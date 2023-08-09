@@ -11,6 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sochs.Core", "Sochs.Core\Sochs.Core.csproj", "{01BF9612-705C-41C5-BC03-AD7027EEF4C2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,9 +23,16 @@ Global
 		{ABF6A222-3972-42A4-838B-C84632A65C60}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ABF6A222-3972-42A4-838B-C84632A65C60}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ABF6A222-3972-42A4-838B-C84632A65C60}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01BF9612-705C-41C5-BC03-AD7027EEF4C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01BF9612-705C-41C5-BC03-AD7027EEF4C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01BF9612-705C-41C5-BC03-AD7027EEF4C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01BF9612-705C-41C5-BC03-AD7027EEF4C2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{01BF9612-705C-41C5-BC03-AD7027EEF4C2} = {0D3DFF46-CE9F-48BC-908F-A0288CC44687}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {42FD825F-B0F0-47B7-BB57-152FBC19B0AF}

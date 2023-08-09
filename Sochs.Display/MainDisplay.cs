@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Sochs.Core;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -26,6 +27,18 @@ namespace Sochs
       // TODO: Configure screen to fit the TV display
 
       this.ResumeLayout(false);
+    }
+
+    private void btnAlice_Click(object sender, EventArgs e)
+    {
+      var childControl = new ChildHelper(Children.Alice);
+      childControl.Show(this);
+    }
+
+    private void btnClara_Click(object sender, EventArgs e)
+    {
+      var childControl = new ChildHelper(Children.Clara);
+      childControl.Show(this);
     }
   }
 }
