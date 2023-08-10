@@ -6,21 +6,34 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Sochs
 {
-  public partial class MainDisplay : Form
+  public partial class MainDisplay : Form, ITemporalDisplay
   {
+    private TimeOfDay _timeOfDay;
+    
+    TimeOfDay ITemporalDisplay.TimeOfDay
+    { 
+      get => _timeOfDay; 
+      set => _timeOfDay = value; 
+    }
+
     public MainDisplay()
     {
       InitializeComponent();
 
-      Configure();
+      ConfigureDisplayForScreen();
+
+      Task timeTask = TimeHelper.GetTimeTask(this);
+
+      timeTask.Start();
     }
 
-    private void Configure()
+    private void ConfigureDisplayForScreen()
     {
       this.SuspendLayout();
 
@@ -39,6 +52,27 @@ namespace Sochs
     {
       var childControl = new ChildHelper(Children.Clara);
       childControl.Show(this);
+    }
+
+    public void SetToMorning()
+    {
+      lblTimeOfDay.Invoke(new MethodInvoker(() => {
+        lblTimeOfDay.Text = TimeHelper.MorningDescription;
+      }));
+    }
+
+    public void SetToAfternoon()
+    {
+      lblTimeOfDay.Invoke(new MethodInvoker(() => {
+        lblTimeOfDay.Text = TimeHelper.AfternoonDescription;
+      }));
+    }
+
+    public void SetToEvening()
+    {
+      lblTimeOfDay.Invoke(new MethodInvoker(() => {
+        lblTimeOfDay.Text = TimeHelper.EveningDescription;
+      }));
     }
   }
 }

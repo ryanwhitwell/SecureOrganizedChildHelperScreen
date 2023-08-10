@@ -30,6 +30,7 @@
     {
       this.lblChildName = new System.Windows.Forms.Label();
       this.button1 = new System.Windows.Forms.Button();
+      this.lblTimeOfDay = new System.Windows.Forms.Label();
       this.SuspendLayout();
       // 
       // lblChildName
@@ -53,12 +54,22 @@
       this.button1.UseVisualStyleBackColor = true;
       this.button1.Click += new System.EventHandler(this.button1_Click);
       // 
+      // lblTimeOfDay
+      // 
+      this.lblTimeOfDay.AutoSize = true;
+      this.lblTimeOfDay.Location = new System.Drawing.Point(298, 200);
+      this.lblTimeOfDay.Name = "lblTimeOfDay";
+      this.lblTimeOfDay.Size = new System.Drawing.Size(35, 13);
+      this.lblTimeOfDay.TabIndex = 2;
+      this.lblTimeOfDay.Text = "label1";
+      // 
       // ChildHelper
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.BackColor = System.Drawing.SystemColors.Window;
       this.ClientSize = new System.Drawing.Size(733, 1100);
+      this.Controls.Add(this.lblTimeOfDay);
       this.Controls.Add(this.button1);
       this.Controls.Add(this.lblChildName);
       this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
@@ -77,5 +88,6 @@
 
     private System.Windows.Forms.Label lblChildName;
     private System.Windows.Forms.Button button1;
+    private System.Windows.Forms.Label lblTimeOfDay;
   }
 }
