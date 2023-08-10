@@ -27,7 +27,7 @@ try
 
     "Deploying Sochs to $deploymentPath"
 
-    scp -v ./Sochs.Display/bin/Release/Sochs.Display.exe $deploymentPath
+    scp -vr ./Sochs.Display/bin/Release/*.* $deploymentPath
 
     "Successfully deployed Sochs to $deploymentPath"
   }
