@@ -59,7 +59,7 @@
       // 
       this.lblTimeOfDay.AutoSize = true;
       this.lblTimeOfDay.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.lblTimeOfDay.Location = new System.Drawing.Point(12, 9);
+      this.lblTimeOfDay.Location = new System.Drawing.Point(12, 173);
       this.lblTimeOfDay.Name = "lblTimeOfDay";
       this.lblTimeOfDay.Size = new System.Drawing.Size(106, 37);
       this.lblTimeOfDay.TabIndex = 2;
