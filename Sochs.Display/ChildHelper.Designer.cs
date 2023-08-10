@@ -29,6 +29,7 @@
     private void InitializeComponent()
     {
       this.lblChildName = new System.Windows.Forms.Label();
+      this.button1 = new System.Windows.Forms.Button();
       this.SuspendLayout();
       // 
       // lblChildName
@@ -41,12 +42,24 @@
       this.lblChildName.TabIndex = 0;
       this.lblChildName.Text = "label1";
       // 
+      // button1
+      // 
+      this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.button1.Location = new System.Drawing.Point(12, 12);
+      this.button1.Name = "button1";
+      this.button1.Size = new System.Drawing.Size(100, 34);
+      this.button1.TabIndex = 1;
+      this.button1.Text = "<< Back";
+      this.button1.UseVisualStyleBackColor = true;
+      this.button1.Click += new System.EventHandler(this.button1_Click);
+      // 
       // ChildHelper
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.BackColor = System.Drawing.SystemColors.Window;
       this.ClientSize = new System.Drawing.Size(733, 1100);
+      this.Controls.Add(this.button1);
       this.Controls.Add(this.lblChildName);
       this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
       this.MaximizeBox = false;
@@ -63,5 +76,6 @@
     #endregion
 
     private System.Windows.Forms.Label lblChildName;
+    private System.Windows.Forms.Button button1;
   }
 }
