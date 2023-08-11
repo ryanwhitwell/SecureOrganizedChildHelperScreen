@@ -1,16 +1,10 @@
 ﻿using Sochs.Core;
+using Sochs.Core.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Sochs
+namespace Sochs.Display
 {
   public partial class MainDisplay : Form, ITemporalDisplay
   {
@@ -27,10 +21,6 @@ namespace Sochs
       InitializeComponent();
 
       ConfigureDisplayForScreen();
-
-      Task timeTask = TimeHelper.GetTimeTask(this);
-
-      timeTask.Start();
     }
 
     private void ConfigureDisplayForScreen()
@@ -40,15 +30,16 @@ namespace Sochs
       // TODO: Configure screen to fit the TV display
 
       this.ResumeLayout(false);
+
     }
 
-    private void btnAlice_Click(object sender, EventArgs e)
+    private void BtnAlice_Click(object sender, EventArgs e)
     {
       var childControl = new ChildHelper(Children.Alice);
       childControl.Show(this);
     }
 
-    private void btnClara_Click(object sender, EventArgs e)
+    private void BtnClara_Click(object sender, EventArgs e)
     {
       var childControl = new ChildHelper(Children.Clara);
       childControl.Show(this);
@@ -73,6 +64,14 @@ namespace Sochs
       lblTimeOfDay.Invoke(new MethodInvoker(() => {
         lblTimeOfDay.Text = TimeHelper.EveningDescription;
       }));
+    }
+
+    protected override void OnLoad(EventArgs e)
+    {
+      // do stuff before Load-event is raised
+      base.OnLoad(e);
+      // do stuff after Load-event was raised
+      Task.Run(() => TimeHelper.UpdateTimeOfDay(this));
     }
   }
 }

@@ -42,7 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Children.cs" />
-    <Compile Include="ITemporalDisplay.cs" />
+    <Compile Include="Log.cs" />
+    <Compile Include="Interfaces\ITemporalDisplay.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TimeHelper.cs" />
     <Compile Include="TimeOfDay.cs" />

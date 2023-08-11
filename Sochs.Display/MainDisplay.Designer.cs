@@ -1,4 +1,4 @@
-﻿namespace Sochs
+﻿namespace Sochs.Display
 {
   partial class MainDisplay
   {
@@ -42,7 +42,7 @@
       this.btnAlice.TabIndex = 0;
       this.btnAlice.Text = "Alice";
       this.btnAlice.UseVisualStyleBackColor = true;
-      this.btnAlice.Click += new System.EventHandler(this.btnAlice_Click);
+      this.btnAlice.Click += new System.EventHandler(this.BtnAlice_Click);
       // 
       // btnClara
       // 
@@ -53,7 +53,7 @@
       this.btnClara.TabIndex = 1;
       this.btnClara.Text = "Clara";
       this.btnClara.UseVisualStyleBackColor = true;
-      this.btnClara.Click += new System.EventHandler(this.btnClara_Click);
+      this.btnClara.Click += new System.EventHandler(this.BtnClara_Click);
       // 
       // lblTimeOfDay
       // 

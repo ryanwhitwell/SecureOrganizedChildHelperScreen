@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Sochs
+namespace Sochs.Display
 {
   internal static class Program
   {

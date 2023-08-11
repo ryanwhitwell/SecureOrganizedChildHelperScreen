@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Sochs.Core.Interfaces;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -8,7 +9,7 @@ namespace Sochs.Core
   {
     public const int MorningCutOffHour = 11; // 12 PM
     public const int AfternoonCutOffHour = 16; // 5 PM
-    public const int TimeCheckPeriodInMilliseconds = 300000; // 5 Minutes
+    public const int TimeCheckPeriodInMilliseconds = 60000; // 1 Minute(s)
 
     public const string MorningDescription = "Morning";
     public const string AfternoonDescription = "Afternoon";
@@ -16,32 +17,44 @@ namespace Sochs.Core
 
     public static TimeOfDay GetTimeOfDay(DateTime dateTime)
     {
-      var currentHour = dateTime.Hour;
+      try
+      {
+        var currentHour = dateTime.Hour;
+
+        if (currentHour >= 0 && currentHour <= MorningCutOffHour)
+        {
+          return TimeOfDay.Morning;
+        }
+        else if (currentHour > MorningCutOffHour && currentHour <= AfternoonCutOffHour)
+        {
+          return TimeOfDay.Afternoon;
+        }
+        else
+        {
+          return TimeOfDay.Evening;
+        }
+      }
+      catch (Exception ex)
+      {
+        Log.Error("Error getting the time of day.", ex);
+        throw;
+      }
       
-      if (currentHour >= 0 && currentHour <= MorningCutOffHour)
-      {
-        return TimeOfDay.Morning;
-      } 
-      else if (currentHour > MorningCutOffHour && currentHour <= AfternoonCutOffHour)
-      {
-        return TimeOfDay.Afternoon;
-      }
-      else
-      {
-        return TimeOfDay.Evening;
-      }
     }
 
-    public static Task GetTimeTask(ITemporalDisplay temporalDisplay)
+    public static Task UpdateTimeOfDay(ITemporalDisplay temporalDisplay)
     {
-      var timeTask = new Task(() => {
-        while (true)
+      while (true)
+      {
+        try
         {
           // check for the correct time range; morning, afternoon, evening
           var now = DateTime.Now;
           var timeOfDay = GetTimeOfDay(now);
 
           temporalDisplay.TimeOfDay = timeOfDay;
+
+          Log.Debug($"Updating time of day to {timeOfDay}.");
 
           switch (temporalDisplay.TimeOfDay)
           {
@@ -67,9 +80,12 @@ namespace Sochs.Core
           // Wait for a bit so we don't kill the CPU
           Thread.Sleep(TimeCheckPeriodInMilliseconds);
         }
-      });
-
-      return timeTask;
+        catch (Exception ex)
+        {
+          Log.Error("Error updating the time of day.", ex);
+          throw;
+        }
+      }
     }
   }
 }

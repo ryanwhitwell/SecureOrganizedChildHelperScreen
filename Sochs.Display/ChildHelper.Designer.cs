@@ -1,4 +1,4 @@
-﻿namespace Sochs
+﻿namespace Sochs.Display
 {
   partial class ChildHelper
   {
