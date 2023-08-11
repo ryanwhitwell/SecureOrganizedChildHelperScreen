@@ -1,4 +1,7 @@
-﻿using Sochs.Core;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Sochs.Core;
+using Sochs.Core.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +20,20 @@ namespace Sochs.Display
     {
       Application.EnableVisualStyles();
       Application.SetCompatibleTextRenderingDefault(false);
-      Application.Run(new MainDisplay());
+
+      var services = new ServiceCollection();
+      ConfigureServices(services);
+      using (ServiceProvider serviceProvider = services.BuildServiceProvider())
+      {
+        var form1 = serviceProvider.GetRequiredService<MainDisplay>();
+        Application.Run(form1);
+      }
+    }
+
+    private static void ConfigureServices(ServiceCollection services)
+    {
+      services.AddSingleton<MainDisplay>()
+              .AddLogging(configure => configure.AddConsole());
     }
   }
 }
