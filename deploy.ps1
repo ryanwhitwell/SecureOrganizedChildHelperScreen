@@ -14,9 +14,15 @@ $SochsPassword = $Env:SOCHS_SSH_PASSWORD
 $SochsHost = $Env:SOCHS_SSH_HOST
 $SochsPort = $Env:SOCHS_SSH_PORT
 
+
+
 # Only run the deployment if the host is available
 try 
 {
+  dotnet publish .\Sochs.App\ -c Release --sc true
+
+  Write-Host "Connecting to " + $SochsUsername + "@" + $SochsHost  
+
   $socket = New-Object System.Net.Sockets.TcpClient($SochsHost, $SochsPort)
 
   if($socket.Connected) 
@@ -25,14 +31,15 @@ try
 
     $deploymentPath = $SochsUsername + "@" + $SochsHost + ":/home/" + $SochsUsername + "/Sochs"
 
-    "Deploying Sochs to $deploymentPath"
+    Write-Host "Deploying Sochs to $deploymentPath"
 
-    scp -vr ./Sochs.Display/bin/Release/*.* $deploymentPath
+    scp -vr ./Sochs.App/bin/Release/net7.0/publish/wwwroot/* $deploymentPath
 
-    "Successfully deployed Sochs to $deploymentPath"
+    Write-Host "Successfully deployed Sochs to $deploymentPath"
   }
 } 
 catch 
 {
-  "Error deploying Sochs"
+  Write-Host "Error deploying Sochs"
+  Write-Host $_
 }
