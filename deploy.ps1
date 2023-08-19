@@ -13,6 +13,7 @@ $SochsUsername = $Env:SOCHS_SSH_USERNAME
 $SochsPassword = $Env:SOCHS_SSH_PASSWORD
 $SochsHost = $Env:SOCHS_SSH_HOST
 $SochsPort = $Env:SOCHS_SSH_PORT
+$WeatherApiKey = $Env:WEATHER_API_KEY
 
 
 
