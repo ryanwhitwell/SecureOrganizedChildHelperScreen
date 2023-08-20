@@ -2,4 +2,7 @@
 A secure sandbox display used to help include young children in the day-to-day of getting things done... it's also a Minecraft server :)
 
 # Minecraft Server Address
-`http://whitwell.hopto.org`
+`http://whitwell.hopto.org:9132`
+
+# Minecraft Player Stats
+`http://whitwell.hopto.org:8804`
