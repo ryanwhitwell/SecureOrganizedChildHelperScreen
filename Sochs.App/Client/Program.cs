@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Sochs.App;
+using Sochs.Library;
+using Sochs.Library.Interfaces;
 
 namespace Sochs.App
 {
@@ -13,6 +15,8 @@ namespace Sochs.App
       builder.RootComponents.Add<HeadOutlet>("head::after");
 
       builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+
+      builder.Services.AddSingleton<ITimeService, TimeService>();
 
       await builder.Build().RunAsync();
     }

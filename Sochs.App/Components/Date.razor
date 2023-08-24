@@ -1,0 +1,34 @@
+﻿@using Sochs.Library.Events;
+@using Sochs.Library.Interfaces;
+@using Sochs.Library.Logging;
+@using Sochs.Library;
+@using System.Runtime;
+@inject ITimeService _timeService;
+@implements IDisposable;
+
+<span>@message</span>
+
+@code {
+  private string? message;
+
+  protected override void OnInitialized()
+  {
+    _timeService.OnTimeUpdated += Handle;
+
+    base.OnInitialized();
+  }
+
+  public void Handle(object? sender, TimeUpdatedEventArgs args)
+  {
+    if (args != null)
+    {
+      message = args.DateTime.ToShortDateString();
+      StateHasChanged();
+    }
+  }
+
+  public void Dispose()
+  {
+    _timeService.OnTimeUpdated -= Handle;
+  }
+}
