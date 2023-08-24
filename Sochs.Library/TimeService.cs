@@ -14,7 +14,7 @@ namespace Sochs.Library
 			_timer = new Timer(UpdateTimeOfDay_Callback, autoEvent, new TimeSpan(0, 0, 0), new TimeSpan(0, 0, 5));
 		}
 
-    public event EventHandler<TimeUpdatedEventArgs>? OnTimeUpdated;
+		public event EventHandler<TimeUpdatedEventArgs>? OnTimeUpdated;
 
 		private void UpdateTimeOfDay_Callback(object? stateInfo)
 		{
@@ -22,7 +22,7 @@ namespace Sochs.Library
 
 			AutoResetEvent autoEvent = (AutoResetEvent)stateInfo;
 
-			OnTimeUpdated?.Invoke(this, new TimeUpdatedEventArgs() {  DateTime = DateTime.Now });
+			OnTimeUpdated?.Invoke(this, new TimeUpdatedEventArgs() { DateTime = DateTime.Now });
 		}
 
 		protected virtual void Dispose(bool disposing)
