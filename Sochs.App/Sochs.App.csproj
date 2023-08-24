@@ -15,4 +15,14 @@
     <ProjectReference Include="..\Sochs.Library\Sochs.Library.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\img\weather\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\img\weather\sunny.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

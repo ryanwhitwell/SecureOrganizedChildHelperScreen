@@ -1,0 +1,43 @@
+﻿@using Sochs.Library.Logging;
+@using Sochs.Library;
+@using Sochs.Library.Structs;
+@implements IObserver<TimeOfDayInfo>;
+
+@inject HttpClient Http
+
+<span>@message</span>
+
+@code {
+  private IDisposable? _cancellation;
+
+  private DateTime? _currentDateTime;
+
+  private string? message;
+
+  public virtual void Subscribe(Clock provider) => _cancellation = provider.Subscribe(this);
+
+  public virtual void Unsubscribe()
+  {
+    _cancellation?.Dispose();
+    _currentDateTime = null;
+  }
+
+  public virtual void OnCompleted() => _currentDateTime = null;
+
+  // No implementation needed: Method is not called by the Clock class.
+  public virtual void OnError(Exception e)
+  {
+    // No implementation.
+  }
+
+  public virtual void OnNext(TimeOfDayInfo info)
+  {
+    var currentDateTime = info.CurrentDateTime;
+
+    var currentDate = currentDateTime.ToShortDateString();
+
+    message = currentDate;
+
+    StateHasChanged();
+  }
+}
