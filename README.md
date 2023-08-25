@@ -15,11 +15,11 @@ This application is inteneded to give my kids enough information about their day
 - Shool lunch menu
   - To help the family decide if we're making lunch in the morning or eating at school
 - Activity flow chart
-  - To help the kids keep on task in the morning, afternoon, and at night
+  - To help the kids keep on task in the morning, afternoon, and in the evening
     - *Morning* - What does each child need to do to get ready to go to school (weekdays) or transition into the afternoon (weekends)
     - *Afternoon* -  What does each child need to do after school (weekdays) or after lunch (weekends) to successfully transition into the evening
     - *Evening* - What does each child need to do after dinner to get ready for bed 
-  - This flow chat contains a visual reward system to help promote engagement and gives the kids some bragging right when they've done everything on their lists
+  - This flow chart contains a visual reward system to help promote engagement and gives the kids some bragging right when they've done everything on their lists
 ___
 
 ## Minecraft Info
