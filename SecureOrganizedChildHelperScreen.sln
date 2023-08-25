@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33502.453
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{0D3DFF46-CE9F-48BC-908F-A0288CC44687}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".root", ".root", "{0D3DFF46-CE9F-48BC-908F-A0288CC44687}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
-		deploy.ps1 = deploy.ps1
 		backup_minecraft_server.sh = backup_minecraft_server.sh
+		deploy.ps1 = deploy.ps1
 		README.md = README.md
 		weather_conditions.csv = weather_conditions.csv
 	EndProjectSection
