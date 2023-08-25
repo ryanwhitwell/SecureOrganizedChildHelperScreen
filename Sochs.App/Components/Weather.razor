@@ -1,7 +1,11 @@
-﻿@using Sochs.Library.Events;
+﻿@using Sochs.Library.Enums;
+@using Sochs.Library.Events;
 @using Sochs.Library.Interfaces;
 @using Sochs.Library;
 @using System.Runtime;
+@using Sochs.Library.Models;
+@inject IConfiguration _config;
+@inject ILogger<Weather> _log;
 @inject IWeatherService _weatherService;
 @implements IDisposable;
 
@@ -11,7 +15,10 @@
 <div class="col-sm-6 text-center" style="background-color: blue;">
   <h1 class="display-1" style="font-size: 6rem;">@condition</h1>
 </div>
-<div class="col-sm-4 text-center" style="background-color: blue;">
+<div class="col-sm-2 text-center" style="background-color: blue;">
+  <img src="@tempSummaryImagePath" class="h-100" />
+</div>
+<div class="col-sm-2 text-center" style="background-color: blue;">
   <h1 class="display-1" style="font-size: 6rem;">@temperature°F</h1>
 </div>
 
@@ -19,9 +26,30 @@
   private string? temperature;
   private string? condition;
   private string? conditionImagePath;
+  private string? tempSummaryImagePath;
+
+  private decimal? _coldThreshold;
+  private decimal? _coolThreshold;
+  private decimal? _warmThreshold;
+  private decimal? _hotThreshold;
+
+  private string? _hotPath;
+  private string? _warmPath;
+  private string? _coolPath;
+  private string? _coldPath;
 
   protected override void OnInitialized()
   {
+    _coldPath = _config.GetString("Icons:TemperatureFeeling:Cold");
+    _coolPath = _config.GetString("Icons:TemperatureFeeling:Cool");
+    _warmPath = _config.GetString("Icons:TemperatureFeeling:Warm");
+    _hotPath  = _config.GetString("Icons:TemperatureFeeling:Hot");
+
+    _coldThreshold = _config.GetDecimal("Weather:Thresholds:Cold");
+    _coolThreshold = _config.GetDecimal("Weather:Thresholds:Cool");
+    _warmThreshold = _config.GetDecimal("Weather:Thresholds:Warm");
+    _hotThreshold  = _config.GetDecimal("Weather:Thresholds:Hot");
+
     _weatherService.OnWeatherUpdated += Handle;
 
     base.OnInitialized();
@@ -31,11 +59,61 @@
   {
     if (args != null && args.WeatherInfo != null)
     {
-      temperature = args.WeatherInfo.Current?.TempF.ToString("N0");
-      condition = args.WeatherInfo.Current?.Condition?.Text;
+      temperature        = args.WeatherInfo.Current?.TempF.ToString("N0");
+      condition          = args.WeatherInfo.Current?.Condition?.Text;
       conditionImagePath = args.WeatherInfo.Current?.Condition?.Icon;
 
+      var temperatureFeeling = GetTemperatureFeeling(args.WeatherInfo);
+
+      switch(temperatureFeeling)
+      {
+        case TemperatureFeeling.Cold:
+          tempSummaryImagePath = _coldPath;
+          break;
+        case TemperatureFeeling.Cool:
+          tempSummaryImagePath = _coolPath;
+          break;
+        case TemperatureFeeling.Warm:
+          tempSummaryImagePath = _warmPath;
+          break;
+        case TemperatureFeeling.Hot:
+          tempSummaryImagePath = _hotPath;
+          break;
+        default:
+          throw new InvalidOperationException($"Cannot determine image path based on temperature feeling {temperatureFeeling}.");
+      }
+
       StateHasChanged();
+    }
+  }
+
+  public TemperatureFeeling GetTemperatureFeeling(WeatherApiResponse weatherInfo)
+  {
+    //TODO: Fix this algorithm
+    
+    var tempF = weatherInfo.Current?.TempF;
+
+    _log.LogTrace(tempF.ToString());
+
+    if (tempF < _coldThreshold)
+    {
+      return TemperatureFeeling.Cold;
+    }
+    else if (tempF > _hotThreshold)
+    {
+      return TemperatureFeeling.Hot;
+    }
+    else if (tempF >= _coldThreshold && tempF <= _coolThreshold)
+    {
+      return TemperatureFeeling.Cool;
+    }
+    else if (tempF >= _warmThreshold && tempF <= _hotThreshold)
+    {
+      return TemperatureFeeling.Warm;
+    }
+    else
+    {
+      throw new InvalidOperationException("Cannot determine temperature feeling from weather info.");
     }
   }
 
