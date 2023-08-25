@@ -1,4 +1,5 @@
-# Secure Organized Child Helper Screen
+# S.O.C.H.S.
+## Secure Organized Child Helper Screen
 A secure sandbox display used to help include young children in the day-to-day of getting things done... it's also a Minecraft server :)
 
 >Please note this is a Blazor WASM application and is meant to be viewed in portrait orientation at a resolution of 1080 X 1920. Just keep that in mind when you're running it locally.
