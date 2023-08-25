@@ -10,7 +10,7 @@ namespace Sochs.Library
 {
   public class WeatherService : IWeatherService, IDisposable
 	{
-		private const int UpdateIntervalMinutes = 10;
+		private const int UpdateIntervalMinutes = 1;
     private const string WeatherApiZipCode = "06460";
     private const string WeatherApiBase = "http://api.weatherapi.com";
     private const string WeatherApiResource = "/v1/current.json";

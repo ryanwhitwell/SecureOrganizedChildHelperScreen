@@ -5,13 +5,15 @@ namespace Sochs.Library
 {
 	public class TimeService : ITimeService, IDisposable
 	{
-		private readonly Timer _timer;
+    private const int UpdateIntervalSeconds = 1;
+
+    private readonly Timer _timer;
 		private bool disposedValue;
 
 		public TimeService()
 		{
 			var autoEvent = new AutoResetEvent(false);
-			_timer = new Timer(UpdateTimeOfDay_Callback, autoEvent, new TimeSpan(0, 0, 0), new TimeSpan(0, 0, 5));
+			_timer = new Timer(UpdateTimeOfDay_Callback, autoEvent, new TimeSpan(0, 0, 0), new TimeSpan(0, 0, UpdateIntervalSeconds));
 		}
 
 		public event EventHandler<TimeUpdatedEventArgs>? OnTimeUpdated;

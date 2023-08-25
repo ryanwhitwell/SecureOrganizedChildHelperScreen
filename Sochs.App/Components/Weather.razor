@@ -5,16 +5,15 @@
 @inject IWeatherService _weatherService;
 @implements IDisposable;
 
-<div class="col-sm-4">
-  <span>Temperature: @temperature °F</span>
+<div class="col-sm-2 text-center" style="background-color: blue;">
+  <img src="@conditionImagePath" class="h-100" />
 </div>
-
-<div class="col-sm-4">
-  <span>Condition: @condition</span>
+<div class="col-sm-6 text-center" style="background-color: blue;">
+  <h1 class="display-1" style="font-size: 6rem;">@condition</h1>
 </div>
-
-
-<img src="@conditionImagePath" />
+<div class="col-sm-4 text-center" style="background-color: blue;">
+  <h1 class="display-1" style="font-size: 6rem;">@temperature°F</h1>
+</div>
 
 @code {
   private string? temperature;
