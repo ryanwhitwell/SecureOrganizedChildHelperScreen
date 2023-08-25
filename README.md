@@ -1,6 +1,22 @@
 # Secure Organized Child Helper Screen
 A secure sandbox display used to help include young children in the day-to-day of getting things done... it's also a Minecraft server :)
 
+This application is inteneded to give my kids enough information about their day to allow them to self-serve. Here's a list of the high-level features:
+
+- Basic date/time information
+  - To help reinforce learning to read/manage time
+- Weather data
+  - To help manage expectations about what we can do outside for the day
+- Recommended clothes
+  - To help the kids understand what kinds of clothes to wear for the day given the current weather 
+- Shool lunch menu
+  - To help the family decide if we're making lunch in the morning or eating at school
+- Activity flow chart
+  - To help the kids keep on task in the morning, afternoon, and at night
+    - *Morning* - What does each child need to do to get ready to go to school (weekdays) or transition into the afternoon (weekends)
+    - *Afternoon* -  What does each child need to do after school (weekdays) or after lunch (weekends) to successfully transition into the evening
+    - *Evening* - What does each child need to do after dinner to get ready for bed 
+  - This flow chat contains a visual reward system to help promote engagement and gives the kids some bragging right when they've done everything on their lists
 ___
 
 ## Minecraft Info
