@@ -1,0 +1,47 @@
+﻿@using Sochs.Library.Events;
+@using Sochs.Library.Interfaces;
+@using Sochs.Library;
+@using System.Runtime;
+@inject IWeatherService _weatherService;
+@implements IDisposable;
+
+<div class="col-sm-4">
+  <span>Temperature: @temperature °F</span>
+</div>
+
+<div class="col-sm-4">
+  <span>Condition: @condition</span>
+</div>
+
+
+<img src="@conditionImagePath" />
+
+@code {
+  private string? temperature;
+  private string? condition;
+  private string? conditionImagePath;
+
+  protected override void OnInitialized()
+  {
+    _weatherService.OnWeatherUpdated += Handle;
+
+    base.OnInitialized();
+  }
+
+  public void Handle(object? sender, WeatherUpdatedEventArgs args)
+  {
+    if (args != null && args.WeatherInfo != null)
+    {
+      temperature = args.WeatherInfo.Current?.TempF.ToString("N0");
+      condition = args.WeatherInfo.Current?.Condition?.Text;
+      conditionImagePath = args.WeatherInfo.Current?.Condition?.Icon;
+
+      StateHasChanged();
+    }
+  }
+
+  public void Dispose()
+  {
+    _weatherService.OnWeatherUpdated -= Handle;
+  }
+}

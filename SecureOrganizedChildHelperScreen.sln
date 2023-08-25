@@ -6,9 +6,10 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{0D3DFF46-CE9F-48BC-908F-A0288CC44687}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
-		back_minecraft_server.sh = back_minecraft_server.sh
 		deploy.ps1 = deploy.ps1
+		backup_minecraft_server.sh = backup_minecraft_server.sh
 		README.md = README.md
+		weather_conditions.csv = weather_conditions.csv
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sochs.App", "Sochs.App\Sochs.App.csproj", "{B96F41E3-09E4-4DCC-8BD6-1F08D240F183}"

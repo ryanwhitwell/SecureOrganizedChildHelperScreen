@@ -13,9 +13,12 @@ namespace Sochs.App
       builder.RootComponents.Add<App>("#app");
       builder.RootComponents.Add<HeadOutlet>("head::after");
 
-      builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+      builder.Logging.SetMinimumLevel(LogLevel.Trace);
+
+      builder.Services.AddTransient(sp => new HttpClient { BaseAddress = new Uri("http://api.weatherapi.com") });
 
       builder.Services.AddSingleton<ITimeService, TimeService>();
+      builder.Services.AddSingleton<IWeatherService, WeatherService>();
 
       await builder.Build().RunAsync();
     }

@@ -1,7 +1,9 @@
-﻿namespace Sochs.Library.Events
+﻿using Sochs.Library.Models;
+
+namespace Sochs.Library.Events
 {
   public class WeatherUpdatedEventArgs : EventArgs
   {
-    public string WeatherInfo { get; set; } = string.Empty;
+    public required WeatherApiResponse WeatherInfo { get; set; }
   }
 }

@@ -20,9 +20,7 @@ namespace Sochs.Library
 		{
 			_ = stateInfo ?? throw new ArgumentNullException(nameof(stateInfo));
 
-			AutoResetEvent autoEvent = (AutoResetEvent)stateInfo;
-
-			OnTimeUpdated?.Invoke(this, new TimeUpdatedEventArgs() { DateTime = DateTime.Now });
+      OnTimeUpdated?.Invoke(this, new TimeUpdatedEventArgs() { DateTime = DateTime.Now });
 		}
 
 		protected virtual void Dispose(bool disposing)
