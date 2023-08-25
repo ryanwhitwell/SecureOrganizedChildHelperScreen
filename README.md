@@ -29,14 +29,19 @@ ___
 |Minecraft Server Address|`http://whitwell.hopto.org:9132` |
 |Minecraft Player Stats  |`http://whitwell.hopto.org:8804` |
 
+*If anonymous users start logging into the server then I'll implement a white list for connectivity.*
 ___
 
 ## Sochs Info
 
 ### Required Environment Variables
-> These are the environemt variables needed on the deployment host in order to successfully deploy the application.
+> These are the environemt variables needed on the **deployment host** in order to successfully deploy the application.
 - WEATHER_API_KEY
 
+### Backup process
+Run the following script from SSH using the command below while in the `/home/pi/` directory replacing the `DROPBOX_API_KEY` value with a real API Key
+
+`nohup ./backup_minecraft_server.sh DROPBOX_API_KEY >> ./minecraft_backup.log 2>&1 &`
 
 ## Credits
 
