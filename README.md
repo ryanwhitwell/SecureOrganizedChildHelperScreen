@@ -18,9 +18,8 @@ ___
 ## Sochs Info
 
 ### Required Environment Variables
-> These are the environemt variables that need to be set on the server in order for Sochs to work correctly
+> These are the environemt variables needed on the deployment host in order to successfully deploy the application.
 - WEATHER_API_KEY
-- DROPBOX_API_KEY
 
 
 ## Credits
