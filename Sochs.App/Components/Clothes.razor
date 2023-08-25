@@ -1,0 +1,52 @@
+﻿@using Sochs.Library.Events;
+@using Sochs.Library.Interfaces;
+@using Sochs.Library;
+@using System.Runtime;
+@using Sochs.Library.Models;
+@inject IWeatherService _weatherService;
+@implements IDisposable;
+
+<div class="col-sm-3 text-center" style="background-color: blue;">
+  <img src="@jacketImagePath" class="h-100" />
+</div>
+<div class="col-sm-3 text-center" style="background-color: blue;">
+  <img src="@topImagePath" class="h-100" />
+</div>
+<div class="col-sm-3 text-center" style="background-color: blue;">
+  <img src="@bottomImagePath" class="h-100" />
+</div>
+<div class="col-sm-3 text-center" style="background-color: blue;">
+  <img src="@shoesImagePath" class="h-100" />
+</div>
+
+@code {
+  private string? jacketImagePath;
+  private string? shoesImagePath;
+  private string? bottomImagePath;
+  private string? topImagePath;
+
+  protected override void OnInitialized()
+  {
+    _weatherService.OnWeatherUpdated += Handle;
+
+    base.OnInitialized();
+  }
+
+  public void Handle(object? sender, WeatherUpdatedEventArgs args)
+  {
+    if (args != null && args.WeatherInfo != null)
+    {
+      StateHasChanged();
+    }
+  }
+
+  private void UpdateClothes(WeatherApiResponse weatherInfo)
+  {
+    _ = weatherInfo ?? throw new ArgumentNullException(nameof(weatherInfo));
+  }
+
+  public void Dispose()
+  {
+    _weatherService.OnWeatherUpdated -= Handle;
+  }
+}
