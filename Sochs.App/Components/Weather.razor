@@ -28,10 +28,9 @@
   private string? conditionImagePath;
   private string? tempSummaryImagePath;
 
-  private decimal? _coldThreshold;
-  private decimal? _coolThreshold;
-  private decimal? _warmThreshold;
-  private decimal? _hotThreshold;
+  private decimal? _lowThreshold;
+  private decimal? _midThreshold;
+  private decimal? _hightThreshold;
 
   private string? _hotPath;
   private string? _warmPath;
@@ -40,15 +39,14 @@
 
   protected override void OnInitialized()
   {
-    _coldPath = _config.GetString("Icons:TemperatureFeeling:Cold");
-    _coolPath = _config.GetString("Icons:TemperatureFeeling:Cool");
-    _warmPath = _config.GetString("Icons:TemperatureFeeling:Warm");
-    _hotPath  = _config.GetString("Icons:TemperatureFeeling:Hot");
+    _coldPath = _config.GetString("Weather:TemperatureFeeling:Cold");
+    _coolPath = _config.GetString("Weather:TemperatureFeeling:Cool");
+    _warmPath = _config.GetString("Weather:TemperatureFeeling:Warm");
+    _hotPath = _config.GetString("Weather:TemperatureFeeling:Hot");
 
-    _coldThreshold = _config.GetDecimal("Weather:Thresholds:Cold");
-    _coolThreshold = _config.GetDecimal("Weather:Thresholds:Cool");
-    _warmThreshold = _config.GetDecimal("Weather:Thresholds:Warm");
-    _hotThreshold  = _config.GetDecimal("Weather:Thresholds:Hot");
+    _lowThreshold   = _config.GetDecimal("Weather:Thresholds:Low");
+    _midThreshold   = _config.GetDecimal("Weather:Thresholds:Mid");
+    _hightThreshold = _config.GetDecimal("Weather:Thresholds:High");
 
     _weatherService.OnWeatherUpdated += Handle;
 
@@ -89,25 +87,23 @@
 
   public TemperatureFeeling GetTemperatureFeeling(WeatherApiResponse weatherInfo)
   {
-    //TODO: Fix this algorithm
-    
     var tempF = weatherInfo.Current?.TempF;
 
     _log.LogTrace(tempF.ToString());
 
-    if (tempF < _coldThreshold)
+    if (tempF < _lowThreshold)
     {
       return TemperatureFeeling.Cold;
     }
-    else if (tempF > _hotThreshold)
-    {
-      return TemperatureFeeling.Hot;
-    }
-    else if (tempF >= _coldThreshold && tempF <= _coolThreshold)
+    else if (tempF >= _lowThreshold && tempF <= _midThreshold)
     {
       return TemperatureFeeling.Cool;
     }
-    else if (tempF >= _warmThreshold && tempF <= _hotThreshold)
+    else if (tempF >= _midThreshold && tempF <= _hightThreshold)
+    {
+      return TemperatureFeeling.Hot;
+    }
+    else if (tempF > _hightThreshold)
     {
       return TemperatureFeeling.Warm;
     }
