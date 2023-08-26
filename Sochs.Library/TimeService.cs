@@ -1,4 +1,5 @@
-﻿using Sochs.Library.Events;
+﻿using Sochs.Library.Enums;
+using Sochs.Library.Events;
 using Sochs.Library.Interfaces;
 
 namespace Sochs.Library
@@ -22,10 +23,45 @@ namespace Sochs.Library
 		{
 			_ = stateInfo ?? throw new ArgumentNullException(nameof(stateInfo));
 
-      OnTimeUpdated?.Invoke(this, new TimeUpdatedEventArgs() { DateTime = DateTime.Now });
+			var now              = DateTime.Now;
+			string timeImagePath = GetTimeImagePath(now);
+			string dateImagePath = GetDateImagePath(now);
+			string dayImagePath  = GetDayImagePath(now);
+
+      OnTimeUpdated?.Invoke(this, new TimeUpdatedEventArgs() { DateTime = DateTime.Now, TimeImagePath = timeImagePath, DateImagePath = dateImagePath, DayImagePath = dayImagePath });
 		}
 
-		protected virtual void Dispose(bool disposing)
+    private string GetDayImagePath(DateTime now)
+    {
+      throw new NotImplementedException();
+    }
+
+    private string GetDateImagePath(DateTime now)
+    {
+      throw new NotImplementedException();
+    }
+
+    private string GetTimeImagePath(DateTime now)
+    {
+      throw new NotImplementedException();
+    }
+
+    private DayOfWeek GetDayOfWeek(DateTime now)
+    {
+			throw new NotImplementedException();
+    }
+
+    private Season GetSeason(DateTime now)
+    {
+      throw new NotImplementedException();
+    }
+
+    private TimeOfDay GetTimeOfDay(DateTime now)
+    {
+      throw new NotImplementedException();
+    }
+
+    protected virtual void Dispose(bool disposing)
 		{
 			if (!disposedValue)
 			{

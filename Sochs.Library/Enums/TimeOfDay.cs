@@ -2,8 +2,8 @@
 {
   public enum TimeOfDay
   {
-    Morning = 0,
+    Morning   = 0,
     Afternoon = 1,
-    Evening = 2
+    Evening   = 2
   }
 }
