@@ -7,7 +7,13 @@ namespace Sochs.Library.Models
     [JsonPropertyName("condition")]
     public WeatherApiCondition? Condition { get; set; }
     
+    [JsonPropertyName("feelslike_f")]
+    public decimal FeelsLikeF { get; set; }
+
     [JsonPropertyName("temp_f")]
-    public decimal TempF { get; set; }
+    public decimal TemperatureF { get; set; }
+
+    [JsonIgnore]
+    public string TemperatureImagePath { get; set; } = string.Empty;
   }
 }
