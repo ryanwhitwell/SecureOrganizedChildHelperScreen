@@ -34,22 +34,22 @@ namespace Sochs.Library
 		{
       _ = config ?? throw new ArgumentNullException(nameof(config));
 
-      _sundayImagePath    = config.GetString("");
-      _mondayImagePath    = config.GetString("");
-      _tuesdayImagePath   = config.GetString("");
-      _wednesdayImagePath = config.GetString("");
-      _thursdayImagePath  = config.GetString("");
-      _fridayImagePath    = config.GetString("");
-      _saturdayImagePath  = config.GetString("");
+      _sundayImagePath    = config.GetString("Time:DayOfWeekImagePaths:Sunday");
+      _mondayImagePath    = config.GetString("Time:DayOfWeekImagePaths:Monday");
+      _tuesdayImagePath   = config.GetString("Time:DayOfWeekImagePaths:Tuesday");
+      _wednesdayImagePath = config.GetString("Time:DayOfWeekImagePaths:Wednesday");
+      _thursdayImagePath  = config.GetString("Time:DayOfWeekImagePaths:Thursday");
+      _fridayImagePath    = config.GetString("Time:DayOfWeekImagePaths:Friday");
+      _saturdayImagePath  = config.GetString("Time:DayOfWeekImagePaths:Saturday");
 
-      _morningImagePath   = config.GetString("");
-      _afternoonImagePath = config.GetString("");
-      _eveningImagePath   = config.GetString("");
+      _morningImagePath   = config.GetString("Time:TimeOfDayImagePaths:Morning");
+      _afternoonImagePath = config.GetString("Time:TimeOfDayImagePaths:Afternoon");
+      _eveningImagePath   = config.GetString("Time:TimeOfDayImagePaths:Evening");
 
-      _springImagePath = config.GetString("");
-      _summerImagePath = config.GetString("");
-      _fallImagePath   = config.GetString("");
-      _winterImagePath = config.GetString("");
+      _springImagePath = config.GetString("Time:SeasonImagePaths:Spring");
+      _summerImagePath = config.GetString("Time:SeasonImagePaths:Summer");
+      _fallImagePath   = config.GetString("Time:SeasonImagePaths:Fall");
+      _winterImagePath = config.GetString("Time:SeasonImagePaths:Winter");
 
       var autoEvent = new AutoResetEvent(false);
 			_timer = new Timer(UpdateTimeOfDay_Callback, autoEvent, new TimeSpan(0, 0, 0), new TimeSpan(0, 0, UpdateIntervalSeconds));
@@ -66,7 +66,7 @@ namespace Sochs.Library
 			string dateImagePath = GetDateImagePath(now);
 			string dayImagePath  = GetDayImagePath(now);
 
-      OnTimeUpdated?.Invoke(this, new TimeUpdatedEventArgs() { DateTime = DateTime.Now, TimeImagePath = timeImagePath, DateImagePath = dateImagePath, DayImagePath = dayImagePath });
+      OnTimeUpdated?.Invoke(this, new TimeUpdatedEventArgs() { DateTime = DateTime.Now, TimeOfDayImagePath = timeImagePath, SeasonImagePath = dateImagePath, DayOfWeekImagePath = dayImagePath });
 		}
 
     private string GetDayImagePath(DateTime now)
@@ -81,6 +81,7 @@ namespace Sochs.Library
         DayOfWeek.Wednesday => _wednesdayImagePath,
         DayOfWeek.Thursday  => _thursdayImagePath,
         DayOfWeek.Friday    => _fridayImagePath,
+        DayOfWeek.Saturday  => _saturdayImagePath,
         _                   => throw new InvalidOperationException($"Cannot determine day of week image path")
       };
     }

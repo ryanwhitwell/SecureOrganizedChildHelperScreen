@@ -4,10 +4,10 @@
   {
     public DateTime DateTime { get; set; }
 
-    public string TimeImagePath { get; set; } = string.Empty;
+    public string TimeOfDayImagePath { get; set; } = string.Empty;
 
-    public string DateImagePath { get; set; } = string.Empty;
+    public string SeasonImagePath { get; set; } = string.Empty;
 
-    public string DayImagePath { get; set; } = string.Empty;
+    public string DayOfWeekImagePath { get; set; } = string.Empty;
   }
 }

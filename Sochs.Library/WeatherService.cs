@@ -50,10 +50,10 @@ namespace Sochs.Library
 
       _weatherConditionImages = GenerateWeatherConditionImageMap();
 
-      _coldPath = _config.GetString("Weather:TemperatureFeeling:Cold");
-      _coolPath = _config.GetString("Weather:TemperatureFeeling:Cool");
-      _warmPath = _config.GetString("Weather:TemperatureFeeling:Warm");
-      _hotPath  = _config.GetString("Weather:TemperatureFeeling:Hot");
+      _coldPath = _config.GetString("Weather:TemperatureFeelingImagePaths:Cold");
+      _coolPath = _config.GetString("Weather:TemperatureFeelingImagePaths:Cool");
+      _warmPath = _config.GetString("Weather:TemperatureFeelingImagePaths:Warm");
+      _hotPath  = _config.GetString("Weather:TemperatureFeelingImagePaths:Hot");
 
       _lowThreshold  = _config.GetDecimal("Weather:Thresholds:Low");
       _midThreshold  = _config.GetDecimal("Weather:Thresholds:Mid");
