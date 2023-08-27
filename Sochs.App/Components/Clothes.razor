@@ -7,18 +7,34 @@
 @inject IWeatherService _weatherService;
 @implements IDisposable;
 
-<div class="col-md-3 text-center" style="background-color: blue;">
-  <img src="@jacketImagePath" class="h-100" />
-</div>
-<div class="col-md-3 text-center" style="background-color: blue;">
-  <img src="@topImagePath" class="h-100" />
-</div>
-<div class="col-md-3 text-center" style="background-color: blue;">
-  <img src="@bottomImagePath" class="h-100" />
-</div>
-<div class="col-md-3 text-center" style="background-color: blue;">
-  <img src="@shoesImagePath" class="h-100" />
-</div>
+
+@if (!string.IsNullOrWhiteSpace(jacketImagePath)) {
+  <div class="col-md-3 text-center" style="background-color: blue;display:none">
+    <img src="@jacketImagePath" class="h-100" />
+  </div>
+  <div class="col-md-3 text-center" style="background-color: blue;">
+    <img src="@topImagePath" class="h-100" />
+  </div>
+  <div class="col-md-3 text-center" style="background-color: blue;">
+    <img src="@bottomImagePath" class="h-100" />
+  </div>
+  <div class="col-md-3 text-center" style="background-color: blue;">
+    <img src="@shoesImagePath" class="h-100" />
+  </div>
+}
+else
+{
+  <div class="col-md-4 text-center" style="background-color: blue;">
+    <img src="@topImagePath" class="h-100" />
+  </div>
+  <div class="col-md-4 text-center" style="background-color: blue;">
+    <img src="@bottomImagePath" class="h-100" />
+  </div>
+  <div class="col-md-4 text-center" style="background-color: blue;">
+    <img src="@shoesImagePath" class="h-100" />
+  </div>
+}
+
 
 @code {
   private string? jacketImagePath;
