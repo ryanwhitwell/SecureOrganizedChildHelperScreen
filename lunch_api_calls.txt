@@ -1,0 +1,9 @@
+
+ALL
+https://thrillshare-cmsv2.services.thrillshare.com/api/v2/s/126312/menus?locale=en&query_id=21637
+
+THIS WEEK
+https://thrillshare-cmsv2.services.thrillshare.com/api/v2/s/126312/menus?locale=en&query_id=21638
+
+NEXT WEEK
+https://thrillshare-cmsv2.services.thrillshare.com/api/v2/s/126312/menus?locale=en&query_id=21639

@@ -8,7 +8,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".root", ".root", "{0D3DFF46
 		.gitignore = .gitignore
 		backup_minecraft_server.sh = backup_minecraft_server.sh
 		deploy.ps1 = deploy.ps1
+		lunch_api_calls.txt = lunch_api_calls.txt
 		README.md = README.md
+		TextFile1.txt = TextFile1.txt
 		weather_conditions.csv = weather_conditions.csv
 	EndProjectSection
 EndProject

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Sochs.Library.Enums;
 using Sochs.Library.Events;
 using Sochs.Library.Interfaces;
 using Sochs.Library.Models;
@@ -14,6 +15,12 @@ namespace Sochs.Library
     private const string WeatherApiZipCode = "06460";
     private const string WeatherApiBase = "http://api.weatherapi.com";
     private const string WeatherApiResource = "/v1/current.json";
+
+    private readonly int[] RainyWeatherCodes = new int[] 
+    {
+      1030,1150,1153,1168,1180,1183,1186,1189,
+      1192,1195,1240,1243,1246,1273,1276
+    };
 
     private bool disposedValue;
 
@@ -64,34 +71,76 @@ namespace Sochs.Library
 
     public event EventHandler<WeatherUpdatedEventArgs>? OnWeatherUpdated;
 
-    private string GetShoesImagePath(WeatherApiResponse? weatherApiResponse)
+    private string GetShoesImagePath(FeelsLikeTemp feelsLikeTemp)
     {
-      _ = weatherApiResponse ?? throw new ArgumentNullException(nameof(weatherApiResponse));
-
-      throw new NotImplementedException();
+      return feelsLikeTemp switch
+      {
+        FeelsLikeTemp.Hot  => _config.GetString("Clothes:Shoes:Sandals"),
+        FeelsLikeTemp.Warm => _config.GetString("Clothes:Shoes:Sneakers"),
+        FeelsLikeTemp.Cool => _config.GetString("Clothes:Shoes:Boots"),
+        FeelsLikeTemp.Cold => _config.GetString("Clothes:Shoes:WinterBoots"),
+        _                  => throw new InvalidOperationException("Cannot determine shoes from weather info.")
+      };
     }
 
-    private string GetPantsImagePath(WeatherApiResponse? weatherApiResponse)
+    private string GetPantsImagePath(FeelsLikeTemp feelsLikeTemp)
     {
-      _ = weatherApiResponse ?? throw new ArgumentNullException(nameof(weatherApiResponse));
-      throw new NotImplementedException();
-
+      return feelsLikeTemp switch
+      {
+        FeelsLikeTemp.Hot  => _config.GetString("Clothes:Pants:ShortPants"),
+        FeelsLikeTemp.Warm => _config.GetString("Clothes:Pants:ShortPants"),
+        FeelsLikeTemp.Cool => _config.GetString("Clothes:Pants:LongPants"),
+        FeelsLikeTemp.Cold => _config.GetString("Clothes:Pants:LongPants"),
+        _                  => throw new InvalidOperationException("Cannot determine pants from weather info.")
+      };
     }
 
-    private string GetShirtImagePath(WeatherApiResponse? weatherApiResponse)
+    private string GetShirtImagePath(FeelsLikeTemp feelsLikeTemp)
     {
-      _ = weatherApiResponse ?? throw new ArgumentNullException(nameof(weatherApiResponse));
-      throw new NotImplementedException();
-
+      return feelsLikeTemp switch
+      {
+        FeelsLikeTemp.Hot  => _config.GetString("Clothes:Shirts:ShortShirt"),
+        FeelsLikeTemp.Warm => _config.GetString("Clothes:Shirts:ShortShirt"),
+        FeelsLikeTemp.Cool => _config.GetString("Clothes:Shirts:LongShirt"),
+        FeelsLikeTemp.Cold => _config.GetString("Clothes:Shirts:LongShirt"),
+        _                  => throw new InvalidOperationException("Cannot determine shirt from weather info.")
+      };
     }
 
     private string GetJacketImagePath(WeatherApiResponse? weatherApiResponse)
     {
       _ = weatherApiResponse ?? throw new ArgumentNullException(nameof(weatherApiResponse));
-      throw new NotImplementedException();
+
+      // Any rain means raincoat
+      var isRainy = IsRainy(weatherApiResponse);
+
+      if (isRainy)
+      {
+        return _config.GetString("Clothes:Jackets:RainCoat");
+      }
+
+      var feelsLike = GetFeelsLikeTemp(weatherApiResponse);
+
+      return feelsLike switch
+      {
+        FeelsLikeTemp.Hot  => string.Empty,
+        FeelsLikeTemp.Warm => string.Empty,
+        FeelsLikeTemp.Cool => _config.GetString("Clothes:Jackets:LightJacket"),
+        FeelsLikeTemp.Cold => _config.GetString("Clothes:Jackets:HeavyJacket"),
+        _                  => throw new InvalidOperationException("Cannot determine shirt from weather info.")
+      };
     }
 
-    private string GetTemperatureImagePath(WeatherApiResponse? weatherApiResponse)
+    private bool IsRainy(WeatherApiResponse? weatherApiResponse)
+    {
+      _ = weatherApiResponse ?? throw new ArgumentNullException(nameof(weatherApiResponse));
+
+      var conditionCode = weatherApiResponse.Current?.Condition?.Code;
+
+      return Array.IndexOf(RainyWeatherCodes, conditionCode) >= 0 ;
+    }
+
+    private FeelsLikeTemp GetFeelsLikeTemp(WeatherApiResponse? weatherApiResponse)
     {
       _ = weatherApiResponse ?? throw new ArgumentNullException(nameof(weatherApiResponse));
 
@@ -104,24 +153,36 @@ namespace Sochs.Library
 
       if (tempF < lowThreshold)
       {
-        return _config.GetString("Weather:TemperatureFeelingImagePaths:Cold");
+        return FeelsLikeTemp.Cold;
       }
       else if (tempF >= lowThreshold && tempF <= midThreshold)
       {
-        return _config.GetString("Weather:TemperatureFeelingImagePaths:Cool");
+        return FeelsLikeTemp.Cool;
       }
       else if (tempF >= midThreshold && tempF <= highThreshold)
       {
-        return _config.GetString("Weather:TemperatureFeelingImagePaths:Warm");
+        return FeelsLikeTemp.Warm;
       }
       else if (tempF > highThreshold)
       {
-        return _config.GetString("Weather:TemperatureFeelingImagePaths:Hot");
+        return FeelsLikeTemp.Hot;
       }
       else
       {
-        throw new InvalidOperationException("Cannot determine temperature feeling from weather info.");
+        throw new InvalidOperationException("Cannot determine feel like temp from weather info.");
       }
+    }
+
+    private string GetTemperatureImagePath(FeelsLikeTemp feelsLikeTemp)
+    {
+      return feelsLikeTemp switch
+      {
+        FeelsLikeTemp.Cold => _config.GetString("Weather:TemperatureFeelingImagePaths:Cold"),
+        FeelsLikeTemp.Cool => _config.GetString("Weather:TemperatureFeelingImagePaths:Cool"),
+        FeelsLikeTemp.Warm => _config.GetString("Weather:TemperatureFeelingImagePaths:Warm"),
+        FeelsLikeTemp.Hot => _config.GetString("Weather:TemperatureFeelingImagePaths:Hot"),
+        _ => throw new InvalidOperationException("Cannot determine temperature feeling from weather info.")
+      };
     }
 
     private string GetConditionImagePath(WeatherApiResponse? weatherApiResponse)
@@ -149,15 +210,23 @@ namespace Sochs.Library
 
         var weatherApiResponse = JsonSerializer.Deserialize<WeatherApiResponse>(responseContentAsString) ?? throw new InvalidOperationException($"There was an error parsing the response from Weather API. HTTP Response: {response}");
 
-        var conditionImagePath = GetConditionImagePath(weatherApiResponse);
-
-        var temperatureImagePath = GetTemperatureImagePath(weatherApiResponse);
+        var feelsLikeTemp        = GetFeelsLikeTemp(weatherApiResponse);
+        var conditionImagePath   = GetConditionImagePath(weatherApiResponse);
+        var temperatureImagePath = GetTemperatureImagePath(feelsLikeTemp);
+        var shoesImagePath       = GetShoesImagePath(feelsLikeTemp);
+        var jacketImagePath      = GetJacketImagePath(weatherApiResponse);
+        var pantsImagePath       = GetPantsImagePath(feelsLikeTemp);
+        var shirtImagePath       = GetShirtImagePath(feelsLikeTemp);
 
         var args = new WeatherUpdatedEventArgs()
         {
           WeatherInfo          = weatherApiResponse,
           ConditionImagePath   = conditionImagePath,
-          TemperatureImagePath = temperatureImagePath
+          TemperatureImagePath = temperatureImagePath,
+          ShirtImagePath       = shirtImagePath,
+          PantsImagePath       = pantsImagePath,
+          ShoesImagePath       = shoesImagePath,
+          JacketImagePath      = jacketImagePath
         };
 
         OnWeatherUpdated?.Invoke(this, args);
@@ -171,7 +240,7 @@ namespace Sochs.Library
 
     private void MockWeatherUpdate()
     {
-      var mockResponse = new WeatherApiResponse()
+      var weatherApiResponse = new WeatherApiResponse()
       {
         Current = new WeatherApiCurrent()
         {
@@ -185,15 +254,23 @@ namespace Sochs.Library
         }
       };
 
-      var conditionImagePath = GetConditionImagePath(mockResponse);
-
-      var temperatureImagePath = GetTemperatureImagePath(mockResponse);
+      var feelsLikeTemp        = GetFeelsLikeTemp(weatherApiResponse);
+      var conditionImagePath   = GetConditionImagePath(weatherApiResponse);
+      var temperatureImagePath = GetTemperatureImagePath(feelsLikeTemp);
+      var shoesImagePath       = GetShoesImagePath(feelsLikeTemp);
+      var jacketImagePath      = GetJacketImagePath(weatherApiResponse);
+      var pantsImagePath       = GetPantsImagePath(feelsLikeTemp);
+      var shirtImagePath       = GetShirtImagePath(feelsLikeTemp);
 
       var args = new WeatherUpdatedEventArgs()
       {
-        WeatherInfo = mockResponse,
-        ConditionImagePath = conditionImagePath,
-        TemperatureImagePath = temperatureImagePath
+        WeatherInfo          = weatherApiResponse,
+        ConditionImagePath   = conditionImagePath,
+        TemperatureImagePath = temperatureImagePath,
+        ShirtImagePath       = shirtImagePath,
+        PantsImagePath       = pantsImagePath,
+        ShoesImagePath       = shoesImagePath,
+        JacketImagePath      = jacketImagePath
       };
 
       OnWeatherUpdated?.Invoke(this, args);
