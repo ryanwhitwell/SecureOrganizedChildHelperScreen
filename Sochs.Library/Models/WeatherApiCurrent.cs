@@ -12,8 +12,5 @@ namespace Sochs.Library.Models
 
     [JsonPropertyName("temp_f")]
     public decimal TemperatureF { get; set; }
-
-    [JsonIgnore]
-    public string TemperatureImagePath { get; set; } = string.Empty;
   }
 }

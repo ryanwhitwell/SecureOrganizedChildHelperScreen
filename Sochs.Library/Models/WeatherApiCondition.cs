@@ -10,7 +10,6 @@ namespace Sochs.Library.Models
     [JsonPropertyName("code")]
     public int Code { get; set; }
 
-    [JsonIgnore]
-    public string ImagePath { get; set;} = string.Empty;
+    
   }
 }

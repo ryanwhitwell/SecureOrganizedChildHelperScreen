@@ -13,10 +13,10 @@
     <img src="@jacketImagePath" class="h-100" />
   </div>
   <div class="col-md-3 text-center" style="background-color: blue;">
-    <img src="@topImagePath" class="h-100" />
+    <img src="@shirtImagePath" class="h-100" />
   </div>
   <div class="col-md-3 text-center" style="background-color: blue;">
-    <img src="@bottomImagePath" class="h-100" />
+    <img src="@pantsImagePath" class="h-100" />
   </div>
   <div class="col-md-3 text-center" style="background-color: blue;">
     <img src="@shoesImagePath" class="h-100" />
@@ -25,10 +25,10 @@
 else
 {
   <div class="col-md-4 text-center" style="background-color: blue;">
-    <img src="@topImagePath" class="h-100" />
+    <img src="@shirtImagePath" class="h-100" />
   </div>
   <div class="col-md-4 text-center" style="background-color: blue;">
-    <img src="@bottomImagePath" class="h-100" />
+    <img src="@pantsImagePath" class="h-100" />
   </div>
   <div class="col-md-4 text-center" style="background-color: blue;">
     <img src="@shoesImagePath" class="h-100" />
@@ -39,8 +39,8 @@ else
 @code {
   private string? jacketImagePath;
   private string? shoesImagePath;
-  private string? bottomImagePath;
-  private string? topImagePath;
+  private string? pantsImagePath;
+  private string? shirtImagePath;
 
   protected override void OnInitialized()
   {
@@ -53,11 +53,11 @@ else
   {
     if (args != null && args.WeatherInfo != null)
     {
-      // TODO: Calculate the correct paths to images for the right clothing based on the weather info
-      jacketImagePath = _config["Icons:Jacket"];
-      topImagePath = _config["Icons:TShirt"];
-      bottomImagePath = _config["Icons:Jeans"];
-      shoesImagePath = _config["Icons:Sneakers"];
+      jacketImagePath = args.JacketImagePath;
+      shirtImagePath  = args.ShirtImagePath;
+      pantsImagePath  = args.PantsImagePath;
+      shoesImagePath  = args.ShoesImagePath;
+
       StateHasChanged();
     }
   }

@@ -16,24 +16,13 @@ namespace Sochs.Library
     private const string WeatherApiBase = "http://api.weatherapi.com";
     private const string WeatherApiResource = "/v1/current.json";
 
-    private readonly decimal _lowThreshold;
-    private readonly decimal _midThreshold;
-    private readonly decimal _highThreshold;
-
-    private readonly string _hotPath;
-    private readonly string _warmPath;
-    private readonly string _coolPath;
-    private readonly string _coldPath;
-
     private bool disposedValue;
-    private IDictionary<string, string>? _weatherConditionImages;
 
     private readonly Timer _timer;
 		private readonly HttpClient _client;
 		private readonly Uri _weatherUri;
 		private readonly IConfiguration _config;
     private readonly ILogger<WeatherService> _log;
-    
 
     public WeatherService(HttpClient client, IConfiguration config, ILogger<WeatherService> log)
 		{
@@ -48,44 +37,9 @@ namespace Sochs.Library
       //_client.BaseAddress = new Uri(WeatherApiBase);
       _weatherUri = GenerateWeatherApiUri();
 
-      _weatherConditionImages = GenerateWeatherConditionImageMap();
-
-      _coldPath = _config.GetString("Weather:TemperatureFeelingImagePaths:Cold");
-      _coolPath = _config.GetString("Weather:TemperatureFeelingImagePaths:Cool");
-      _warmPath = _config.GetString("Weather:TemperatureFeelingImagePaths:Warm");
-      _hotPath  = _config.GetString("Weather:TemperatureFeelingImagePaths:Hot");
-
-      _lowThreshold  = _config.GetDecimal("Weather:Thresholds:Low");
-      _midThreshold  = _config.GetDecimal("Weather:Thresholds:Mid");
-      _highThreshold = _config.GetDecimal("Weather:Thresholds:High");
-
       var autoEvent = new AutoResetEvent(false);
 			_timer = new Timer(UpdateWeather_Callback, autoEvent, new TimeSpan(0, 0, 0), new TimeSpan(0, UpdateIntervalMinutes, 0));
 		}
-
-    private IDictionary<string, string> GenerateWeatherConditionImageMap()
-    {
-      var configSection = _config.GetSection("Weather:ConditionImagePaths") 
-        ?? throw new InvalidOperationException("Cannot read weather ConditionImagePaths config section.");
-
-      IDictionary<string, string> weatherConditionImages = new Dictionary<string, string>();
-
-      foreach (var item in configSection.GetChildren())
-      {
-        var code = item.Key;
-        var path = item.Value;
-
-        if (string.IsNullOrEmpty(code) || string.IsNullOrEmpty(path)) { throw new InvalidOperationException("Cannot read code or path from Weather ConditionImagePaths config section."); }
-
-        weatherConditionImages.Add(code, path);
-      }
-
-      var data = JsonSerializer.Serialize(weatherConditionImages);
-
-      _log.LogTrace("Data as Json {data}", data);
-
-      return weatherConditionImages;
-    }
 
     private Uri GenerateWeatherApiUri()
     {
@@ -111,26 +65,59 @@ namespace Sochs.Library
 
     public event EventHandler<WeatherUpdatedEventArgs>? OnWeatherUpdated;
 
-    private TemperatureFeeling GetTemperatureFeeling(WeatherApiResponse weatherInfo)
+    private string GetShoesImagePath(WeatherApiResponse? weatherApiResponse)
     {
-      // Set summary based on Feels Like Temperature
-      var tempF = weatherInfo.Current?.FeelsLikeF;
+      _ = weatherApiResponse ?? throw new ArgumentNullException(nameof(weatherApiResponse));
 
-      if (tempF < _lowThreshold)
+      throw new NotImplementedException();
+    }
+
+    private string GetPantsImagePath(WeatherApiResponse? weatherApiResponse)
+    {
+      _ = weatherApiResponse ?? throw new ArgumentNullException(nameof(weatherApiResponse));
+      throw new NotImplementedException();
+
+    }
+
+    private string GetShirtImagePath(WeatherApiResponse? weatherApiResponse)
+    {
+      _ = weatherApiResponse ?? throw new ArgumentNullException(nameof(weatherApiResponse));
+      throw new NotImplementedException();
+
+    }
+
+    private string GetJacketImagePath(WeatherApiResponse? weatherApiResponse)
+    {
+      _ = weatherApiResponse ?? throw new ArgumentNullException(nameof(weatherApiResponse));
+      throw new NotImplementedException();
+    }
+
+    private string GetTemperatureImagePath(WeatherApiResponse? weatherApiResponse)
+    {
+      _ = weatherApiResponse ?? throw new ArgumentNullException(nameof(weatherApiResponse));
+
+      // Set summary based on Feels Like Temperature
+      var tempF = weatherApiResponse.Current?.FeelsLikeF;
+
+      var lowThreshold  = _config.GetDecimal("Weather:Thresholds:Low");
+      var midThreshold  = _config.GetDecimal("Weather:Thresholds:Mid");
+      var highThreshold = _config.GetDecimal("Weather:Thresholds:High");
+
+      if (tempF < lowThreshold)
       {
-        return TemperatureFeeling.Cold;
+        return _config.GetString("Weather:TemperatureFeelingImagePaths:Cold");
       }
-      else if (tempF >= _lowThreshold && tempF <= _midThreshold)
+      else if (tempF >= lowThreshold && tempF <= midThreshold)
       {
-        return TemperatureFeeling.Cool;
+        return _config.GetString("Weather:TemperatureFeelingImagePaths:Cool");
       }
-      else if (tempF >= _midThreshold && tempF <= _highThreshold)
+      else if (tempF >= midThreshold && tempF <= highThreshold)
       {
-        return TemperatureFeeling.Warm;
+        return _config.GetString("Weather:TemperatureFeelingImagePaths:Warm");
       }
-      else if (tempF > _highThreshold)
+      else if (tempF > highThreshold)
       {
-        return TemperatureFeeling.Hot;
+        return _config.GetString("Weather:TemperatureFeelingImagePaths:Hot");
       }
       else
       {
@@ -138,53 +125,17 @@ namespace Sochs.Library
       }
     }
 
-    private string GetTemperatureImagePath(WeatherApiResponse? weatherApiResponse)
-    {
-      _ = weatherApiResponse ?? throw new ArgumentNullException(nameof(weatherApiResponse));
-
-      var temperatureFeeling = GetTemperatureFeeling(weatherApiResponse);
-
-      return temperatureFeeling switch
-      {
-        TemperatureFeeling.Cold => _coldPath,
-        TemperatureFeeling.Cool => _coolPath,
-        TemperatureFeeling.Warm => _warmPath,
-        TemperatureFeeling.Hot => _hotPath,
-        _ => throw new InvalidOperationException($"Cannot determine image path based on temperature feeling {temperatureFeeling}."),
-      };
-    }
-
-    private void SetTemperatureImagePath(WeatherApiResponse? weatherApiResponse)
-    {
-      _ = weatherApiResponse ?? throw new ArgumentNullException(nameof(weatherApiResponse));
-
-      string path = GetTemperatureImagePath(weatherApiResponse);
-
-      if (string.IsNullOrWhiteSpace(path)) { throw new InvalidOperationException("Cannot determine temperature image path."); }
-
-      if (weatherApiResponse.Current != null)
-      {
-        // Set image path for weather condition
-        weatherApiResponse.Current.TemperatureImagePath = path;
-      }
-    }
-
-    private void SetConditionImagePath(WeatherApiResponse? weatherApiResponse)
+    private string GetConditionImagePath(WeatherApiResponse? weatherApiResponse)
     {
       _ = weatherApiResponse ?? throw new ArgumentNullException(nameof(weatherApiResponse));
 
       // Get the code from the Api reponse
       var code = weatherApiResponse.Current?.Condition?.Code ?? throw new InvalidOperationException("Cannot get code from Weather API Response");
 
-      _log.LogTrace("Code from API call: {code}", code);
-
       // Get the path based on the code from the local data structure
-      var path = _weatherConditionImages?[code.ToString()] ?? throw new InvalidOperationException("Cannot get image path from weatherConditionImages");
+      var path = _config.GetString($"Weather:ConditionImagePaths:{code}");
 
-      _log.LogTrace("Path from data structure: {path}", path);
-
-      // Set image path for weather condition
-      weatherApiResponse.Current.Condition.ImagePath = path;
+      return path;
     }
 
 		private async Task WeatherUpdate()
@@ -199,11 +150,18 @@ namespace Sochs.Library
 
         var weatherApiResponse = JsonSerializer.Deserialize<WeatherApiResponse>(responseContentAsString) ?? throw new InvalidOperationException($"There was an error parsing the response from Weather API. HTTP Response: {response}");
 
-        SetConditionImagePath(weatherApiResponse);
+        var conditionImagePath = GetConditionImagePath(weatherApiResponse);
 
-        SetTemperatureImagePath(weatherApiResponse);
+        var temperatureImagePath = GetTemperatureImagePath(weatherApiResponse);
 
-        OnWeatherUpdated?.Invoke(this, new WeatherUpdatedEventArgs() { WeatherInfo = weatherApiResponse });
+        var args = new WeatherUpdatedEventArgs()
+        {
+          WeatherInfo          = weatherApiResponse,
+          ConditionImagePath   = conditionImagePath,
+          TemperatureImagePath = temperatureImagePath
+        };
+
+        OnWeatherUpdated?.Invoke(this, args);
       }
       catch (Exception ex)
       {
@@ -214,10 +172,6 @@ namespace Sochs.Library
 
     private void MockWeatherUpdate()
     {
-      var iconPath = _config["Icons:TrollFace"];
-
-      if (string.IsNullOrWhiteSpace(iconPath)) { throw new InvalidOperationException("Invalid or missing config value located at Icons:TrollFace"); }
-
       var mockResponse = new WeatherApiResponse()
       {
         Current = new WeatherApiCurrent()
@@ -232,11 +186,18 @@ namespace Sochs.Library
         }
       };
 
-      SetConditionImagePath(mockResponse);
+      var conditionImagePath = GetConditionImagePath(mockResponse);
 
-      SetTemperatureImagePath(mockResponse);
+      var temperatureImagePath = GetTemperatureImagePath(mockResponse);
 
-      OnWeatherUpdated?.Invoke(this, new WeatherUpdatedEventArgs() { WeatherInfo = mockResponse });
+      var args = new WeatherUpdatedEventArgs()
+      {
+        WeatherInfo = mockResponse,
+        ConditionImagePath = conditionImagePath,
+        TemperatureImagePath = temperatureImagePath
+      };
+
+      OnWeatherUpdated?.Invoke(this, args);
     }
 
     private async void UpdateWeather_Callback(object? stateInfo)
@@ -263,7 +224,6 @@ namespace Sochs.Library
 				{
 					_timer?.Dispose();
 					_client?.Dispose();
-          _weatherConditionImages = null;
         }
 
         // TODO: free unmanaged resources (unmanaged objects) and override finalizer
