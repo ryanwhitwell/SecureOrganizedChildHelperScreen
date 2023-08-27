@@ -5,9 +5,19 @@
 @inject ITimeService _timeService;
 @implements IDisposable;
 
-<div class="col-lg-12 text-center" style="background-color: blue;">
-  <img src="@timeOfDayImagePath" />
-  <h1 class="display" style="font-size: 12rem;">@timeAsString</h1>
+<div class="col-lg-12 text-center">
+
+  <div class="container">
+    <div class="row">
+      <div class="col-9">
+        <h1 class="display" style="font-size: 10rem;">@timeAsString</h1>
+      </div>
+      <div class="col-3">
+        <img src="@timeOfDayImagePath" />
+      </div>
+    </div>
+  </div>
+
 </div>
 
 @code {

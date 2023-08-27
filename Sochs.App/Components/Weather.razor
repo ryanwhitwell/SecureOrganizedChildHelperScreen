@@ -8,11 +8,13 @@
 @inject IWeatherService _weatherService;
 @implements IDisposable;
 
-<div class="col-sm-6 text-center" style="background-color: blue;">
+<span class="display-3 text-center">- Weather -</span>
+
+<div class="col-sm-6 text-center">
   <img src="@conditionImagePath"/>
   <p style="font-size: 4rem;">@condition</p>
 </div>
-<div class="col-sm-6 text-center" style="background-color: blue;">
+<div class="col-sm-6 text-center">
   <img src="@temperatureImagePath"/>
   <p style="font-size: 4em;">@temperature°F </p>
 </div>

@@ -7,30 +7,31 @@
 @inject IWeatherService _weatherService;
 @implements IDisposable;
 
+<span class="display-3 text-center">- Clothes -</span>
 
 @if (!string.IsNullOrWhiteSpace(jacketImagePath)) {
-  <div class="col-md-3 text-center" style="background-color: blue;display:none">
+  <div class="col-md-3 text-center">
     <img src="@jacketImagePath" class="h-100" />
   </div>
-  <div class="col-md-3 text-center" style="background-color: blue;">
+  <div class="col-md-3 text-center">
     <img src="@shirtImagePath" class="h-100" />
   </div>
-  <div class="col-md-3 text-center" style="background-color: blue;">
+  <div class="col-md-3 text-center">
     <img src="@pantsImagePath" class="h-100" />
   </div>
-  <div class="col-md-3 text-center" style="background-color: blue;">
+  <div class="col-md-3 text-center">
     <img src="@shoesImagePath" class="h-100" />
   </div>
 }
 else
 {
-  <div class="col-md-4 text-center" style="background-color: blue;">
+  <div class="col-md-4 text-center">
     <img src="@shirtImagePath" class="h-100" />
   </div>
-  <div class="col-md-4 text-center" style="background-color: blue;">
+  <div class="col-md-4 text-center">
     <img src="@pantsImagePath" class="h-100" />
   </div>
-  <div class="col-md-4 text-center" style="background-color: blue;">
+  <div class="col-md-4 text-center">
     <img src="@shoesImagePath" class="h-100" />
   </div>
 }
