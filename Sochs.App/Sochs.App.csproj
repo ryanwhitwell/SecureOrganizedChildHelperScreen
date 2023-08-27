@@ -16,14 +16,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\img\weather\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Update="wwwroot\appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Update="wwwroot\img\weather\sunny.png">
+    <Content Update="wwwroot\img\Alice_avatar.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
