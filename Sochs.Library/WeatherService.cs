@@ -40,7 +40,7 @@ namespace Sochs.Library
 			_config = config;
 			_log = log;
 
-      //_client.BaseAddress = new Uri(WeatherApiBase);
+      _client.BaseAddress = new Uri(WeatherApiBase);
       _weatherUri = GenerateWeatherApiUri();
 
       var autoEvent = new AutoResetEvent(false);
@@ -207,6 +207,8 @@ namespace Sochs.Library
         response.EnsureSuccessStatusCode();
 
         var responseContentAsString = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+        _log.LogTrace("Weather API Response: {responseContentAsString}", responseContentAsString);
 
         var weatherApiResponse = JsonSerializer.Deserialize<WeatherApiResponse>(responseContentAsString) ?? throw new InvalidOperationException($"There was an error parsing the response from Weather API. HTTP Response: {response}");
 

@@ -15,10 +15,11 @@ namespace Sochs.App
 
       builder.Logging.SetMinimumLevel(LogLevel.Trace);
 
-      builder.Services.AddTransient(sp => new HttpClient { BaseAddress = new Uri("http://api.weatherapi.com") });
+      builder.Services.AddTransient(sp => new HttpClient());
 
       builder.Services.AddSingleton<ITimeService, TimeService>();
       builder.Services.AddSingleton<IWeatherService, WeatherService>();
+      builder.Services.AddSingleton<ILunchService, LunchService>();
 
       await builder.Build().RunAsync();
     }
