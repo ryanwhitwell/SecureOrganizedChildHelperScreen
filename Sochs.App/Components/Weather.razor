@@ -1,5 +1,4 @@
-﻿@using Sochs.Library.Enums;
-@using Sochs.Library.Events;
+﻿@using Sochs.Library.Events;
 @using Sochs.Library.Interfaces;
 @using Sochs.Library;
 @using System.Runtime;
@@ -8,7 +7,6 @@
 @inject ILogger<Weather> _log;
 @inject IWeatherService _weatherService;
 @implements IDisposable;
-
 
 <div class="col-sm-6 text-center" style="background-color: blue;">
   <img src="@conditionImagePath"/>
@@ -38,8 +36,8 @@
     {
       temperature          = args.WeatherInfo.Current?.FeelsLikeF.ToString("N0");
       condition            = args.WeatherInfo.Current?.Condition?.Text;
-      conditionImagePath   = args.WeatherInfo.Current?.Condition?.ImagePath;
-      temperatureImagePath = args.WeatherInfo.Current?.TemperatureImagePath;
+      conditionImagePath   = args.ConditionImagePath;
+      temperatureImagePath = args.TemperatureImagePath;
 
       _log.LogTrace("Condition Image Path: {conditionImagePath}", conditionImagePath);
 

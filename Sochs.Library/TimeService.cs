@@ -1,55 +1,22 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Sochs.Library.Enums;
 using Sochs.Library.Events;
 using Sochs.Library.Interfaces;
 
 namespace Sochs.Library
 {
-	public class TimeService : ITimeService, IDisposable
+  public class TimeService : ITimeService, IDisposable
 	{
     private const int UpdateIntervalSeconds = 1;
 
     private readonly Timer _timer;
-
-    private readonly string _sundayImagePath;
-    private readonly string _mondayImagePath;
-    private readonly string _tuesdayImagePath;
-    private readonly string _wednesdayImagePath;
-    private readonly string _thursdayImagePath;
-    private readonly string _fridayImagePath;
-    private readonly string _saturdayImagePath;
-
-    private readonly string _morningImagePath;
-    private readonly string _afternoonImagePath;
-    private readonly string _eveningImagePath;
-
-    private readonly string _springImagePath;
-    private readonly string _summerImagePath;
-    private readonly string _fallImagePath;
-    private readonly string _winterImagePath;
+    private readonly IConfiguration _config;
 
     private bool disposedValue;
 
 		public TimeService(IConfiguration config)
 		{
       _ = config ?? throw new ArgumentNullException(nameof(config));
-
-      _sundayImagePath    = config.GetString("Time:DayOfWeekImagePaths:Sunday");
-      _mondayImagePath    = config.GetString("Time:DayOfWeekImagePaths:Monday");
-      _tuesdayImagePath   = config.GetString("Time:DayOfWeekImagePaths:Tuesday");
-      _wednesdayImagePath = config.GetString("Time:DayOfWeekImagePaths:Wednesday");
-      _thursdayImagePath  = config.GetString("Time:DayOfWeekImagePaths:Thursday");
-      _fridayImagePath    = config.GetString("Time:DayOfWeekImagePaths:Friday");
-      _saturdayImagePath  = config.GetString("Time:DayOfWeekImagePaths:Saturday");
-
-      _morningImagePath   = config.GetString("Time:TimeOfDayImagePaths:Morning");
-      _afternoonImagePath = config.GetString("Time:TimeOfDayImagePaths:Afternoon");
-      _eveningImagePath   = config.GetString("Time:TimeOfDayImagePaths:Evening");
-
-      _springImagePath = config.GetString("Time:SeasonImagePaths:Spring");
-      _summerImagePath = config.GetString("Time:SeasonImagePaths:Summer");
-      _fallImagePath   = config.GetString("Time:SeasonImagePaths:Fall");
-      _winterImagePath = config.GetString("Time:SeasonImagePaths:Winter");
+      _config = config;
 
       var autoEvent = new AutoResetEvent(false);
 			_timer = new Timer(UpdateTimeOfDay_Callback, autoEvent, new TimeSpan(0, 0, 0), new TimeSpan(0, 0, UpdateIntervalSeconds));
@@ -61,100 +28,77 @@ namespace Sochs.Library
 		{
 			_ = stateInfo ?? throw new ArgumentNullException(nameof(stateInfo));
 
-			var now              = DateTime.Now;
+			var now = DateTime.Now;
+
 			string timeImagePath = GetTimeImagePath(now);
 			string dateImagePath = GetDateImagePath(now);
 			string dayImagePath  = GetDayImagePath(now);
 
-      OnTimeUpdated?.Invoke(this, new TimeUpdatedEventArgs() { DateTime = DateTime.Now, TimeOfDayImagePath = timeImagePath, SeasonImagePath = dateImagePath, DayOfWeekImagePath = dayImagePath });
+      var args = new TimeUpdatedEventArgs()
+      {
+        DateTime           = DateTime.Now, 
+        TimeOfDayImagePath = timeImagePath, 
+        SeasonImagePath    = dateImagePath, 
+        DayOfWeekImagePath = dayImagePath 
+      };
+
+      OnTimeUpdated?.Invoke(this, args);
 		}
 
     private string GetDayImagePath(DateTime now)
     {
-      var dayOfWeek = GetDayOfWeek(now);
-      
+      var dayOfWeek = now.DayOfWeek;
+
       return dayOfWeek switch
       {
-        DayOfWeek.Sunday    => _sundayImagePath,
-        DayOfWeek.Monday    => _mondayImagePath,
-        DayOfWeek.Tuesday   => _tuesdayImagePath,
-        DayOfWeek.Wednesday => _wednesdayImagePath,
-        DayOfWeek.Thursday  => _thursdayImagePath,
-        DayOfWeek.Friday    => _fridayImagePath,
-        DayOfWeek.Saturday  => _saturdayImagePath,
+        DayOfWeek.Sunday    => _config.GetString("Time:DayOfWeekImagePaths:Sunday"),
+        DayOfWeek.Monday    => _config.GetString("Time:DayOfWeekImagePaths:Monday"),
+        DayOfWeek.Tuesday   => _config.GetString("Time:DayOfWeekImagePaths:Tuesday"),
+        DayOfWeek.Wednesday => _config.GetString("Time:DayOfWeekImagePaths:Wednesday"),
+        DayOfWeek.Thursday  => _config.GetString("Time:DayOfWeekImagePaths:Thursday"),
+        DayOfWeek.Friday    => _config.GetString("Time:DayOfWeekImagePaths:Friday"),
+        DayOfWeek.Saturday  => _config.GetString("Time:DayOfWeekImagePaths:Saturday"),
         _                   => throw new InvalidOperationException($"Cannot determine day of week image path")
-      };
-    }
-
-    private string GetDateImagePath(DateTime now)
-    {
-      var season = GetSeason(now);
-
-      return season switch
-      {
-        Season.Spring => _springImagePath,
-        Season.Summer => _summerImagePath,
-        Season.Fall   => _fallImagePath,
-        Season.Winter => _winterImagePath,
-        _             => throw new InvalidOperationException($"Cannot determine day of week image path")
       };
     }
 
     private string GetTimeImagePath(DateTime now)
     {
-      var timeOfDay = GetTimeOfDay(now);
+      var hour = now.Hour;
 
-      return timeOfDay switch
+      if (hour >= 5 && hour < 12) // Morning
       {
-        TimeOfDay.Morning   => _morningImagePath,
-        TimeOfDay.Afternoon => _afternoonImagePath,
-        TimeOfDay.Evening   => _eveningImagePath,
-        _                   => throw new InvalidOperationException($"Cannot determine day of week image path")
-      };
+        return _config.GetString("Time:TimeOfDayImagePaths:Morning");
+      }
+      else if (hour >= 12 && hour < 18) // Afternoon
+      {
+        return _config.GetString("Time:TimeOfDayImagePaths:Afternoon");
+      }
+      else // Evening
+      {
+        return _config.GetString("Time:TimeOfDayImagePaths:Evening");
+      }
     }
 
-    private static DayOfWeek GetDayOfWeek(DateTime now)
-    {
-      return now.DayOfWeek;
-    }
-
-    private static Season GetSeason(DateTime now)
+    private string GetDateImagePath(DateTime now)
     {
       var month = now.Month;
 
-      if (month >= 3 && month <= 5)
+      if (month >= 3 && month <= 5) // Spring
       {
-        return Season.Spring;
+        return _config.GetString("Time:SeasonImagePaths:Spring");
       }
-      else if (month > 5 && month <= 8)
+      else if (month > 5 && month <= 8) // Summer
       {
-        return Season.Summer;
+        return _config.GetString("Time:SeasonImagePaths:Summer");
       }
-      else if (month > 8 && month <= 11)
+      else if (month > 8 && month <= 11) // Fall
       {
-        return Season.Fall;
+        return _config.GetString("Time:SeasonImagePaths:Fall");
       }
-      else
+      else // Winter
       {
-        return Season.Winter;
-      }
-    }
-
-    private static TimeOfDay GetTimeOfDay(DateTime now)
-    {
-      var hour = now.Hour;
-
-      if (hour >= 5 && hour < 12)
-      {
-        return TimeOfDay.Morning;
-      }
-      else if (hour >= 12 && hour < 18)
-      {
-        return TimeOfDay.Afternoon;
-      }
-      else
-      {
-        return TimeOfDay.Evening;
+        return _config.GetString("Time:SeasonImagePaths:Winter");
       }
     }
 
