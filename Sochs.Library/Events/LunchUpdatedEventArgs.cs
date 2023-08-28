@@ -1,11 +1,13 @@
-﻿using Sochs.Library.Models;
-
-namespace Sochs.Library.Events
+﻿namespace Sochs.Library.Events
 {
   public class LunchUpdatedEventArgs : EventArgs
   {
-    public LunchApiResponse? LunchInfo { get; set; }
+    public IEnumerable<string> TodayLunch { get; set; } = new List<string>();
 
-    public bool HasData { get { return LunchInfo != null && LunchInfo.Menus != null && LunchInfo.Menus.Any(); } }
+    public IEnumerable<string> TomorrowLunch { get; set; } = new List<string>();
+
+    public IEnumerable<string> NextDayLunch { get; set; } = new List<string>();
+
+    public bool HasData { get { return TodayLunch.Any() || TomorrowLunch.Any() || NextDayLunch.Any(); } }
   }
 }

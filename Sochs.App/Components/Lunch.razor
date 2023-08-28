@@ -5,22 +5,85 @@
 @inject ILunchService _lunchService;
 @implements IDisposable;
 
-<div class="col-12 @(showComponent ? "visible mt-5" : "invisible")">
+
+     
+<div class="col-4 @(showComponent ? "visible mt-5" : "invisible")">
+
+  <!-- Today Lunch Menu -->
   <div class="card shadow-lg">
-    <div class="card-header">
-      Today's Lunch
-    </div>
-    <div class="card-body">
-      <p>
-        Insert lunch data here
-      </p>
-    </div>
+    <h5 class="card-header">
+      Today's Lunch Menu
+    </h5>
+
+    <ul class="list-group list-group-flush">
+      @{
+        if (todayLunch != null && todayLunch.Any())
+        {
+          foreach (var item in todayLunch)
+          {
+            <li class="list-group-item">@item</li>
+          }
+        }
+      }
+    </ul>
+
   </div>
+
 </div>
+
+<div class="col-4 @(showComponent ? "visible mt-5" : "invisible")">
+  <!-- Tomorrow Lunch Menu -->
+  <div class="card shadow-lg">
+    <h5 class="card-header">
+      Tomorrow's Lunch Menu
+    </h5>
+
+    <ul class="list-group list-group-flush">
+      @{
+        if (tomorrowLunch != null && tomorrowLunch.Any())
+        {
+          foreach (var item in tomorrowLunch)
+          {
+            <li class="list-group-item">@item</li>
+          }
+        }
+      }
+    </ul>
+  </div>
+
+</div>
+
+<div class="col-4 @(showComponent ? "visible mt-5" : "invisible")">
+  <!-- Next Day Lunch Menu -->
+  <div class="card shadow-lg">
+    <h5 class="card-header">
+      @(DateTime.Now.AddDays(2).DayOfWeek.ToString())'s Lunch Menu
+    </h5>
+
+    <ul class="list-group list-group-flush">
+      @{
+        if (nextDayLunch != null && nextDayLunch.Any())
+        {
+          foreach (var item in nextDayLunch)
+          {
+            <li class="list-group-item">@item</li>
+          }
+        }
+      }
+    </ul>
+  </div>
+
+</div>
+
+
 
 @code {
 
   private bool showComponent;
+
+  private IEnumerable<string>? todayLunch;
+  private IEnumerable<string>? tomorrowLunch;
+  private IEnumerable<string>? nextDayLunch;
 
   protected override void OnInitialized()
   {
@@ -38,7 +101,9 @@
 
       if (showComponent)
       {
-        // TODO: Get lunch data
+        todayLunch    = args.TodayLunch;
+        tomorrowLunch = args.TomorrowLunch;
+        nextDayLunch  = args.NextDayLunch;
       }
 
       StateHasChanged();

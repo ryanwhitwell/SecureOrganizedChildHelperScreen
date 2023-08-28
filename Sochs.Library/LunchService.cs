@@ -88,9 +88,19 @@ namespace Sochs.Library
 
         var apiResponse = JsonSerializer.Deserialize<LunchApiResponse>(responseContentAsString) ?? throw new InvalidOperationException($"There was an error parsing the response from Weather API. HTTP Response: {response}");
 
+        var todayString    = DateTime.Now.ToString("yyyy-MM-dd");
+        var tommorowString = DateTime.Now.AddDays(1).ToString("yyyy-MM-dd");
+        var nextDayString  = DateTime.Now.AddDays(2).ToString("yyyy-MM-dd");
+
+        var todayLunch    = apiResponse.Menus?.Where(x => x.Name.Equals(todayString, StringComparison.OrdinalIgnoreCase)).FirstOrDefault()?.Lunch.Split("\r\n") ?? Array.Empty<string>();
+        var tomorrowLunch = apiResponse.Menus?.Where(x => x.Name.Equals(tommorowString, StringComparison.OrdinalIgnoreCase)).FirstOrDefault()?.Lunch.Split("\r\n") ?? Array.Empty<string>();
+        var nextDayLunch  = apiResponse.Menus?.Where(x => x.Name.Equals(nextDayString, StringComparison.OrdinalIgnoreCase)).FirstOrDefault()?.Lunch.Split("\r\n") ?? Array.Empty<string>();
+
         var args = new LunchUpdatedEventArgs()
         {
-          LunchInfo = apiResponse
+          TodayLunch    = todayLunch,
+          TomorrowLunch = tomorrowLunch,
+          NextDayLunch  = nextDayLunch
         };
 
         OnLunchUpdated?.Invoke(this, args);
@@ -104,14 +114,11 @@ namespace Sochs.Library
 
     private void MockLunchUpdated()
     {
-      var apiResponse = new LunchApiResponse()
-      {
-        Menus = new List<LunchApiMenu>()
-      };
-
       var args = new LunchUpdatedEventArgs()
       {
-        LunchInfo = apiResponse
+        TodayLunch    = "Penne Pasta w/Marinara Sauce & Meatballs\r\nBagel w/ Yogurt & string cheese.\r\nHummus Plate w/String Cheese".Split("\r\n"),
+        TomorrowLunch = "Sals Fresh Pizza\r\nBagel w/ Yogurt & string cheese.\r\nHummus Plate w/String Cheese\r\nPotato Crusted Fish w/ Lemon & Dinner Roll".Split("\r\n"),
+        NextDayLunch  = "Chicken Patty on a WG Bun\r\nBagel w/ Yogurt & string cheese.\r\nHummus Plate w/String Cheese".Split("\r\n")
       };
 
       OnLunchUpdated?.Invoke(this, args);
