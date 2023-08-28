@@ -5,24 +5,50 @@
 @inject ITimeService _timeService;
 @implements IDisposable;
 
-<div class="col-lg-12 text-center">
-
-  <div class="container">
-    <div class="row">
-      <div class="col-9">
-        <h2 class="display" style="font-size: 9rem;">@timeAsString</h2>
-      </div>
-      <div class="col-3">
-        <img src="@timeOfDayImagePath" />
-      </div>
+<div class="container">
+  <div class="row">
+    <!-- Time of Day -->
+    <div class="col-9 px-5">
+      <h2 class="display" style="font-size: 9rem;">@timeAsString</h2>
+    </div>
+    <div class="col">
+      <img src="@timeOfDayImagePath" />
     </div>
   </div>
+  <div class="row">
+    <!-- Day of Week -->
+    <div class="col-9 px-5">
+      <h1 class="display" style="font-size: 9rem;">@dayOfWeekAsString</h1>
+    </div>
+    <div class="col">
+      <img src="@dayOfWeekImagePath" />
+    </div>
 
+  </div>
+  <div class="row">
+    <!-- Date & Season -->
+    <div class="col-9 px-5">
+      <h1 class="display" style="font-size: 9rem;">@dateAsString</h1>
+    </div>
+    <div class="col">
+      <img src="@seasonImagePath" />
+    </div>
+  </div>
 </div>
+
+
+
+
 
 @code {
   private string? timeAsString;
   private string? timeOfDayImagePath;
+
+  private string? dayOfWeekAsString;
+  private string? dayOfWeekImagePath;
+
+  private string? dateAsString;
+  private string? seasonImagePath;
 
 
   protected override void OnInitialized()
@@ -36,8 +62,12 @@
   {
     if (args != null)
     {
-      timeAsString               = args.DateTime.ToShortTimeString();
+      timeAsString       = args.DateTime.ToShortTimeString();
       timeOfDayImagePath = args.TimeOfDayImagePath;
+      dayOfWeekAsString  = args.DateTime.DayOfWeek.ToString();
+      dayOfWeekImagePath = args.DayOfWeekImagePath;
+      dateAsString       = args.DateTime.ToShortDateString();
+      seasonImagePath    = args.SeasonImagePath;
 
       StateHasChanged();
     }

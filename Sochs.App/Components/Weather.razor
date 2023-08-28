@@ -8,22 +8,67 @@
 @inject IWeatherService _weatherService;
 @implements IDisposable;
 
-<span class="display-2 text-center"><u>Weather</u></span>
+<div class="container">
+  <div class="row">
 
-<div class="col-sm-6 text-center">
-  <img src="@conditionImagePath"/>
-  <p style="font-size: 4rem;">@condition</p>
+    <!-- Weather data -->
+    <div class="col-sm-6 text-center">
+      <img src="@conditionImagePath" />
+      <p style="font-size: 4rem;">@condition</p>
+    </div>
+    <div class="col-sm-6 text-center">
+      <img src="@temperatureImagePath" />
+      <p style="font-size: 4em;">@temperature°F </p>
+    </div>
+  </div>
+
+  <div class="row">
+
+    <!-- Clothing recommendations -->
+    @if (!string.IsNullOrWhiteSpace(jacketImagePath))
+    {
+      <div class="col-md-3 text-center">
+        <img src="@jacketImagePath" class="h-100" />
+      </div>
+      <div class="col-md-3 text-center">
+        <img src="@shirtImagePath" class="h-100" />
+      </div>
+      <div class="col-md-3 text-center">
+        <img src="@pantsImagePath" class="h-100" />
+      </div>
+      <div class="col-md-3 text-center">
+        <img src="@shoesImagePath" class="h-100" />
+      </div>
+    }
+    else
+    {
+      <div class="col-md-4 text-center">
+        <img src="@shirtImagePath" class="h-100" />
+      </div>
+      <div class="col-md-4 text-center">
+        <img src="@pantsImagePath" class="h-100" />
+      </div>
+      <div class="col-md-4 text-center">
+        <img src="@shoesImagePath" class="h-100" />
+      </div>
+    }
+
+  </div>
 </div>
-<div class="col-sm-6 text-center">
-  <img src="@temperatureImagePath"/>
-  <p style="font-size: 4em;">@temperature°F </p>
-</div>
+
+
+
 
 @code {
   private string? temperature;
   private string? condition;
   private string? conditionImagePath;
   private string? temperatureImagePath;
+
+  private string? jacketImagePath;
+  private string? shoesImagePath;
+  private string? pantsImagePath;
+  private string? shirtImagePath;
 
   protected override void OnInitialized()
   {
@@ -40,6 +85,11 @@
       condition            = args.WeatherInfo.Current?.Condition?.Text;
       conditionImagePath   = args.ConditionImagePath;
       temperatureImagePath = args.TemperatureImagePath;
+
+      jacketImagePath = args.JacketImagePath;
+      shirtImagePath = args.ShirtImagePath;
+      pantsImagePath = args.PantsImagePath;
+      shoesImagePath = args.ShoesImagePath;
 
       _log.LogTrace("Condition Image Path: {conditionImagePath}", conditionImagePath);
 
