@@ -5,40 +5,51 @@
 @inject ITimeService _timeService;
 @implements IDisposable;
 
-<div class="container">
-  <div class="row">
-    <!-- Time of Day -->
-    <div class="col-9 px-5">
-      <h2 class="display" style="font-size: 9rem;">@timeAsString</h2>
+<div class="col-12 mt-5">
+  <div class="card shadow-lg">
+    <!--
+    <div class="card-header">
+      Time
     </div>
-    <div class="col">
-      <img src="@timeOfDayImagePath" />
-    </div>
-  </div>
-  <div class="row">
-    <!-- Day of Week -->
-    <div class="col-9 px-5">
-      <h1 class="display" style="font-size: 9rem;">@dayOfWeekAsString</h1>
-    </div>
-    <div class="col">
-      <img src="@dayOfWeekImagePath" />
+    -->
+    <div class="card-body">
+      <div class="container">
+
+        <!-- Time of Day -->
+        <div class="row">
+          <div class="col-9">
+            <h1 class="display" style="font-size: 8rem;">@timeAsString</h1>
+          </div>
+          <div class="col">
+            <img src="@timeOfDayImagePath" />
+          </div>
+        </div>
+
+        <!-- Day of Week -->
+        <div class="row">
+          <div class="col-9">
+            <h1 class="display" style="font-size: 8rem;">@dayOfWeekAsString</h1>
+          </div>
+          <div class="col">
+            <img src="@dayOfWeekImagePath" />
+          </div>
+        </div>
+
+        <!-- Date & Season -->
+        <div class="row">
+          <div class="col-9">
+            <h1 class="display" style="font-size: 8rem;">@dateAsString</h1>
+          </div>
+          <div class="col">
+            <img src="@seasonImagePath" />
+          </div>
+        </div>
+        
+      </div>
     </div>
 
-  </div>
-  <div class="row">
-    <!-- Date & Season -->
-    <div class="col-9 px-5">
-      <h1 class="display" style="font-size: 9rem;">@dateAsString</h1>
-    </div>
-    <div class="col">
-      <img src="@seasonImagePath" />
-    </div>
   </div>
 </div>
-
-
-
-
 
 @code {
   private string? timeAsString;

@@ -8,56 +8,63 @@
 @inject IWeatherService _weatherService;
 @implements IDisposable;
 
-<div class="container">
-  <div class="row">
-
-    <!-- Weather data -->
-    <div class="col-sm-6 text-center">
-      <img src="@conditionImagePath" />
-      <p style="font-size: 4rem;">@condition</p>
+<div class="col-12 mt-5">
+  <div class="card shadow-lg">
+    <!--
+    <div class="card-header">
+      Weather
     </div>
-    <div class="col-sm-6 text-center">
-      <img src="@temperatureImagePath" />
-      <p style="font-size: 4em;">@temperature°F </p>
+    -->
+    <div class="card-body">
+      <div class="container">
+
+        <!-- Weather data -->
+        <div class="row">
+          <div class="col-sm-6 text-center">
+            <img src="@conditionImagePath" />
+            <p style="font-size: 3rem;">@condition</p>
+          </div>
+          <div class="col-sm-6 text-center">
+            <img src="@temperatureImagePath" />
+            <p style="font-size: 4em;">@temperature°F </p>
+          </div>
+        </div>
+
+        <!-- Clothing recommendations -->
+        <div class="row">
+          @if (!string.IsNullOrWhiteSpace(jacketImagePath))
+          {
+            <div class="col-md-3 text-center">
+              <img src="@jacketImagePath" class="h-100" />
+            </div>
+            <div class="col-md-3 text-center">
+              <img src="@shirtImagePath" class="h-100" />
+            </div>
+            <div class="col-md-3 text-center">
+              <img src="@pantsImagePath" class="h-100" />
+            </div>
+            <div class="col-md-3 text-center">
+              <img src="@shoesImagePath" class="h-100" />
+            </div>
+          }
+          else
+          {
+            <div class="col-md-4 text-center">
+              <img src="@shirtImagePath" class="h-100" />
+            </div>
+            <div class="col-md-4 text-center">
+              <img src="@pantsImagePath" class="h-100" />
+            </div>
+            <div class="col-md-4 text-center">
+              <img src="@shoesImagePath" class="h-100" />
+            </div>
+          }
+        </div>
+
+      </div>
     </div>
   </div>
-
-  <div class="row">
-
-    <!-- Clothing recommendations -->
-    @if (!string.IsNullOrWhiteSpace(jacketImagePath))
-    {
-      <div class="col-md-3 text-center">
-        <img src="@jacketImagePath" class="h-100" />
-      </div>
-      <div class="col-md-3 text-center">
-        <img src="@shirtImagePath" class="h-100" />
-      </div>
-      <div class="col-md-3 text-center">
-        <img src="@pantsImagePath" class="h-100" />
-      </div>
-      <div class="col-md-3 text-center">
-        <img src="@shoesImagePath" class="h-100" />
-      </div>
-    }
-    else
-    {
-      <div class="col-md-4 text-center">
-        <img src="@shirtImagePath" class="h-100" />
-      </div>
-      <div class="col-md-4 text-center">
-        <img src="@pantsImagePath" class="h-100" />
-      </div>
-      <div class="col-md-4 text-center">
-        <img src="@shoesImagePath" class="h-100" />
-      </div>
-    }
-
-  </div>
-</div>
-
-
-
+ </div>
 
 @code {
   private string? temperature;

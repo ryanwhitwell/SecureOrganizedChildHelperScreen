@@ -3,24 +3,32 @@
 @inherits LayoutComponentBase
 @page "/"
 
-<div class="container-fluid">
+<div class="container">
 
-  <div class="row my-5">
+  <div class="row">
     <Time />
   </div>
 
-  <div class="row my-5">
+  <div class="row">
     <Weather />
   </div>
 
-  <div class="row my-2">
-    <Lunch />
-  </div>
-
-  <div class="row my-2">
+  <div class="row">
     <Alice />
     <Clara />
   </div>
 
+  <div class="row">
+    <Lunch />
+  </div>
+
 </div>
 
+@code {
+  protected override void OnInitialized()
+  {
+    
+    
+    base.OnInitialized();
+  }
+}

@@ -5,13 +5,23 @@
 @inject ILunchService _lunchService;
 @implements IDisposable;
 
-<span class="display-2 text-center"><u>Lunch Menu</u></span>
-
-<div class="col-lg-12 text-center">
-  <p>Insert lunch data here</p>
+<div class="col-12 @(showComponent ? "visible mt-5" : "invisible")">
+  <div class="card shadow-lg">
+    <div class="card-header">
+      Today's Lunch
+    </div>
+    <div class="card-body">
+      <p>
+        Insert lunch data here
+      </p>
+    </div>
+  </div>
 </div>
 
 @code {
+
+  private bool showComponent;
+
   protected override void OnInitialized()
   {
     _lunchService.OnLunchUpdated += Handle;
@@ -23,8 +33,14 @@
   {
     if (args != null)
     {
-      // TODO: Deal with new lunch menus being available
-      
+      // Only show component when there's data to show
+      showComponent = args.HasData;
+
+      if (showComponent)
+      {
+        // TODO: Get lunch data
+      }
+
       StateHasChanged();
     }
   }

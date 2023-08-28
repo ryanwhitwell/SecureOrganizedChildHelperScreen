@@ -10,7 +10,7 @@ namespace Sochs.Library
 {
   public class LunchService : ILunchService, IDisposable
 	{
-    private const int UpdateIntervalHours = 4;
+    private const int UpdateIntervalHours = 1;
 
     private const string LunchApiBase        = "https://thrillshare-cmsv2.services.thrillshare.com";
     private const string LunchApiAllResource = "/api/v2/s/126312/menus";
