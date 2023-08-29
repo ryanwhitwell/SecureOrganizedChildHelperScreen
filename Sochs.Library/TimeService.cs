@@ -66,17 +66,21 @@ namespace Sochs.Library
     {
       var hour = now.Hour;
 
-      if (hour >= 5 && hour < 12) // Morning
+      if (hour >= 5 && hour < 11) // Morning
       {
         return _config.GetString("Time:TimeOfDayImagePaths:Morning");
       }
-      else if (hour >= 12 && hour < 18) // Afternoon
+      else if (hour >= 11 && hour < 18) // Afternoon
       {
         return _config.GetString("Time:TimeOfDayImagePaths:Afternoon");
       }
-      else // Evening
+      else if (hour >= 18 && hour < 20) // Evening
       {
         return _config.GetString("Time:TimeOfDayImagePaths:Evening");
+      }
+      else // Night
+      {
+        return _config.GetString("Time:TimeOfDayImagePaths:Night");
       }
     }
 
