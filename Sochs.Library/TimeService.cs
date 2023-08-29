@@ -37,7 +37,7 @@ namespace Sochs.Library
       string timeImagePath = GetTimeImagePath(timeOfDay);
 			string dateImagePath = GetDateImagePath(now);
 			string dayImagePath  = GetDayImagePath(now);
-      bool enableDarkMode  = GetDarkModeEnabled(now);
+      bool enableDarkMode  = timeOfDay == TimeOfDay.Evening || timeOfDay == TimeOfDay.Night;
 
       var args = new TimeUpdatedEventArgs()
       {
@@ -101,18 +101,6 @@ namespace Sochs.Library
       {
         return TimeOfDay.Night;
       }
-    }
-
-    private static bool GetDarkModeEnabled(DateTime now)
-    {
-      var hour = now.Hour;
-
-      if (hour >= 5 && hour <= 19) // Daylight hours 5 AM - 7 PM
-      {
-        return false;
-      }
-
-      return true;
     }
 
     private string GetDateImagePath(DateTime now)
