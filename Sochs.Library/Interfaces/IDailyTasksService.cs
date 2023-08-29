@@ -3,13 +3,13 @@ using Sochs.Library.Models;
 
 namespace Sochs.Library.Interfaces
 {
-  public interface ITaskService
+  public interface IDailyTasksService
   {
-    event EventHandler<TimeOfDayTasksChangeEventArgs>? OnTimeOfDayTasksChange;
+    event EventHandler<ActiveDailyTasksChangeEventArgs>? OnActiveDailyTasksChange;
 
     event EventHandler<DailyTasksResetEventArgs>? OnDailyTasksReset;
 
-    event EventHandler<TaskUpdatedEventArgs>? OnTaskUpdated;
+    event EventHandler<DailyTaskUpdatedEventArgs>? OnDailyTaskUpdated;
 
     public IEnumerable<DailyTask> ActiveTasks { get; }
   }
