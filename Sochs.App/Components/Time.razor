@@ -3,6 +3,7 @@
 @using Sochs.Library;
 @using System.Runtime;
 @inject ITimeService _timeService;
+@inject IJSRuntime _jSRuntime
 @implements IDisposable;
 
 <div class="col-12 mt-5">
@@ -79,6 +80,10 @@
       dayOfWeekImagePath = args.DayOfWeekImagePath;
       dateAsString       = args.DateTime.ToShortDateString();
       seasonImagePath    = args.SeasonImagePath;
+
+      // Set dark/light mode
+      string mode = args.EnableDarkMode ? "dark" : "light";
+      _jSRuntime.InvokeVoidAsync("setTheme", mode);
 
       StateHasChanged();
     }

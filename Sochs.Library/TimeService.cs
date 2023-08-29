@@ -33,13 +33,15 @@ namespace Sochs.Library
 			string timeImagePath = GetTimeImagePath(now);
 			string dateImagePath = GetDateImagePath(now);
 			string dayImagePath  = GetDayImagePath(now);
+      bool enableDarkMode  = GetDarkModeEnabled(now);
 
       var args = new TimeUpdatedEventArgs()
       {
-        DateTime           = DateTime.Now, 
-        TimeOfDayImagePath = timeImagePath, 
-        SeasonImagePath    = dateImagePath, 
-        DayOfWeekImagePath = dayImagePath 
+        DateTime           = DateTime.Now,
+        TimeOfDayImagePath = timeImagePath,
+        SeasonImagePath    = dateImagePath,
+        DayOfWeekImagePath = dayImagePath,
+        EnableDarkMode     = enableDarkMode
       };
 
       OnTimeUpdated?.Invoke(this, args);
@@ -66,22 +68,34 @@ namespace Sochs.Library
     {
       var hour = now.Hour;
 
-      if (hour >= 5 && hour < 11) // Morning
+      if (hour >= 5 && hour < 11) // Morning 5 AM - 10:59 AM
       {
         return _config.GetString("Time:TimeOfDayImagePaths:Morning");
       }
-      else if (hour >= 11 && hour < 18) // Afternoon
+      else if (hour >= 11 && hour < 18) // Afternoon 11 AM - 5:59 PM
       {
         return _config.GetString("Time:TimeOfDayImagePaths:Afternoon");
       }
-      else if (hour >= 18 && hour < 20) // Evening
+      else if (hour >= 18 && hour < 20) // Evening 6 PM - 7:59 PM
       {
         return _config.GetString("Time:TimeOfDayImagePaths:Evening");
       }
-      else // Night
+      else // Night 8 PM - 4:59 AM
       {
         return _config.GetString("Time:TimeOfDayImagePaths:Night");
       }
+    }
+
+    private static bool GetDarkModeEnabled(DateTime now)
+    {
+      var hour = now.Hour;
+
+      if (hour >= 5 && hour <= 19) // Daylight hours 5 AM - 7 PM
+      {
+        return false;
+      }
+
+      return true;
     }
 
     private string GetDateImagePath(DateTime now)

@@ -13,7 +13,7 @@ namespace Sochs.App
       builder.RootComponents.Add<App>("#app");
       builder.RootComponents.Add<HeadOutlet>("head::after");
 
-      builder.Logging.SetMinimumLevel(LogLevel.Trace);
+      builder.Logging.SetMinimumLevel(LogLevel.Information);
 
       builder.Services.AddTransient(sp => new HttpClient());
 

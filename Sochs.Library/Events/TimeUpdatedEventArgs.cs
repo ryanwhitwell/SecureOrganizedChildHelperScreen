@@ -9,5 +9,7 @@
     public string SeasonImagePath { get; set; } = string.Empty;
 
     public string DayOfWeekImagePath { get; set; } = string.Empty;
+
+    public bool EnableDarkMode { get; set; }
   }
 }
