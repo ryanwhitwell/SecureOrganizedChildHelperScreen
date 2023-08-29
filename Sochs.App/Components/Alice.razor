@@ -5,7 +5,7 @@
 
 <div class="col-lg-6 mt-5 align-self-end">
   <div class="card shadow-lg">
-    
+
     <!--
     <div class="card-header">
       Alice
@@ -16,7 +16,18 @@
       <div class="container">
         <div class="row">
           <div class="col text-center">
-            <img src="img/Alice_avatar_cartoon.png" />
+
+            <button type="button" class="btn btn-primary-outline" @onclick="() => ModalDialog?.Open()"><img src="img/Alice_avatar_cartoon.png" /></button>
+
+            <ModalDialog @ref="@ModalDialog" Title="Hello World">
+              <div class="row">
+                <h3>Lorem Ipsum</h3>
+                <hr>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vel ultricies sapien. Duis nec nunc erat. Vivamus eget sem tristique, lacinia mi id, cursus eros.</p>
+                <button type="button" class="btn btn-primary" @onclick="() => ModalDialog?.Close()">Close</button>
+              </div>
+            </ModalDialog>
+
           </div>
         </div>
       </div>
@@ -27,8 +38,6 @@
 
 @code {
 
-  protected override void OnInitialized()
-  {
-    base.OnInitialized();
-  }
+  private ModalDialog? ModalDialog { get; set; }
+
 }
