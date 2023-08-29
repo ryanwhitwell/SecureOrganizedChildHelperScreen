@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Sochs.Library.Enums;
 using Sochs.Library.Events;
 using Sochs.Library.Interfaces;
 
@@ -13,7 +14,9 @@ namespace Sochs.Library
 
     private bool disposedValue;
 
-		public TimeService(IConfiguration config)
+    public TimeOfDay TimeOfDay => throw new NotImplementedException();
+
+    public TimeService(IConfiguration config)
 		{
       _ = config ?? throw new ArgumentNullException(nameof(config));
       _config = config;
@@ -30,7 +33,8 @@ namespace Sochs.Library
 
 			var now = DateTime.Now;
 
-			string timeImagePath = GetTimeImagePath(now);
+      TimeOfDay timeOfDay  = GetTimeOfDay(now);
+      string timeImagePath = GetTimeImagePath(timeOfDay);
 			string dateImagePath = GetDateImagePath(now);
 			string dayImagePath  = GetDayImagePath(now);
       bool enableDarkMode  = GetDarkModeEnabled(now);
@@ -41,7 +45,8 @@ namespace Sochs.Library
         TimeOfDayImagePath = timeImagePath,
         SeasonImagePath    = dateImagePath,
         DayOfWeekImagePath = dayImagePath,
-        EnableDarkMode     = enableDarkMode
+        EnableDarkMode     = enableDarkMode,
+        TimeOfDay          = timeOfDay
       };
 
       OnTimeUpdated?.Invoke(this, args);
@@ -64,25 +69,37 @@ namespace Sochs.Library
       };
     }
 
-    private string GetTimeImagePath(DateTime now)
+    private string GetTimeImagePath(TimeOfDay timeOfDay)
+    {
+      return timeOfDay switch
+      {
+        TimeOfDay.Morning   => _config.GetString("Time:TimeOfDayImagePaths:Morning"),
+        TimeOfDay.Afternoon => _config.GetString("Time:TimeOfDayImagePaths:Afternoon"),
+        TimeOfDay.Evening   => _config.GetString("Time:TimeOfDayImagePaths:Evening"),
+        TimeOfDay.Night     => _config.GetString("Time:TimeOfDayImagePaths:Night"),
+        _                   => throw new InvalidOperationException($"Cannot determine time of day image path based on time of day")
+      };
+    }
+
+    private TimeOfDay GetTimeOfDay(DateTime now)
     {
       var hour = now.Hour;
 
       if (hour >= 5 && hour < 11) // Morning 5 AM - 10:59 AM
       {
-        return _config.GetString("Time:TimeOfDayImagePaths:Morning");
+        return TimeOfDay.Morning;
       }
       else if (hour >= 11 && hour < 18) // Afternoon 11 AM - 5:59 PM
       {
-        return _config.GetString("Time:TimeOfDayImagePaths:Afternoon");
+        return TimeOfDay.Afternoon;
       }
       else if (hour >= 18 && hour < 20) // Evening 6 PM - 7:59 PM
       {
-        return _config.GetString("Time:TimeOfDayImagePaths:Evening");
+        return TimeOfDay.Evening;
       }
       else // Night 8 PM - 4:59 AM
       {
-        return _config.GetString("Time:TimeOfDayImagePaths:Night");
+        return TimeOfDay.Night;
       }
     }
 

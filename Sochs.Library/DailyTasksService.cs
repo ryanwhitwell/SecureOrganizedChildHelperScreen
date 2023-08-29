@@ -9,7 +9,7 @@ namespace Sochs.Library
 {
   public class DailyTasksService : IDailyTasksService, IDisposable
   {
-    private const int UpdateIntervalMinutes = 1;
+    private const int UpdateIntervalSeconds = 1;
 
     private bool disposedValue;
 
@@ -29,7 +29,7 @@ namespace Sochs.Library
       _log = log;
 
       var autoEvent = new AutoResetEvent(false);
-      _timer = new Timer(UpdateDailyTasks_Callback, autoEvent, new TimeSpan(0, 0, 0), new TimeSpan(0, UpdateIntervalMinutes, 0));
+      _timer = new Timer(UpdateDailyTasks_Callback, autoEvent, new TimeSpan(0, 0, 0), new TimeSpan(0, 0, UpdateIntervalSeconds));
     }
 
     public event EventHandler<ActiveDailyTasksChangeEventArgs>? OnActiveDailyTasksChange;

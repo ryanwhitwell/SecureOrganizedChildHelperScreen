@@ -1,4 +1,6 @@
-﻿namespace Sochs.Library.Events
+﻿using Sochs.Library.Enums;
+
+namespace Sochs.Library.Events
 {
   public class TimeUpdatedEventArgs : EventArgs
   {
@@ -11,5 +13,7 @@
     public string DayOfWeekImagePath { get; set; } = string.Empty;
 
     public bool EnableDarkMode { get; set; }
+
+    public TimeOfDay TimeOfDay { get; set; }
   }
 }

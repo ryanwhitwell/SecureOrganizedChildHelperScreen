@@ -6,18 +6,22 @@
 @using Sochs.Library.Models;
 
 @inject IDailyTasksService _dailyTasksService;
+@inject ITimeService _timeService;
 @implements IDisposable;
 
 <div class="container">
   <div class="row">
     <div class="col">
+
       <!-- Task completion interface -->
-      @if (_activeTasks != null)
+      @if (_taskData != null && _taskData.HasData)
       {
+        var tasks = _taskData.GetTasks(Child, _timeOfDay);
+        
         <ul>
-        @foreach (var task in _activeTasks)
+        @foreach (var task in tasks)
         {
-          <li>@task.Description</li>
+          <li id="@task.Key">@task.Value.Description</li>
         }
         </ul>
       }
@@ -31,24 +35,36 @@
   [Parameter]
   public Child Child { get; set; }
 
-  private IEnumerable<DailyTask>? _activeTasks;
+  private TimeOfDay _timeOfDay { get; set; }
+
+  private DailyTaskData? _taskData { get; set; }
 
   protected override void OnInitialized()
   {
     _dailyTasksService.Child = Child;
-    
+
     _dailyTasksService.OnDailyTasksReset        += HandleOnDailyTasksReset;
     _dailyTasksService.OnDailyTaskUpdated       += HandleOnDailyTaskUpdated;
     _dailyTasksService.OnActiveDailyTasksChange += HandleOnActiveDailyTasksChange;
 
+    _timeService.OnTimeUpdated += HandleTimeUpdated;
+
     base.OnInitialized();
+  }
+
+  public void HandleTimeUpdated(object? sender, TimeUpdatedEventArgs args)
+  {
+    if (args != null)
+    {
+      _timeOfDay = args.TimeOfDay;
+    }
   }
 
   public void HandleOnDailyTasksReset(object? sender, DailyTasksResetEventArgs args)
   {
     if (args != null)
     {
-      // Day has changed, reset the content by getting the new tasks
+      _taskData = args.TaskData;
 
       StateHasChanged();
     }
@@ -58,7 +74,7 @@
   {
     if (args != null)
     {
-      // A tasks state has changed, updated the content
+      _taskData = args.TaskData;
 
       StateHasChanged();
     }
@@ -68,7 +84,7 @@
   {
     if (args != null)
     {
-      // The time of day has changed and the active tasks are new, update the content
+      _taskData = args.TaskData;
 
       StateHasChanged();
     }

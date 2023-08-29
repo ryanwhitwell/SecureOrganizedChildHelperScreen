@@ -1,9 +1,12 @@
-﻿using Sochs.Library.Events;
+﻿using Sochs.Library.Enums;
+using Sochs.Library.Events;
 
 namespace Sochs.Library.Interfaces
 {
   public interface ITimeService
   {
     event EventHandler<TimeUpdatedEventArgs>? OnTimeUpdated;
+
+    public TimeOfDay TimeOfDay { get; }
   }
 }
