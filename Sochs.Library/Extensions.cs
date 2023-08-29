@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Sochs.Library.Enums;
+using System;
 
 namespace Sochs.Library
 {
@@ -22,6 +24,15 @@ namespace Sochs.Library
       if (!decimal.TryParse(value, out decimal result)) { throw new InvalidOperationException($"Cannot convert string to decimal in config at path {path}"); }
 
       return result;
+    }
+
+    public static TEnum GetEnum<TEnum>(this IConfiguration config, string path) where TEnum : struct, Enum
+    {
+      string value = config[path] ?? string.Empty;
+
+      if (string.IsNullOrWhiteSpace(value)) { throw new InvalidOperationException($"Cannot get value in config at path {path}"); }
+
+      return (TEnum)Enum.Parse(typeof(TEnum), value);
     }
   }
 }

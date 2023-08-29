@@ -1,0 +1,83 @@
+﻿@using Sochs.Library.Enums;
+@using Sochs.Library.Events;
+@using Sochs.Library.Interfaces;
+@using Sochs.Library;
+@using System.Runtime;
+@using Sochs.Library.Models;
+
+@inject IDailyTasksService _dailyTasksService;
+@implements IDisposable;
+
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <!-- Task completion interface -->
+      @if (_activeTasks != null)
+      {
+        <ul>
+        @foreach (var task in _activeTasks)
+        {
+          <li>@task.Description</li>
+        }
+        </ul>
+      }
+      
+    </div>
+  </div>
+</div>
+
+@code {
+
+  [Parameter]
+  public Child Child { get; set; }
+
+  private IEnumerable<DailyTask>? _activeTasks;
+
+  protected override void OnInitialized()
+  {
+    _dailyTasksService.Child = Child;
+    
+    _dailyTasksService.OnDailyTasksReset        += HandleOnDailyTasksReset;
+    _dailyTasksService.OnDailyTaskUpdated       += HandleOnDailyTaskUpdated;
+    _dailyTasksService.OnActiveDailyTasksChange += HandleOnActiveDailyTasksChange;
+
+    base.OnInitialized();
+  }
+
+  public void HandleOnDailyTasksReset(object? sender, DailyTasksResetEventArgs args)
+  {
+    if (args != null)
+    {
+      // Day has changed, reset the content by getting the new tasks
+
+      StateHasChanged();
+    }
+  }
+
+  public void HandleOnDailyTaskUpdated(object? sender, DailyTaskUpdatedEventArgs args)
+  {
+    if (args != null)
+    {
+      // A tasks state has changed, updated the content
+
+      StateHasChanged();
+    }
+  }
+
+  public void HandleOnActiveDailyTasksChange(object? sender, ActiveDailyTasksChangeEventArgs args)
+  {
+    if (args != null)
+    {
+      // The time of day has changed and the active tasks are new, update the content
+
+      StateHasChanged();
+    }
+  }
+
+  public void Dispose()
+  {
+    _dailyTasksService.OnDailyTasksReset        -= HandleOnDailyTasksReset;
+    _dailyTasksService.OnDailyTaskUpdated       -= HandleOnDailyTaskUpdated;
+    _dailyTasksService.OnActiveDailyTasksChange -= HandleOnActiveDailyTasksChange;
+  }
+}
