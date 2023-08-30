@@ -34,7 +34,7 @@
             {
               <tr>
                 <td><img src="@task.Value.ImagePath" /></td>
-                <td>@task.Value.Description</td>
+                <td><p class="text-lg-start mx-5" style="font-size: 5rem;">@task.Value.Description</p></td>
                 <td><button type="button" class="btn btn-primary-outline" @onclick="() => UpdateTask(task.Value.Id, task.Value.IsCompleted)"><img src="@(task.Value.IsCompleted ? _config.GetString("Application:CheckedBoxImagePath") : _config.GetString("Application:UncheckedBoxImagePath"))" /></button></td>
               </tr>
             }
