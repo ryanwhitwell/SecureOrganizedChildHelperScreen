@@ -83,7 +83,7 @@ namespace Sochs.Library
       };
     }
 
-    private TimeOfDay GetTimeOfDay(DateTime now)
+    private static TimeOfDay GetTimeOfDay(DateTime now)
     {
       var hour = now.Hour;
 

@@ -15,5 +15,25 @@ namespace Sochs.Library.Models
     {
       return Tasks.Where(x => x.Value.Child == child && x.Value.DayType == dayType && x.Value.TimeOfDay == timeOfDay).OrderBy(x => x.Value.Id);
     }
+
+    public bool MorningTasksCompleted(Child child, DayType dayType)
+    {
+      return Tasks.All(x => x.Value.Child == child && x.Value.DayType == dayType && x.Value.TimeOfDay == TimeOfDay.Morning && x.Value.IsCompleted == true);
+    }
+
+    public bool AfternoonTasksCompleted(Child child, DayType dayType)
+    {
+      return Tasks.All(x => x.Value.Child == child && x.Value.DayType == dayType && x.Value.TimeOfDay == TimeOfDay.Afternoon && x.Value.IsCompleted == true);
+    }
+
+    public bool EveningTasksCompleted(Child child, DayType dayType)
+    {
+      return Tasks.All(x => x.Value.Child == child && x.Value.DayType == dayType && x.Value.TimeOfDay == TimeOfDay.Evening && x.Value.IsCompleted == true);
+    }
+
+    public bool NightTasksCompleted(Child child, DayType dayType)
+    {
+      return Tasks.All(x => x.Value.Child == child && x.Value.DayType == dayType && x.Value.TimeOfDay == TimeOfDay.Night && x.Value.IsCompleted == true);
+    }
   }
 }

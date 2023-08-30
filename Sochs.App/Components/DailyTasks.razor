@@ -70,11 +70,9 @@
   {
     _dailyTasksService.Child = Child;
 
-    _dailyTasksService.OnDailyTasksReset        += HandleOnDailyTasksReset;
-    _dailyTasksService.OnDailyTaskUpdated       += HandleOnDailyTaskUpdated;
-    _dailyTasksService.OnActiveDailyTasksChange += HandleOnActiveDailyTasksChange;
-
-    _timeService.OnTimeUpdated += HandleTimeUpdated;
+    _dailyTasksService.OnDailyTasksReset  += HandleOnDailyTasksReset;
+    _dailyTasksService.OnDailyTaskUpdated += HandleOnDailyTaskUpdated;
+    _timeService.OnTimeUpdated            += HandleTimeUpdated;
 
     base.OnInitialized();
   }
@@ -144,8 +142,8 @@
 
   public void Dispose()
   {
-    _dailyTasksService.OnDailyTasksReset        -= HandleOnDailyTasksReset;
-    _dailyTasksService.OnDailyTaskUpdated       -= HandleOnDailyTaskUpdated;
-    _dailyTasksService.OnActiveDailyTasksChange -= HandleOnActiveDailyTasksChange;
+    _dailyTasksService.OnDailyTasksReset  -= HandleOnDailyTasksReset;
+    _dailyTasksService.OnDailyTaskUpdated -= HandleOnDailyTaskUpdated;
+    _timeService.OnTimeUpdated            -= HandleTimeUpdated;
   }
 }

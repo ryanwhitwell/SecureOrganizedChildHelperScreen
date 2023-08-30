@@ -1,4 +1,5 @@
 ﻿@using Sochs.App.Components
+@using Sochs.Library.Enums;
 
 @inherits LayoutComponentBase
 @page "/"
@@ -14,8 +15,8 @@
   </div>
 
   <div class="row">
-    <Alice />
-    <Clara />
+    <TaskManager Child=Child.Alice />
+    <TaskManager Child=Child.Clara />
   </div>
 
   <div class="row">

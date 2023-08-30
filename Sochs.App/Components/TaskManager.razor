@@ -1,0 +1,110 @@
+﻿@using Sochs.Library.Enums;
+@using Sochs.Library.Events;
+@using Sochs.Library.Interfaces;
+@using Sochs.Library;
+@using System.Runtime;
+
+@inject ITimeService _timeService;
+@inject IConfiguration _config;
+@implements IDisposable;
+
+<div class="col-lg-6 mt-5 align-self-end">
+  <div class="card shadow-lg">
+
+    <!--
+    <div class="card-header">
+      @Child.ToString()
+    </div>
+    -->
+
+    <div class="card-body">
+      <div class="container">
+        <div class="row">
+          <div class="col text-center">
+
+            <button type="button" class="btn btn-primary-outline shadow-none" @onclick="() => TaskDialog?.Open()">
+              <img src="@_childAvatarImagePath" />
+            </button>
+            
+            <ModalDialog @ref="@TaskDialog" Title=@($"{Child.ToString()}'s Tasks")>
+              <DailyTasks @ref="@DailyTasks" Child=Child />
+            </ModalDialog>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+@code {
+  [Parameter]
+  public Child Child { get; set; }
+
+  private ModalDialog? TaskDialog { get; set; }
+
+  private string? _childAvatarImagePath { get; set; }
+
+  private DailyTasks? DailyTasks { get; set; }
+
+  private TimeOfDay _timeOfDay { get; set; }
+
+  private DayType _dayType { get; set; }
+
+  private bool _morningTasksCompleted;
+  private bool _afternoonTasksCompleted;
+  private bool _eveningTasksCompleted;
+  private bool _nightTasksCompleted;
+
+  protected override void OnInitialized()
+  {
+    if (DailyTasks != null)
+    {
+      DailyTasks.OnDailyTaskAchievement += HandleAchievementEvent;
+    }
+
+    _timeService.OnTimeUpdated += HandleTimeUpdated;
+
+    if (Child == Child.Alice)
+    {
+      _childAvatarImagePath = _config.GetString("Application:AliceAvatarImagePath");
+    }
+    else if (Child == Child.Clara)
+    {
+      _childAvatarImagePath = _config.GetString("Application:ClaraAvatarImagePath");
+    }
+
+    base.OnInitialized(); 
+  }
+
+  public void HandleTimeUpdated(object? sender, TimeUpdatedEventArgs args)
+  {
+    if (args != null)
+    {
+      _timeOfDay = args.TimeOfDay;
+      _dayType = args.DayType;
+    }
+  }
+
+  private void HandleAchievementEvent(object? sender, DailyTaskAchievementEventArgs args)
+  {
+    if (args != null && args.TaskData != null)
+    {
+      _morningTasksCompleted   = args.TaskData.MorningTasksCompleted(Child, _dayType);
+      _afternoonTasksCompleted = args.TaskData.AfternoonTasksCompleted(Child, _dayType);
+      _eveningTasksCompleted   = args.TaskData.EveningTasksCompleted(Child, _dayType);
+      _nightTasksCompleted     = args.TaskData.NightTasksCompleted(Child, _dayType);
+
+      StateHasChanged();
+    }
+  }
+
+  public void Dispose()
+  {
+    if (DailyTasks != null)
+    {
+      DailyTasks.OnDailyTaskAchievement -= HandleAchievementEvent;
+    }
+  }
+}

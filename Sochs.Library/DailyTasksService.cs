@@ -18,21 +18,17 @@ namespace Sochs.Library
 
     private readonly Timer _timer;
     private readonly IConfiguration _config;
-    private readonly ILogger<DailyTasksService> _log;
 
-    public DailyTasksService(IConfiguration config, ILogger<DailyTasksService> log)
+    public DailyTasksService(IConfiguration config)
     {
       _ = config ?? throw new ArgumentNullException(nameof(config));
-      _ = log ?? throw new ArgumentNullException(nameof(log));
 
       _config = config;
-      _log = log;
 
       var autoEvent = new AutoResetEvent(false);
       _timer = new Timer(UpdateDailyTasks_Callback, autoEvent, new TimeSpan(0, 0, 0), new TimeSpan(0, 0, UpdateIntervalSeconds));
     }
 
-    public event EventHandler<ActiveDailyTasksChangeEventArgs>? OnActiveDailyTasksChange;
     public event EventHandler<DailyTasksResetEventArgs>? OnDailyTasksReset;
     public event EventHandler<DailyTaskUpdatedEventArgs>? OnDailyTaskUpdated;
 
