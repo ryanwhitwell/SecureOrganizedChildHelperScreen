@@ -36,18 +36,18 @@
           <div class="container" style="position:absolute">
             <div class="row">
               <div class="col @(_morningTasksCompleted ? "visible" : "invisible")" style="margin-left: 10px;">
-                <img src="@_config.GetString("Application:MorningTasksAchievementImagePath")" />
+                <img src="@_config.GetString($"Achievements:{Child}:MorningTasksAchievementImagePath")" />
               </div>
               <div class="col @(_afternoonTasksCompleted ? "visible" : "invisible")" style="margin-left: 10px;">
-                <img src="@_config.GetString("Application:AfternoonTasksAchievementImagePath")" />
+                <img src="@_config.GetString($"Achievements:{Child}:AfternoonTasksAchievementImagePath")" />
               </div>
             </div>
             <div class="row">
               <div class="col @(_eveningTasksCompleted ? "visible" : "invisible")" style="margin-left: 10px;">
-                <img src="@_config.GetString("Application:EveningTasksAchievementImagePath")" />
+                <img src="@_config.GetString($"Achievements:{Child}:EveningTasksAchievementImagePath")" />
               </div>
               <div class="col @(_nightTasksCompleted ? "visible" : "invisible")" style="margin-left: 10px;">
-              <img src="@_config.GetString("Application:NightTasksAchievementImagePath")" />
+                <img src="@_config.GetString($"Achievements:{Child}:NightTasksAchievementImagePath")" />
             </div>
             </div>
           </div>
