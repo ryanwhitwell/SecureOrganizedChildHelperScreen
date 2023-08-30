@@ -11,9 +11,9 @@ namespace Sochs.Library.Models
 
     public DateTime DateTime { get; set; }
 
-    public IEnumerable<KeyValuePair<string, DailyTask>> GetTasks(Child child, TimeOfDay timeOfDay)
+    public IEnumerable<KeyValuePair<string, DailyTask>> GetTasks(Child child, TimeOfDay timeOfDay, DayType dayType)
     {
-      return Tasks.Where(x => x.Value.Child == child && x.Value.TimeOfDay == timeOfDay);
+      return Tasks.Where(x => x.Value.Child == child && x.Value.DayType == dayType && x.Value.TimeOfDay == timeOfDay);
     }
   }
 }

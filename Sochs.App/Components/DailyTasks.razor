@@ -7,6 +7,7 @@
 
 @inject IDailyTasksService _dailyTasksService;
 @inject ITimeService _timeService;
+@inject IConfiguration _config;
 @implements IDisposable;
 
 <div class="container">
@@ -16,27 +17,25 @@
       <!-- Task completion interface -->
       @if (_taskData != null && _taskData.HasData)
       {
-        var tasks = _taskData.GetTasks(Child, _timeOfDay);
+        var tasks = _taskData.GetTasks(Child, _timeOfDay, _dayType);
         
         <table class="table">
+          <!-- 
           <thead>
             <tr>
               <th scope="col">Name</th>
               <th scope="col">Description</th>
               <th scope="col">Image Path</th>
-              <th scope="col">Child</th>
-              <th scope="col">Time Of Day</th>
             </tr>
           </thead>
+          -->
           <tbody>
             @foreach (var task in tasks)
             {
               <tr>
-                <th scope="row">@task.Value.Id</th>
-                <td>@task.Value.Description</td>
                 <td><img src="@task.Value.ImagePath" /></td>
-                <td>@task.Value.Child.ToString()</td>
-                <td>@task.Value.TimeOfDay.ToString()</td>
+                <td>@task.Value.Description</td>
+                <td><button type="button" class="btn btn-primary-outline" @onclick="() => UpdateTask(task.Value.Id, task.Value.IsCompleted)"><img src="@(task.Value.IsCompleted ? _config.GetString("Application:CheckedBoxImagePath") : _config.GetString("Application:UncheckedBoxImagePath"))" /></button></td>
               </tr>
             }
           </tbody>
@@ -55,7 +54,15 @@
 
   private TimeOfDay _timeOfDay { get; set; }
 
+  private DayType _dayType { get; set; }
+
   private DailyTaskData? _taskData { get; set; }
+
+  public void UpdateTask(string id, bool isCompleted)
+  {
+    // Call the task service with the opposite value of IsCompleted in order to change the value
+    _dailyTasksService.UpdateTask(id, !isCompleted);
+  }
 
   protected override void OnInitialized()
   {
@@ -75,6 +82,7 @@
     if (args != null)
     {
       _timeOfDay = args.TimeOfDay;
+      _dayType   = args.DayType;
     }
   }
 

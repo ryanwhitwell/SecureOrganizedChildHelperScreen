@@ -12,6 +12,8 @@ namespace Sochs.Library.Models
 
     public TimeOfDay TimeOfDay { get; set; }
 
+    public DayType DayType { get; set; }
+    
     public Child Child { get; set; }
 
     public bool IsCompleted { get; set; }

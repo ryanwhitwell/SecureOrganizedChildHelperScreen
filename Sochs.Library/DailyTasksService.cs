@@ -67,6 +67,7 @@ namespace Sochs.Library
         var imagePath   = item.GetString("ImagePath");
         var child       = item.GetEnum<Child>("Child");
         var timeOfDay   = item.GetEnum<TimeOfDay>("TimeOfDay");
+        var dayType     = item.GetEnum<DayType>("DayType");
 
         var newTask = new DailyTask()
         {
@@ -74,7 +75,8 @@ namespace Sochs.Library
           Description = description,
           ImagePath   = imagePath,
           Child       = child,
-          TimeOfDay   = timeOfDay
+          TimeOfDay   = timeOfDay,
+          DayType     = dayType
         };
 
         data.Tasks.TryAdd(key, newTask);

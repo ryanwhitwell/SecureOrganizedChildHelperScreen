@@ -15,5 +15,7 @@ namespace Sochs.Library.Events
     public bool EnableDarkMode { get; set; }
 
     public TimeOfDay TimeOfDay { get; set; }
+
+    public DayType DayType { get; set; }
   }
 }
