@@ -18,22 +18,22 @@ namespace Sochs.Library.Models
 
     public bool MorningTasksCompleted(Child child, DayType dayType)
     {
-      return Tasks.All(x => x.Value.Child == child && x.Value.DayType == dayType && x.Value.TimeOfDay == TimeOfDay.Morning && x.Value.IsCompleted == true);
+      return Tasks.Where(x => x.Value.Child == child && x.Value.DayType == dayType && x.Value.TimeOfDay == TimeOfDay.Morning).All(x => x.Value.IsCompleted == true);
     }
 
     public bool AfternoonTasksCompleted(Child child, DayType dayType)
     {
-      return Tasks.All(x => x.Value.Child == child && x.Value.DayType == dayType && x.Value.TimeOfDay == TimeOfDay.Afternoon && x.Value.IsCompleted == true);
+      return Tasks.Where(x => x.Value.Child == child && x.Value.DayType == dayType && x.Value.TimeOfDay == TimeOfDay.Afternoon).All(x => x.Value.IsCompleted == true);
     }
 
     public bool EveningTasksCompleted(Child child, DayType dayType)
     {
-      return Tasks.All(x => x.Value.Child == child && x.Value.DayType == dayType && x.Value.TimeOfDay == TimeOfDay.Evening && x.Value.IsCompleted == true);
+      return Tasks.Where(x => x.Value.Child == child && x.Value.DayType == dayType && x.Value.TimeOfDay == TimeOfDay.Evening).All(x => x.Value.IsCompleted == true);
     }
 
     public bool NightTasksCompleted(Child child, DayType dayType)
     {
-      return Tasks.All(x => x.Value.Child == child && x.Value.DayType == dayType && x.Value.TimeOfDay == TimeOfDay.Night && x.Value.IsCompleted == true);
+      return Tasks.Where(x => x.Value.Child == child && x.Value.DayType == dayType && x.Value.TimeOfDay == TimeOfDay.Night).All(x => x.Value.IsCompleted == true);
     }
   }
 }

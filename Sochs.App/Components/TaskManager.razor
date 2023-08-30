@@ -3,9 +3,11 @@
 @using Sochs.Library.Interfaces;
 @using Sochs.Library;
 @using System.Runtime;
+@using System.Text.Json;
 
 @inject ITimeService _timeService;
 @inject IConfiguration _config;
+@inject ILogger<TaskManager> _log;
 @implements IDisposable;
 
 <div class="col-lg-6 mt-5 align-self-end">
@@ -22,14 +24,32 @@
         <div class="row">
           <div class="col text-center">
 
-            <button type="button" class="btn btn-primary-outline shadow-none" @onclick="() => TaskDialog?.Open()">
-              <img src="@_childAvatarImagePath" />
-            </button>
+            <img src="@_childAvatarImagePath" />
+            <button type="button" class="btn shadow-none" style="background-color:transparent;z-index:999;width: 200px;position: absolute;height: 275px;margin-left: -200px;" @onclick="() => TaskDialog?.Open()"></button>
             
             <ModalDialog @ref="@TaskDialog" Title=@($"{Child.ToString()}'s Tasks")>
               <DailyTasks @ref="@DailyTasks" Child=Child />
             </ModalDialog>
 
+          </div>
+
+          <div class="container" style="position:absolute">
+            <div class="row">
+              <div class="col @(_morningTasksCompleted ? "visible" : "invisible")" style="margin-left: 10px;">
+                <img src="@_config.GetString("Application:MorningTasksAchievementImagePath")" />
+              </div>
+              <div class="col @(_afternoonTasksCompleted ? "visible" : "invisible")" style="margin-left: 10px;">
+                <img src="@_config.GetString("Application:AfternoonTasksAchievementImagePath")" />
+              </div>
+            </div>
+            <div class="row">
+              <div class="col @(_eveningTasksCompleted ? "visible" : "invisible")" style="margin-left: 10px;">
+                <img src="@_config.GetString("Application:EveningTasksAchievementImagePath")" />
+              </div>
+              <div class="col @(_nightTasksCompleted ? "visible" : "invisible")" style="margin-left: 10px;">
+              <img src="@_config.GetString("Application:NightTasksAchievementImagePath")" />
+            </div>
+            </div>
           </div>
         </div>
       </div>
@@ -57,13 +77,18 @@
   private bool _eveningTasksCompleted;
   private bool _nightTasksCompleted;
 
-  protected override void OnInitialized()
+  protected override void OnAfterRender(bool firstRender)
   {
-    if (DailyTasks != null)
+    if (firstRender && DailyTasks != null)
     {
       DailyTasks.OnDailyTaskAchievement += HandleAchievementEvent;
     }
 
+    base.OnAfterRender(firstRender);
+  }
+
+  protected override void OnInitialized()
+  {
     _timeService.OnTimeUpdated += HandleTimeUpdated;
 
     if (Child == Child.Alice)
@@ -89,12 +114,22 @@
 
   private void HandleAchievementEvent(object? sender, DailyTaskAchievementEventArgs args)
   {
+    _log.LogDebug("Achievement event handled for {Child}", Child);
+
     if (args != null && args.TaskData != null)
     {
       _morningTasksCompleted   = args.TaskData.MorningTasksCompleted(Child, _dayType);
       _afternoonTasksCompleted = args.TaskData.AfternoonTasksCompleted(Child, _dayType);
       _eveningTasksCompleted   = args.TaskData.EveningTasksCompleted(Child, _dayType);
       _nightTasksCompleted     = args.TaskData.NightTasksCompleted(Child, _dayType);
+
+      var data = JsonSerializer.Serialize(args.TaskData);
+
+      _log.LogDebug("Morning completed for {Child}: {_morningTasksCompleted}", Child, _morningTasksCompleted);
+      _log.LogDebug("Afternoon completed for {Child}: {_afternoonTasksCompleted}", Child, _afternoonTasksCompleted);
+      _log.LogDebug("Evening completed for {Child}: {_eveningTasksCompleted}", Child, _eveningTasksCompleted);
+      _log.LogDebug("Night completed for {Child}: {_nightTasksCompleted}", Child, _nightTasksCompleted);
+      _log.LogDebug("{data}", data);
 
       StateHasChanged();
     }
