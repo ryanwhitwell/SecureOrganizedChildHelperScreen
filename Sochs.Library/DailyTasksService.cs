@@ -70,6 +70,7 @@ namespace Sochs.Library
 
         var newTask = new DailyTask()
         {
+          Id          = key,
           Description = description,
           ImagePath   = imagePath,
           Child       = child,

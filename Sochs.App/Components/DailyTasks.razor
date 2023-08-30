@@ -18,12 +18,30 @@
       {
         var tasks = _taskData.GetTasks(Child, _timeOfDay);
         
-        <ul>
-        @foreach (var task in tasks)
-        {
-          <li id="@task.Key">@task.Value.Description</li>
-        }
-        </ul>
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Description</th>
+              <th scope="col">Image Path</th>
+              <th scope="col">Child</th>
+              <th scope="col">Time Of Day</th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach (var task in tasks)
+            {
+              <tr>
+                <th scope="row">@task.Value.Id</th>
+                <td>@task.Value.Description</td>
+                <td><img src="@task.Value.ImagePath" /></td>
+                <td>@task.Value.Child.ToString()</td>
+                <td>@task.Value.TimeOfDay.ToString()</td>
+              </tr>
+            }
+          </tbody>
+
+        </table>
       }
       
     </div>
