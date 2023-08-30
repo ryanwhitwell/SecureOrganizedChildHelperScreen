@@ -14,6 +14,6 @@ namespace Sochs.Library.Interfaces
 
     event EventHandler<DailyTaskUpdatedEventArgs>? OnDailyTaskUpdated;
 
-    public void UpdateTask(string name, bool isCompleted);
+    public void UpdateTask(int id, bool isCompleted);
   }
 }

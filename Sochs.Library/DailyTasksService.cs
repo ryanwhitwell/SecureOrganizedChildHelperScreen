@@ -38,13 +38,11 @@ namespace Sochs.Library
 
     public Child Child { get; set; }
 
-    public void UpdateTask(string name, bool isCompleted)
+    public void UpdateTask(int id, bool isCompleted)
     {
-      if (string.IsNullOrWhiteSpace(name)) { throw new ArgumentNullException(nameof(name)); }
-
       if (_taskData == null || !_taskData.HasData) { throw new InvalidOperationException("Cannot update task. Task data is empty or null."); }
 
-      _taskData.Tasks[name].IsCompleted = isCompleted;
+      _taskData.Tasks[id].IsCompleted = isCompleted;
 
       OnDailyTaskUpdated?.Invoke(this, new DailyTaskUpdatedEventArgs() { TaskData = _taskData });
     }
@@ -62,7 +60,7 @@ namespace Sochs.Library
 
       foreach (var item in allTasks.GetChildren())
       {
-        var key         = item.Key;
+        var key         = int.Parse(item.Key);
         var description = item.GetString("Description");
         var imagePath   = item.GetString("ImagePath");
         var child       = item.GetEnum<Child>("Child");

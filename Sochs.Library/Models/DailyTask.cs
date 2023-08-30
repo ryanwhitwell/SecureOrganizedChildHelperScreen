@@ -4,7 +4,7 @@ namespace Sochs.Library.Models
 {
   public class DailyTask
   {
-    public string Id { get; set; } = string.Empty;
+    public int Id { get; set; }
 
     public string Description { get; set; } = string.Empty;
 

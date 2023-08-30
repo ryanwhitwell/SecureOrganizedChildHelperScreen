@@ -34,5 +34,16 @@ namespace Sochs.Library
 
       return (TEnum)Enum.Parse(typeof(TEnum), value);
     }
+
+    public static int GetInteger(this IConfiguration config, string path)
+    {
+      var value = config[path];
+
+      if (string.IsNullOrWhiteSpace(value)) { throw new InvalidOperationException($"Cannot get integer in config at path {path}"); }
+
+      if (!int.TryParse(value, out int result)) { throw new InvalidOperationException($"Cannot convert string to integer in config at path {path}"); }
+
+      return result;
+    }
   }
 }

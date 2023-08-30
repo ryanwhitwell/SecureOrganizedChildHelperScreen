@@ -58,7 +58,7 @@
 
   private DailyTaskData? _taskData { get; set; }
 
-  public void UpdateTask(string id, bool isCompleted)
+  public void UpdateTask(int id, bool isCompleted)
   {
     // Call the task service with the opposite value of IsCompleted in order to change the value
     _dailyTasksService.UpdateTask(id, !isCompleted);
