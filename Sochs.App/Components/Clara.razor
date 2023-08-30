@@ -23,7 +23,7 @@
             </button>
 
             <ModalDialog @ref="@TaskDialog" Title="Clara's Tasks">
-              <DailyTasks Child=Child.Clara />
+              <DailyTasks @ref="@DailyTasks" Child=_child />
             </ModalDialog>
 
           </div>
@@ -35,7 +35,29 @@
 </div>
 
 @code {
+  private const Child _child = Child.Clara;
 
   private ModalDialog? TaskDialog { get; set; }
 
+  private DailyTasks? DailyTasks { get; set; }
+
+  private bool _morningTasksCompleted;
+  private bool _afternoonTasksCompleted;
+  private bool _eveningTasksCompleted;
+  private bool _nightTasksCompleted;
+
+  protected override void OnInitialized()
+  {
+    if (DailyTasks != null)
+    {
+      DailyTasks.OnDailyTaskAchievement += HandleAchievementEvent;
+    }
+
+    base.OnInitialized();
+  }
+
+  private void HandleAchievementEvent(object? sender, DailyTaskAchievementEventArgs args)
+  {
+    // calculate values for private member variables
+  }
 }

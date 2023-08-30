@@ -58,6 +58,8 @@
 
   private DailyTaskData? _taskData { get; set; }
 
+  public event EventHandler<DailyTaskAchievementEventArgs>? OnDailyTaskAchievement;
+
   public void UpdateTask(int id, bool isCompleted)
   {
     // Call the task service with the opposite value of IsCompleted in order to change the value
@@ -92,6 +94,14 @@
     {
       _taskData = args.TaskData;
 
+      var achievementArgs = new DailyTaskAchievementEventArgs()
+      {
+        Child = this.Child,
+        TaskData = this._taskData
+      };
+
+      OnDailyTaskAchievement?.Invoke(this, achievementArgs);
+
       StateHasChanged();
     }
   }
@@ -102,6 +112,14 @@
     {
       _taskData = args.TaskData;
 
+      var achievementArgs = new DailyTaskAchievementEventArgs()
+      {
+        Child = this.Child,
+        TaskData = this._taskData
+      };
+
+      OnDailyTaskAchievement?.Invoke(this, achievementArgs);
+
       StateHasChanged();
     }
   }
@@ -111,6 +129,14 @@
     if (args != null)
     {
       _taskData = args.TaskData;
+
+      var achievementArgs = new DailyTaskAchievementEventArgs()
+      {
+        Child = this.Child,
+        TaskData = this._taskData
+      };
+
+      OnDailyTaskAchievement?.Invoke(this, achievementArgs);
 
       StateHasChanged();
     }
