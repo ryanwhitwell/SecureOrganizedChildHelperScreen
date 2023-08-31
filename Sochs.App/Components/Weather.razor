@@ -116,9 +116,19 @@
 
   private async Task PlayAudioFile()
   {
-    // _js.InvokeVoidAsync("playAudioFile", "/sounds/success-fanfare-trumpets.mp3");
+    // await _js.InvokeVoidAsync("playAudioFile", "/sounds/success-fanfare-trumpets.mp3");
 
-    await _speechSynthesis.SpeakAsync("this is the best!");
+    var voices = await _speechSynthesis.GetVoicesAsync();
+
+    var voice = voices.FirstOrDefault();
+
+    var utterance = new SpeechSynthesisUtterance()
+    {
+      Text = "this is the best!",
+      Voice = voice
+    };
+
+    await _speechSynthesis.SpeakAsync(utterance);
   }
 
   public void Dispose()
