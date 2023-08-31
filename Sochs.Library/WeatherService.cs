@@ -4,6 +4,7 @@ using Sochs.Library.Enums;
 using Sochs.Library.Events;
 using Sochs.Library.Interfaces;
 using Sochs.Library.Models;
+using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Web;
 
@@ -40,7 +41,9 @@ namespace Sochs.Library
 			_config = config;
 			_log = log;
 
-      _client.BaseAddress = new Uri(WeatherApiBase);
+      client.BaseAddress = new Uri(WeatherApiBase);
+      client.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue() { NoCache = true, MustRevalidate = true };
+
       _weatherUri = GenerateWeatherApiUri();
 
       var autoEvent = new AutoResetEvent(false);

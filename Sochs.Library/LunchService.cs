@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Sochs.Library.Events;
 using Sochs.Library.Interfaces;
 using Sochs.Library.Models;
+using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Web;
 
@@ -34,6 +35,8 @@ namespace Sochs.Library
       _log = log;
 
       client.BaseAddress = new Uri(LunchApiBase);
+      client.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue() {  NoCache = true, MustRevalidate = true  };
+
       _lunchUri = GenerateLunchUri();
 
       var autoEvent = new AutoResetEvent(false);
