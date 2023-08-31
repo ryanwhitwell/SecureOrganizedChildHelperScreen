@@ -12,6 +12,7 @@ namespace Sochs.Library
   public class LunchService : ILunchService, IDisposable
 	{
     private const int UpdateIntervalMinutes = 30;
+    private const int MaxLunchItems = 4;
 
     private const string LunchApiBase        = "https://thrillshare-cmsv2.services.thrillshare.com";
     private const string LunchApiAllResource = "/api/v2/s/126312/menus";
@@ -95,9 +96,9 @@ namespace Sochs.Library
         var tommorowString = DateTime.Now.AddDays(1).ToString("yyyy-MM-dd");
         var nextDayString  = DateTime.Now.AddDays(2).ToString("yyyy-MM-dd");
 
-        var todayLunch    = apiResponse.Menus?.Where(x => x.Name.Equals(todayString, StringComparison.OrdinalIgnoreCase)).FirstOrDefault()?.Lunch.Split("\r\n") ?? Array.Empty<string>();
-        var tomorrowLunch = apiResponse.Menus?.Where(x => x.Name.Equals(tommorowString, StringComparison.OrdinalIgnoreCase)).FirstOrDefault()?.Lunch.Split("\r\n") ?? Array.Empty<string>();
-        var nextDayLunch  = apiResponse.Menus?.Where(x => x.Name.Equals(nextDayString, StringComparison.OrdinalIgnoreCase)).FirstOrDefault()?.Lunch.Split("\r\n") ?? Array.Empty<string>();
+        var todayLunch    = apiResponse.Menus?.Where(x => x.Name.Equals(todayString, StringComparison.OrdinalIgnoreCase)).FirstOrDefault()?.Lunch.Split("\r\n").Take(MaxLunchItems) ?? Array.Empty<string>();
+        var tomorrowLunch = apiResponse.Menus?.Where(x => x.Name.Equals(tommorowString, StringComparison.OrdinalIgnoreCase)).FirstOrDefault()?.Lunch.Split("\r\n").Take(MaxLunchItems) ?? Array.Empty<string>();
+        var nextDayLunch  = apiResponse.Menus?.Where(x => x.Name.Equals(nextDayString, StringComparison.OrdinalIgnoreCase)).FirstOrDefault()?.Lunch.Split("\r\n").Take(MaxLunchItems) ?? Array.Empty<string>();
 
         var args = new LunchUpdatedEventArgs()
         {
