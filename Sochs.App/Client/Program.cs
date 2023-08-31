@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Sochs.Library;
 using Sochs.Library.Interfaces;
+using Toolbelt.Blazor.Extensions.DependencyInjection;
 
 namespace Sochs.App
 {
@@ -14,6 +15,8 @@ namespace Sochs.App
       builder.RootComponents.Add<HeadOutlet>("head::after");
 
       builder.Logging.SetMinimumLevel(LogLevel.Information);
+
+      builder.Services.AddSpeechSynthesis();
 
       builder.Services.AddTransient(sp => new HttpClient());
 
