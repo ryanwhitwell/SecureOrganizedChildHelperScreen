@@ -19,9 +19,14 @@
       @{
         if (todayLunch != null && todayLunch.Any())
         {
-          foreach (var item in todayLunch)
+          var sentinal = 0;
+          for (int i = 0; i < todayLunch.Count(); i++)
           {
-            <li class="list-group-item">@item</li>
+            if (sentinal < MaxLunchItems)
+            {
+              <li class="list-group-item">@todayLunch.ElementAtOrDefault(i)</li>
+              sentinal++;
+            }
           }
         }
       }
@@ -42,9 +47,14 @@
       @{
         if (tomorrowLunch != null && tomorrowLunch.Any())
         {
-          foreach (var item in tomorrowLunch)
+          var sentinal = 0;
+          for (int i = 0; i < tomorrowLunch.Count(); i++)
           {
-            <li class="list-group-item">@item</li>
+            if (sentinal < MaxLunchItems)
+            {
+              <li class="list-group-item">@tomorrowLunch.ElementAtOrDefault(i)</li>
+              sentinal++;
+            }
           }
         }
       }
@@ -64,9 +74,14 @@
       @{
         if (nextDayLunch != null && nextDayLunch.Any())
         {
-          foreach (var item in nextDayLunch)
+          var sentinal = 0;
+          for (int i = 0; i < nextDayLunch.Count(); i++)
           {
-            <li class="list-group-item">@item</li>
+            if (sentinal < MaxLunchItems)
+            {
+              <li class="list-group-item">@nextDayLunch.ElementAtOrDefault(i)</li>
+              sentinal++;
+            }
           }
         }
       }
@@ -78,6 +93,7 @@
 
 
 @code {
+  private const int MaxLunchItems = 5;
 
   private bool showComponent;
 
