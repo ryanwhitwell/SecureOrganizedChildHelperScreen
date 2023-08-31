@@ -41,10 +41,30 @@ ___
 > These are the environemt variables needed on the **deployment host** in order to successfully deploy the application.
 - WEATHER_API_KEY
 
-### Backup process
+### Backup Minecraft server process
 Run the following script from SSH using the command below while in the `/home/pi/` directory replacing the `DROPBOX_API_KEY` value with a real API Key
 
 `nohup ./backup_minecraft_server.sh DROPBOX_API_KEY >> ./minecraft_backup.log 2>&1 &`
+
+### Enable startup in kiosk mode
+Edit this file
+
+sudo nano /etc/xdg/lxsession/LXDE-pi/autostart
+
+And add this:
+
+@xset s off
+@xset -dpms
+@xset s noblank
+@chromium-browser --kiosk --incognito http://localhost  # load chromium after boot and open the website in full screen mode
+
+Then reboot. Chromium should automatically launch in fullscreen mode after the desktop has loaded.
+
+Note: The default file ( /etc/xdg/lxsession/LXDE-pi/autostart ) is the global autostart and is executed each time a user logs into the desktop. In case you want to use local autostart, use /home/pi/.config/lxsession/LXDE-pi/autostart. Local autostart(s) are useful when you want to run different programs or configurations for each user.
+
+
+### Update Mouse X-Axis Orientatin
+ https://www.instructables.com/Rotate-Raspberry-Pi-Display-and-Touchscreen/
 
 ## Credits
 
