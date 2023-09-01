@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Sochs.Library;
 using Sochs.Library.Interfaces;
-using Toolbelt.Blazor.Extensions.DependencyInjection;
 
 namespace Sochs.App
 {
@@ -16,14 +15,13 @@ namespace Sochs.App
 
       builder.Logging.SetMinimumLevel(LogLevel.Information);
 
-      builder.Services.AddSpeechSynthesis();
-
       builder.Services.AddTransient(sp => new HttpClient());
 
       builder.Services.AddSingleton<ITimeService, TimeService>();
       builder.Services.AddSingleton<IWeatherService, WeatherService>();
       builder.Services.AddSingleton<ILunchService, LunchService>();
       builder.Services.AddSingleton<IDailyTasksService, DailyTasksService>();
+      builder.Services.AddSingleton<IAudioService, AudioService>();
 
       await builder.Build().RunAsync();
     }

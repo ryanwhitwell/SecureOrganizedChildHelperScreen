@@ -8,6 +8,8 @@
 @inject ITimeService _timeService;
 @inject IConfiguration _config;
 @inject ILogger<TaskManager> _log;
+@inject IAudioService _audioService;
+
 @implements IDisposable;
 
 <div class="col-lg-6 mt-5 align-self-end">
@@ -114,22 +116,36 @@
 
   private void HandleAchievementEvent(object? sender, DailyTaskAchievementEventArgs args)
   {
-    _log.LogDebug("Achievement event handled for {Child}", Child);
-
     if (args != null && args.TaskData != null)
     {
-      _morningTasksCompleted   = args.TaskData.MorningTasksCompleted(Child, _dayType);
-      _afternoonTasksCompleted = args.TaskData.AfternoonTasksCompleted(Child, _dayType);
-      _eveningTasksCompleted   = args.TaskData.EveningTasksCompleted(Child, _dayType);
-      _nightTasksCompleted     = args.TaskData.NightTasksCompleted(Child, _dayType);
+      var morningTasksCompleted   = args.TaskData.MorningTasksCompleted(Child, _dayType);
+      var afternoonTasksCompleted = args.TaskData.AfternoonTasksCompleted(Child, _dayType);
+      var eveningTasksCompleted   = args.TaskData.EveningTasksCompleted(Child, _dayType);
+      var nightTasksCompleted     = args.TaskData.NightTasksCompleted(Child, _dayType);
 
-      var data = JsonSerializer.Serialize(args.TaskData);
+      var oldAllTasksCompleted = _morningTasksCompleted && _afternoonTasksCompleted && _eveningTasksCompleted && _nightTasksCompleted;
+      var newAllTasksCompleted = morningTasksCompleted && afternoonTasksCompleted && eveningTasksCompleted && nightTasksCompleted;
 
-      _log.LogDebug("Morning completed for {Child}: {_morningTasksCompleted}", Child, _morningTasksCompleted);
-      _log.LogDebug("Afternoon completed for {Child}: {_afternoonTasksCompleted}", Child, _afternoonTasksCompleted);
-      _log.LogDebug("Evening completed for {Child}: {_eveningTasksCompleted}", Child, _eveningTasksCompleted);
-      _log.LogDebug("Night completed for {Child}: {_nightTasksCompleted}", Child, _nightTasksCompleted);
-      _log.LogDebug("{data}", data);
+      var isNewAllTasksCompleted = !oldAllTasksCompleted && newAllTasksCompleted;
+
+      var isNewMorningTasksCompleted   = !_morningTasksCompleted && morningTasksCompleted;
+      var isNewAfternoonTasksCompleted = !_afternoonTasksCompleted && afternoonTasksCompleted;
+      var isNewEveningTasksCompleted   = !_eveningTasksCompleted && eveningTasksCompleted;
+      var isNewNightTasksCompleted     = !_nightTasksCompleted && nightTasksCompleted;
+
+      _morningTasksCompleted   = morningTasksCompleted;
+      _afternoonTasksCompleted = afternoonTasksCompleted;
+      _eveningTasksCompleted   = eveningTasksCompleted;
+      _nightTasksCompleted     = nightTasksCompleted;
+
+      if (isNewAllTasksCompleted)
+      {
+        _audioService.PlayAudioFile("/sounds/success-fanfare-trumpets.mp3");
+      }
+      else if (isNewMorningTasksCompleted || isNewAfternoonTasksCompleted || isNewEveningTasksCompleted || isNewNightTasksCompleted)
+      {
+        _audioService.PlayAudioFile("/sounds/winbanjo-96336.mp3");
+      }
 
       StateHasChanged();
     }

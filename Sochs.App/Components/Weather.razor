@@ -3,12 +3,11 @@
 @using Sochs.Library;
 @using System.Runtime;
 @using Sochs.Library.Models;
-@using Toolbelt.Blazor.SpeechSynthesis;
+
 @inject IConfiguration _config;
 @inject ILogger<Weather> _log;
 @inject IWeatherService _weatherService;
 @inject IJSRuntime _js;
-@inject SpeechSynthesis _speechSynthesis
 
 @implements IDisposable;
 
@@ -29,11 +28,7 @@
             <p style="font-size: 3rem;">@condition</p>
           </div>
           <div class="col-sm-6 text-center">
-
-            <button type="button" class="btn shadow-none" @onclick="() => PlayAudioFile()">
-              <img src="@temperatureImagePath" />
-            </button>
-
+            <img src="@temperatureImagePath" />
             <p style="font-size: 3em;">@temperature°F </p>
           </div>
         </div>
@@ -89,8 +84,6 @@
   {
     _weatherService.OnWeatherUpdated += Handle;
 
-
-
     base.OnInitialized();
   }
 
@@ -112,23 +105,6 @@
 
       StateHasChanged();
     }
-  }
-
-  private async Task PlayAudioFile()
-  {
-    // await _js.InvokeVoidAsync("playAudioFile", "/sounds/success-fanfare-trumpets.mp3");
-
-    var voices = await _speechSynthesis.GetVoicesAsync();
-
-    var voice = voices.FirstOrDefault();
-
-    var utterance = new SpeechSynthesisUtterance()
-    {
-      Text = "this is the best!",
-      Voice = voice
-    };
-
-    await _speechSynthesis.SpeakAsync(utterance);
   }
 
   public void Dispose()

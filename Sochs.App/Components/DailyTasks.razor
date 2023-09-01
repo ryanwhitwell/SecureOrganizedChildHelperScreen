@@ -8,6 +8,8 @@
 @inject IDailyTasksService _dailyTasksService;
 @inject ITimeService _timeService;
 @inject IConfiguration _config;
+@inject IAudioService _audioService;
+
 @implements IDisposable;
 
 <div class="container">
@@ -62,6 +64,8 @@
 
   public void UpdateTask(int id, bool isCompleted)
   {
+    _audioService.PlayAudioFile("/sounds/interface-button-154180.mp3");
+    
     // Call the task service with the opposite value of IsCompleted in order to change the value
     _dailyTasksService.UpdateTask(id, !isCompleted);
   }
