@@ -6,6 +6,10 @@ namespace Sochs.Library
 {
   public class AudioService : IAudioService
   {
+    public const string CompletedAchievement = "/sounds/winbanjo-96336.mp3";
+    public const string CompletedAllTasks    = "/sounds/success-fanfare-trumpets.mp3";
+    public const string Click                = "/sounds/interface-button-154180.mp3";
+
     private readonly ILogger<AudioService> _logger;
 
     private readonly IJSRuntime _js;
@@ -31,7 +35,6 @@ namespace Sochs.Library
         _logger.LogError(ex, "Error playing audio file at path {filePath}", filePath);
         throw;
       }
-      
     }
   }
 }

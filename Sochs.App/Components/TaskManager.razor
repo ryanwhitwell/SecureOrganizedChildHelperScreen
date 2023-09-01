@@ -140,11 +140,11 @@
 
       if (isNewAllTasksCompleted)
       {
-        _audioService.PlayAudioFile("/sounds/success-fanfare-trumpets.mp3");
+        _audioService.PlayAudioFile(AudioService.CompletedAllTasks);
       }
       else if (isNewMorningTasksCompleted || isNewAfternoonTasksCompleted || isNewEveningTasksCompleted || isNewNightTasksCompleted)
       {
-        _audioService.PlayAudioFile("/sounds/winbanjo-96336.mp3");
+        _audioService.PlayAudioFile(AudioService.CompletedAchievement);
       }
 
       StateHasChanged();

@@ -1,4 +1,5 @@
 ﻿@using Sochs.Library.Interfaces;
+@using Sochs.Library;
 
 @inject IAudioService _audioService;
 
@@ -42,7 +43,7 @@
 
   public void Open()
   {
-    _audioService.PlayAudioFile("/sounds/interface-button-154180.mp3");
+    _audioService.PlayAudioFile(AudioService.Click);
     
     modalDisplay = "block";
     modalClass = "show";
@@ -51,7 +52,7 @@
 
   public void Close()
   {
-    _audioService.PlayAudioFile("/sounds/interface-button-154180.mp3");
+    _audioService.PlayAudioFile(AudioService.Click);
 
     modalDisplay = "none";
     modalClass = string.Empty;
