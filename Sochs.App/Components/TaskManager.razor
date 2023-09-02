@@ -8,7 +8,7 @@
 @inject ITimeService _timeService;
 @inject IConfiguration _config;
 @inject ILogger<TaskManager> _log;
-@inject IAudioService _audioService;
+@inject IJSRuntime _js;
 
 @implements IDisposable;
 
@@ -140,11 +140,11 @@
 
       if (isNewAllTasksCompleted)
       {
-        _audioService.PlayAudioFile(AudioService.CompletedAllTasks);
+        _js.InvokeVoidAsync("playCompleteAllTasks");
       }
       else if (isNewMorningTasksCompleted || isNewAfternoonTasksCompleted || isNewEveningTasksCompleted || isNewNightTasksCompleted)
       {
-        _audioService.PlayAudioFile(AudioService.CompletedAchievement);
+        _js.InvokeVoidAsync("playCompleteAchievement");
       }
 
       StateHasChanged();

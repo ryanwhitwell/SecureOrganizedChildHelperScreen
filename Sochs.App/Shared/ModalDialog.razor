@@ -1,7 +1,7 @@
 ﻿@using Sochs.Library.Interfaces;
 @using Sochs.Library;
 
-@inject IAudioService _audioService;
+@inject IJSRuntime _js;
 
 <div class="modal @modalClass" tabindex="-1" role="dialog" style="display:@modalDisplay; overflow-y: auto;">
   <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
@@ -43,7 +43,7 @@
 
   public void Open()
   {
-    _audioService.PlayAudioFile(AudioService.Click);
+    _js.InvokeVoidAsync("playClick");
     
     modalDisplay = "block";
     modalClass = "show";
@@ -52,7 +52,7 @@
 
   public void Close()
   {
-    _audioService.PlayAudioFile(AudioService.Click);
+    _js.InvokeVoidAsync("playClick");
 
     modalDisplay = "none";
     modalClass = string.Empty;

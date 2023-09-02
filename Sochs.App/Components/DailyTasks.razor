@@ -8,7 +8,7 @@
 @inject IDailyTasksService _dailyTasksService;
 @inject ITimeService _timeService;
 @inject IConfiguration _config;
-@inject IAudioService _audioService;
+@inject IJSRuntime _js;
 
 @implements IDisposable;
 
@@ -64,7 +64,7 @@
 
   public void UpdateTask(int id, bool isCompleted)
   {
-    _audioService.PlayAudioFile(AudioService.Click);
+    _js.InvokeVoidAsync("playClick");
     
     // Call the task service with the opposite value of IsCompleted in order to change the value
     _dailyTasksService.UpdateTask(id, !isCompleted);

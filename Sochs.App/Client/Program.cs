@@ -21,7 +21,6 @@ namespace Sochs.App
       builder.Services.AddSingleton<IWeatherService, WeatherService>();
       builder.Services.AddSingleton<ILunchService, LunchService>();
       builder.Services.AddSingleton<IDailyTasksService, DailyTasksService>();
-      builder.Services.AddSingleton<IAudioService, AudioService>();
 
       await builder.Build().RunAsync();
     }

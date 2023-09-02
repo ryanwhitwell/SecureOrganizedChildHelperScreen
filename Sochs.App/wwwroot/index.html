@@ -13,6 +13,7 @@
 </head>
 
 <body>
+  <!-- Main application -->
   <div id="app">
     <svg class="loading-progress">
       <circle r="40%" cx="50%" cy="50%" />
@@ -21,14 +22,27 @@
     <div class="loading-progress-text"></div>
   </div>
 
+  <!-- Error dialog -->
   <div id="blazor-error-ui">
     An unhandled error has occurred.
     <a href="" class="reload">Reload</a>
     <a class="dismiss">🗙</a>
   </div>
-  <audio id="player">
-    <source id="playerSource" src="" />
+
+  <!-- Audio -->
+  <audio id="player_click" preload="auto">
+    <source id="player_click_src" src="/sounds/interface-button-154180.mp3" type="audio/mpeg" />
   </audio>
+
+  <audio id="player_complete_achievement" preload="auto">
+    <source id="player_complete_achievement_src" src="/sounds/winbanjo-96336.mp3" type="audio/mpeg" />
+  </audio>
+
+  <audio id="player_complete_all_tasks" preload="auto">
+    <source id="player_complete_all_tasks_src" src="/sounds/success-fanfare-trumpets.mp3" type="audio/mpeg" />
+  </audio>
+
+  <!-- Custom scripts -->
   <script src="_framework/blazor.webassembly.js"></script>
   <script src="js/bootstrap.bundle.min.js"></script>
   <script src="js/sochs_scripts.js"></script>

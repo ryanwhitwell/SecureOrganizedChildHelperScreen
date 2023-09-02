@@ -11,14 +11,26 @@
   }
 }
 
-function playAudioFile(src) {
-  var audio = document.getElementById('player');
+function playClick() {
+  var audio = document.getElementById('player_click');
   if (audio != null) {
-    var audioSource = document.getElementById('playerSource');
-    if (audioSource != null) {
-      audioSource.src = src;
-      audio.load();
-      audio.play();
-    }
+    audio.load();
+    audio.play();
+  }
+}
+
+function playCompleteAchievement() {
+  var audio = document.getElementById('player_complete_achievement');
+  if (audio != null) {
+    audio.load();
+    audio.play();
+  }
+}
+
+function playCompleteAllTasks() {
+  var audio = document.getElementById('player_complete_all_tasks');
+  if (audio != null) {
+    audio.load();
+    audio.play();
   }
 }
