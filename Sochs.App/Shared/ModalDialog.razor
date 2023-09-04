@@ -38,15 +38,15 @@
   public RenderFragment? ChildContent { get; set; }
 
   private string modalDisplay = "none;";
-  private string modalClass = string.Empty;
-  private bool showBackdrop = false;
+  private string modalClass   = string.Empty;
+  private bool showBackdrop   = false;
 
   public void Open()
   {
     _js.InvokeVoidAsync("playClick");
     
     modalDisplay = "block";
-    modalClass = "show";
+    modalClass   = "show";
     showBackdrop = true;
   }
 
@@ -55,7 +55,7 @@
     _js.InvokeVoidAsync("playClick");
 
     modalDisplay = "none";
-    modalClass = string.Empty;
+    modalClass   = string.Empty;
     showBackdrop = false;
   }
 }

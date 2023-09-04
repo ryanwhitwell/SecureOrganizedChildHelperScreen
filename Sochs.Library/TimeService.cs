@@ -60,14 +60,14 @@ namespace Sochs.Library
 
       return dayOfWeek switch
       {
-        DayOfWeek.Sunday => _config.GetString("Time:DayOfWeekImagePaths:Sunday"),
-        DayOfWeek.Monday => _config.GetString("Time:DayOfWeekImagePaths:Monday"),
-        DayOfWeek.Tuesday => _config.GetString("Time:DayOfWeekImagePaths:Tuesday"),
+        DayOfWeek.Sunday    => _config.GetString("Time:DayOfWeekImagePaths:Sunday"),
+        DayOfWeek.Monday    => _config.GetString("Time:DayOfWeekImagePaths:Monday"),
+        DayOfWeek.Tuesday   => _config.GetString("Time:DayOfWeekImagePaths:Tuesday"),
         DayOfWeek.Wednesday => _config.GetString("Time:DayOfWeekImagePaths:Wednesday"),
-        DayOfWeek.Thursday => _config.GetString("Time:DayOfWeekImagePaths:Thursday"),
-        DayOfWeek.Friday => _config.GetString("Time:DayOfWeekImagePaths:Friday"),
-        DayOfWeek.Saturday => _config.GetString("Time:DayOfWeekImagePaths:Saturday"),
-        _ => throw new InvalidOperationException($"Cannot determine day of week image path")
+        DayOfWeek.Thursday  => _config.GetString("Time:DayOfWeekImagePaths:Thursday"),
+        DayOfWeek.Friday    => _config.GetString("Time:DayOfWeekImagePaths:Friday"),
+        DayOfWeek.Saturday  => _config.GetString("Time:DayOfWeekImagePaths:Saturday"),
+        _                   => throw new InvalidOperationException($"Cannot determine day of week image path")
       };
     }
 
@@ -75,11 +75,11 @@ namespace Sochs.Library
     {
       return timeOfDay switch
       {
-        TimeOfDay.Morning => _config.GetString("Time:TimeOfDayImagePaths:Morning"),
+        TimeOfDay.Morning   => _config.GetString("Time:TimeOfDayImagePaths:Morning"),
         TimeOfDay.Afternoon => _config.GetString("Time:TimeOfDayImagePaths:Afternoon"),
-        TimeOfDay.Evening => _config.GetString("Time:TimeOfDayImagePaths:Evening"),
-        TimeOfDay.Night => _config.GetString("Time:TimeOfDayImagePaths:Night"),
-        _ => throw new InvalidOperationException($"Cannot determine time of day image path based on time of day")
+        TimeOfDay.Evening   => _config.GetString("Time:TimeOfDayImagePaths:Evening"),
+        TimeOfDay.Night     => _config.GetString("Time:TimeOfDayImagePaths:Night"),
+        _                   => throw new InvalidOperationException($"Cannot determine time of day image path based on time of day")
       };
     }
 
@@ -146,11 +146,10 @@ namespace Sochs.Library
 			{
 				if (disposing)
 				{
-					_timer?.Dispose();
+					// Remove the timer
+          _timer?.Dispose();
 				}
 
-				// TODO: free unmanaged resources (unmanaged objects) and override finalizer
-				// TODO: set large fields to null
 				disposedValue = true;
 			}
 		}

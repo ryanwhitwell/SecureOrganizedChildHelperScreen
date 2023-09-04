@@ -14,8 +14,8 @@ namespace Sochs.Library
     private const int UpdateIntervalMinutes = 30;
     private const int MaxLunchItems = 4;
 
-    private const string LunchApiBase        = "https://thrillshare-cmsv2.services.thrillshare.com";
-    private const string LunchApiAllResource = "/api/v2/s/126312/menus";
+    private const string LunchApiBase        = "https://thrillshare-cmsv2.services.thrillshare.com";  // TODO: Move to config file
+    private const string LunchApiAllResource = "/api/v2/s/126312/menus";                              // TODO: Move to config file
 
     private readonly Timer _timer;
     private readonly IConfiguration _config;

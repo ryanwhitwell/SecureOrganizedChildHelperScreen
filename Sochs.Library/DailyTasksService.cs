@@ -98,12 +98,13 @@ namespace Sochs.Library
       {
         if (disposing)
         {
+          // Remove the timer
           _timer?.Dispose();
+
+          // Mark task data for GC
           _taskData = null;
         }
 
-        // TODO: free unmanaged resources (unmanaged objects) and override finalizer
-        // TODO: set large fields to null
         disposedValue = true;
       }
     }

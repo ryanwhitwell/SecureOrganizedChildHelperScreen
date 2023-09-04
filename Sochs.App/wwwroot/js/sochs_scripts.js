@@ -11,6 +11,7 @@
   }
 }
 
+// Each sound had its own audio source defined in markup in order to support layered sounds
 function playClick() {
   var audio = document.getElementById('player_click');
   if (audio != null) {

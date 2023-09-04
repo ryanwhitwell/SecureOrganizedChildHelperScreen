@@ -13,9 +13,10 @@ namespace Sochs.Library
   public class WeatherService : IWeatherService, IDisposable
 	{
 		private const int UpdateIntervalMinutes = 1;
-    private const string WeatherApiZipCode = "06460";
-    private const string WeatherApiBase = "http://api.weatherapi.com";
-    private const string WeatherApiResource = "/v1/current.json";
+
+    private const string WeatherApiZipCode  = "06460";                      // TODO: Move to config file
+    private const string WeatherApiBase     = "http://api.weatherapi.com";  // TODO: Move to config file
+    private const string WeatherApiResource = "/v1/current.json";           // TODO: Move to config file
 
     private readonly int[] RainyWeatherCodes = new int[] 
     {
@@ -64,9 +65,10 @@ namespace Sochs.Library
       };
 
       var query = HttpUtility.ParseQueryString(string.Empty);
-      query["key"] = weatherApiKey;
-      query["q"] = WeatherApiZipCode;
-      query["aqi"] = "no";
+      
+      query["key"]  = weatherApiKey;
+      query["q"]    = WeatherApiZipCode;
+      query["aqi"]  = "no";
       builder.Query = query.ToString();
 
       return new Uri(builder.ToString());
@@ -183,8 +185,8 @@ namespace Sochs.Library
         FeelsLikeTemp.Cold => _config.GetString("Weather:TemperatureFeelingImagePaths:Cold"),
         FeelsLikeTemp.Cool => _config.GetString("Weather:TemperatureFeelingImagePaths:Cool"),
         FeelsLikeTemp.Warm => _config.GetString("Weather:TemperatureFeelingImagePaths:Warm"),
-        FeelsLikeTemp.Hot => _config.GetString("Weather:TemperatureFeelingImagePaths:Hot"),
-        _ => throw new InvalidOperationException("Cannot determine temperature feeling from weather info.")
+        FeelsLikeTemp.Hot  => _config.GetString("Weather:TemperatureFeelingImagePaths:Hot"),
+        _                  => throw new InvalidOperationException("Cannot determine temperature feeling from weather info.")
       };
     }
 
@@ -303,12 +305,13 @@ namespace Sochs.Library
 			{
 				if (disposing)
 				{
-					_timer?.Dispose();
+					// Remove the timer
+          _timer?.Dispose();
+
+          // Remove the Http Client
 					_client?.Dispose();
         }
 
-        // TODO: free unmanaged resources (unmanaged objects) and override finalizer
-        // TODO: set large fields to null
         disposedValue = true;
 			}
 		}

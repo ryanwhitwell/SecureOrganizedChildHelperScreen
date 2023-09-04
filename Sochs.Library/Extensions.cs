@@ -1,6 +1,4 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Sochs.Library.Enums;
-using System;
 
 namespace Sochs.Library
 {

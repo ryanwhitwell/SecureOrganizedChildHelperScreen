@@ -118,26 +118,32 @@
   {
     if (args != null && args.TaskData != null)
     {
+      // Get new task states for time of day
       var morningTasksCompleted   = args.TaskData.MorningTasksCompleted(Child, _dayType);
       var afternoonTasksCompleted = args.TaskData.AfternoonTasksCompleted(Child, _dayType);
       var eveningTasksCompleted   = args.TaskData.EveningTasksCompleted(Child, _dayType);
       var nightTasksCompleted     = args.TaskData.NightTasksCompleted(Child, _dayType);
 
+      // Get new task state for whole day
       var oldAllTasksCompleted = _morningTasksCompleted && _afternoonTasksCompleted && _eveningTasksCompleted && _nightTasksCompleted;
       var newAllTasksCompleted = morningTasksCompleted && afternoonTasksCompleted && eveningTasksCompleted && nightTasksCompleted;
 
+      // Aggregate task state for whole day
       var isNewAllTasksCompleted = !oldAllTasksCompleted && newAllTasksCompleted;
 
+      // Aggregate tasks state for time of day
       var isNewMorningTasksCompleted   = !_morningTasksCompleted && morningTasksCompleted;
       var isNewAfternoonTasksCompleted = !_afternoonTasksCompleted && afternoonTasksCompleted;
       var isNewEveningTasksCompleted   = !_eveningTasksCompleted && eveningTasksCompleted;
       var isNewNightTasksCompleted     = !_nightTasksCompleted && nightTasksCompleted;
 
+      // Update private member values for UI
       _morningTasksCompleted   = morningTasksCompleted;
       _afternoonTasksCompleted = afternoonTasksCompleted;
       _eveningTasksCompleted   = eveningTasksCompleted;
       _nightTasksCompleted     = nightTasksCompleted;
 
+      // If state change is for whole day, play whole day achievement sound, other wise only play the time of day achivement sound
       if (isNewAllTasksCompleted)
       {
         _js.InvokeVoidAsync("playCompleteAllTasks");
