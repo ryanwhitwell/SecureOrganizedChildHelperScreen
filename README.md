@@ -65,6 +65,7 @@ Note: The default file ( /etc/xdg/lxsession/LXDE-pi/autostart ) is the global au
 
 ### Update Mouse X-Axis Orientatin
  https://www.instructables.com/Rotate-Raspberry-Pi-Display-and-Touchscreen/
+ > This guide provides notes on the screen rotation and hints at the mouse x-axis problem, but doesn't offer a solution.
 
 ## Credits
 
