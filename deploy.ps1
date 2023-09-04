@@ -15,7 +15,6 @@ $SochsHost = $Env:SOCHS_SSH_HOST
 $SochsPort = $Env:SOCHS_SSH_PORT
 $WeatherApiKey = $Env:WEATHER_API_KEY
 
-
 function Format-Json {
     <#
     .SYNOPSIS
@@ -43,7 +42,7 @@ function Format-Json {
 
         [Parameter(ParameterSetName = 'Prettify')]
         [ValidateRange(1, 1024)]
-        [int]$Indentation = 2,
+        [int]$Indentation = 4,
 
         [Parameter(ParameterSetName = 'Prettify')]
         [switch]$AsArray
@@ -65,8 +64,10 @@ function Format-Json {
     $result = $Json -split '\r?\n' |
         ForEach-Object {
             # If the line contains a ] or } character, 
-            # we need to decrement the indentation level unless it is inside quotes.
-            if ($_ -match "[}\]]$regexUnlessQuoted") {
+            # we need to decrement the indentation level, unless:
+            #   - it is inside quotes, AND
+            #   - it does not contain a [ or {
+            if (($_ -match "[}\]]$regexUnlessQuoted") -and ($_ -notmatch "[\{\[]$regexUnlessQuoted")) {
                 $indent = [Math]::Max($indent - $Indentation, 0)
             }
 
@@ -74,8 +75,10 @@ function Format-Json {
             $line = (' ' * $indent) + ($_.TrimStart() -replace ":\s+$regexUnlessQuoted", ': ')
 
             # If the line contains a [ or { character, 
-            # we need to increment the indentation level unless it is inside quotes.
-            if ($_ -match "[\{\[]$regexUnlessQuoted") {
+            # we need to increment the indentation level, unless:
+            #   - it is inside quotes, AND
+            #   - it does not contain a ] or }
+            if (($_ -match "[\{\[]$regexUnlessQuoted") -and ($_ -notmatch "[}\]]$regexUnlessQuoted")) {
                 $indent += $Indentation
             }
 
@@ -87,10 +90,10 @@ function Format-Json {
 }
 
 # Update config file for deployment
-#$json = Get-Content ".\Sochs.App\wwwroot\appsettings.json" | ConvertFrom-Json 
-#$json.Application.WeatherApiKey = "" + $WeatherApiKey + ""
-#$json.Application.MockEnabled = "false"
-#$json | ConvertTo-Json | Format-Json | Out-File ".\Sochs.App\wwwroot\appsettings.json"
+$json = Get-Content ".\Sochs.App\wwwroot\appsettings.json" | ConvertFrom-Json 
+$json.Application.WeatherApiKey = "" + $WeatherApiKey + ""
+$json.Application.MockEnabled = "false"
+$json | ConvertTo-Json -Depth 99 | Format-Json -Indentation 2 | Out-File ".\Sochs.App\wwwroot\appsettings.json"
 
 #<#
 
@@ -129,7 +132,9 @@ catch
 
 
 # Reset config file after deployment
-#$json = Get-Content ".\Sochs.App\wwwroot\appsettings.json" | ConvertFrom-Json 
-#$json.Application.WeatherApiKey = "WEATHER_API_KEY"
-#$json.Application.MockEnabled = "true"
-#$json | ConvertTo-Json | Format-Json | Out-File ".\Sochs.App\wwwroot\appsettings.json"
+$json = Get-Content ".\Sochs.App\wwwroot\appsettings.json" | ConvertFrom-Json 
+$json.Application.WeatherApiKey = "WEATHER_API_KEY"
+$json.Application.MockEnabled = "true"
+$json | ConvertTo-Json -Depth 99 | Format-Json -Indentation 2 | Out-File ".\Sochs.App\wwwroot\appsettings.json"
+
+
