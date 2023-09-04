@@ -87,10 +87,10 @@ function Format-Json {
 }
 
 # Update config file for deployment
-$json = Get-Content ".\Sochs.App\wwwroot\appsettings.json" | ConvertFrom-Json 
-$json.Application.WeatherApiKey = "" + $WeatherApiKey + ""
-$json.Application.MockEnabled = "false"
-$json | ConvertTo-Json | Format-Json | Out-File ".\Sochs.App\wwwroot\appsettings.json"
+#$json = Get-Content ".\Sochs.App\wwwroot\appsettings.json" | ConvertFrom-Json 
+#$json.Application.WeatherApiKey = "" + $WeatherApiKey + ""
+#$json.Application.MockEnabled = "false"
+#$json | ConvertTo-Json | Format-Json | Out-File ".\Sochs.App\wwwroot\appsettings.json"
 
 #<#
 
@@ -129,7 +129,7 @@ catch
 
 
 # Reset config file after deployment
-$json = Get-Content ".\Sochs.App\wwwroot\appsettings.json" | ConvertFrom-Json 
-$json.Application.WeatherApiKey = "WEATHER_API_KEY"
-$json.Application.MockEnabled = "true"
-$json | ConvertTo-Json | Format-Json | Out-File ".\Sochs.App\wwwroot\appsettings.json"
+#$json = Get-Content ".\Sochs.App\wwwroot\appsettings.json" | ConvertFrom-Json 
+#$json.Application.WeatherApiKey = "WEATHER_API_KEY"
+#$json.Application.MockEnabled = "true"
+#$json | ConvertTo-Json | Format-Json | Out-File ".\Sochs.App\wwwroot\appsettings.json"
