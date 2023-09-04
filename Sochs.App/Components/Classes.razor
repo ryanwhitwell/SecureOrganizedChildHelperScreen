@@ -1,0 +1,72 @@
+﻿@using Sochs.Library.Enums;
+@using Sochs.Library.Events;
+@using Sochs.Library.Interfaces;
+@using Sochs.Library;
+@using System.Runtime;
+
+@inject IClassService _classService;
+@implements IDisposable;
+
+<div class="col-6 @(showComponent ? "visible mt-5" : "invisible")">
+
+  <!-- Todays Special Class -->
+  <div class="card shadow-lg">
+    <h5 class="card-header">
+      @(Child)'s Special Class Today
+    </h5>
+
+    <div class="card-body">
+
+      <table>
+        <tr>
+          <td><img src="@todaysSpecialClassImagePath" /></td>
+          <td style="width: 50px;"></td>
+          <td><span style="font-size: 3rem;">@todaysSpecialClass</span></td>
+        </tr>
+      </table>
+
+    </div>
+  </div>
+
+</div>
+
+@code {
+  private bool showComponent;
+
+  private string? todaysSpecialClass;
+  private string? todaysSpecialClassImagePath;
+
+  [Parameter]
+  public Child Child { get; set; }
+
+  protected override void OnInitialized()
+  {
+    _classService.Child = Child;
+
+    _classService.OnClassesUpdated += Handle;
+
+    base.OnInitialized();
+  }
+
+  public void Handle(object? sender, ClassesUpdatedEventArgs args)
+  {
+    if (args != null)
+    {
+      // Only show component on weekdays
+      showComponent = args.IsWeekday;
+
+      if (showComponent)
+      {
+        todaysSpecialClass          = args.TodaysSpecialClass;
+        todaysSpecialClassImagePath = args.TodaysSpecialClassImagePath;
+      }
+
+      StateHasChanged();
+    }
+  }
+
+  public void Dispose()
+  {
+    _classService.OnClassesUpdated -= Handle;
+  }
+}

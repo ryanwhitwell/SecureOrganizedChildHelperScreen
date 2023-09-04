@@ -17,10 +17,14 @@ namespace Sochs.App
 
       builder.Services.AddTransient(sp => new HttpClient());
 
+      // Singletons
       builder.Services.AddSingleton<ITimeService, TimeService>();
       builder.Services.AddSingleton<IWeatherService, WeatherService>();
       builder.Services.AddSingleton<ILunchService, LunchService>();
-      builder.Services.AddSingleton<IDailyTasksService, DailyTasksService>();
+
+      // Transients
+      builder.Services.AddTransient<IDailyTasksService, DailyTasksService>();
+      builder.Services.AddTransient<IClassService, ClassService>();
 
       await builder.Build().RunAsync();
     }
