@@ -8,6 +8,10 @@ namespace Sochs.Library
   public class TimeService : ITimeService, IDisposable
   {
     private const int UpdateIntervalSeconds = 1;
+    private const int NightStartHour        = 20;
+    private const int MorningStartHour      = 5;
+    private const int AfternoonStartHour    = 11;
+    private const int EveningStartHour      = 18;
 
     private readonly Timer _timer;
     private readonly IConfiguration _config;
@@ -40,18 +44,33 @@ namespace Sochs.Library
       string dayImagePath  = GetDayImagePath(now);
       bool enableDarkMode  = timeOfDay == TimeOfDay.Evening || timeOfDay == TimeOfDay.Night;
 
+      double minutesUntilNextTimeOfDay = GetMinutesUntilNextTimeOfDay(now, timeOfDay);
+
       var args = new TimeUpdatedEventArgs()
       {
-        DateTime           = DateTime.Now,
-        TimeOfDayImagePath = timeImagePath,
-        SeasonImagePath    = dateImagePath,
-        DayOfWeekImagePath = dayImagePath,
-        EnableDarkMode     = enableDarkMode,
-        TimeOfDay          = timeOfDay,
-        DayType            = dayType
+        DateTime                  = DateTime.Now,
+        TimeOfDayImagePath        = timeImagePath,
+        SeasonImagePath           = dateImagePath,
+        DayOfWeekImagePath        = dayImagePath,
+        EnableDarkMode            = enableDarkMode,
+        TimeOfDay                 = timeOfDay,
+        DayType                   = dayType,
+        MinutesUntilNextTimeOfDay = minutesUntilNextTimeOfDay
       };
 
       OnTimeUpdated?.Invoke(this, args);
+    }
+
+    private static double GetMinutesUntilNextTimeOfDay(DateTime now, TimeOfDay timeOfDay)
+    {
+      return timeOfDay switch
+      {
+        TimeOfDay.Morning => (new DateTime(now.Year, now.Month, now.Day, AfternoonStartHour, 0, 0) - now).TotalMinutes,
+        TimeOfDay.Afternoon => (new DateTime(now.Year, now.Month, now.Day, EveningStartHour, 0, 0) - now).TotalMinutes,
+        TimeOfDay.Evening => (new DateTime(now.Year, now.Month, now.Day, NightStartHour, 0, 0) - now).TotalMinutes,
+        TimeOfDay.Night => (new DateTime(now.Year, now.Month, now.Day, MorningStartHour, 0, 0).AddDays(1) - now).TotalMinutes,
+        _ => throw new InvalidOperationException($"Cannot determine day of week image path")
+      }; ;
     }
 
     private string GetDayImagePath(DateTime now)
@@ -87,15 +106,15 @@ namespace Sochs.Library
     {
       var hour = now.Hour;
 
-      if (hour >= 5 && hour < 11) // Morning 5 AM - 10:59 AM
+      if (hour >= MorningStartHour && hour < AfternoonStartHour) // Morning 5 AM - 10:59 AM
       {
         return TimeOfDay.Morning;
       }
-      else if (hour >= 11 && hour < 18) // Afternoon 11 AM - 5:59 PM
+      else if (hour >= AfternoonStartHour && hour < EveningStartHour) // Afternoon 11 AM - 5:59 PM
       {
         return TimeOfDay.Afternoon;
       }
-      else if (hour >= 18 && hour < 20) // Evening 6 PM - 7:59 PM
+      else if (hour >= 18 && hour < NightStartHour) // Evening 6 PM - 7:59 PM
       {
         return TimeOfDay.Evening;
       }

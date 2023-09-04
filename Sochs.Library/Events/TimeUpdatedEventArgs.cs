@@ -17,5 +17,7 @@ namespace Sochs.Library.Events
     public TimeOfDay TimeOfDay { get; set; }
 
     public DayType DayType { get; set; }
+
+    public double MinutesUntilNextTimeOfDay {  get; set; }
   }
 }
