@@ -6,6 +6,12 @@
 
     public string TodaysSpecialClassImagePath { get; set; } = string.Empty;
 
-    public bool IsWeekday { get; set; }
+    public string TomorrowSpecialClass { get; set; } = string.Empty;
+
+    public string TomorrowSpecialClassImagePath { get; set; } = string.Empty;
+
+    public bool TodayIsWeekday { get; set; }
+
+    public bool TomorrowIsWeekday { get; set; }
   }
 }

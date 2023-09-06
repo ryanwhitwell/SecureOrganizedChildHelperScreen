@@ -38,17 +38,33 @@ namespace Sochs.Library
 
       try
       {
-        var dayOfWeek = DateTime.Now.DayOfWeek;
+        var args = new ClassesUpdatedEventArgs();
 
-        var className = _config.GetString($"SpecialClasses:{Child}:{dayOfWeek}:Name");
-        var imagePath = _config.GetString($"SpecialClasses:{Child}:{dayOfWeek}:ImagePath");
 
-        var args = new ClassesUpdatedEventArgs()
+        var today = DateTime.Now.DayOfWeek;
+        var tomorrow = DateTime.Now.AddDays(1).DayOfWeek;
+
+        // Today is weekday
+        if (today != DayOfWeek.Sunday && today != DayOfWeek.Saturday)
         {
-          TodaysSpecialClass          = className,
-          TodaysSpecialClassImagePath = imagePath,
-          IsWeekday                   = dayOfWeek != DayOfWeek.Sunday && dayOfWeek != DayOfWeek.Saturday,
-        };
+          var className = _config.GetString($"SpecialClasses:{Child}:{today}:Name");
+          var imagePath = _config.GetString($"SpecialClasses:{Child}:{today}:ImagePath");
+
+          args.TodaysSpecialClass          = className;
+          args.TodaysSpecialClassImagePath = imagePath;
+          args.TodayIsWeekday              = true;
+        }
+
+        // Tomorrow is weekday
+        if (tomorrow != DayOfWeek.Sunday && tomorrow != DayOfWeek.Saturday)
+        {
+          var className = _config.GetString($"SpecialClasses:{Child}:{tomorrow}:Name");
+          var imagePath = _config.GetString($"SpecialClasses:{Child}:{tomorrow}:ImagePath");
+
+          args.TomorrowSpecialClass          = className;
+          args.TomorrowSpecialClassImagePath = imagePath;
+          args.TomorrowIsWeekday             = true;
+        }
 
         OnClassesUpdated?.Invoke(this, args);
       }
