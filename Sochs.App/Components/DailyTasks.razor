@@ -14,24 +14,52 @@
 
 <div class="container">
   <div class="row">
-    <div class="col">
+    <div class="col-5">
+      <p style="font-size: 3rem;">@(Child)'s Tasks</p>
+    </div>
+    <div class="col-7">
 
       <!-- BEGIN Time Of Day Navigation -->
-      <ul class="nav justify-content-end">
+      <!--
+      <ul class="nav nav-pills justify-content-end">
         <li class="nav-item">
-          <button type="button" class="btn btn-primary-outline shadow-none" @onclick="() => SetTimeOfDay(TimeOfDay.Morning)">@(TimeOfDay.Morning)</button>
+          <a class="nav-link @(_timeOfDay == TimeOfDay.Morning ? "active" : "")" href="#" @onclick="() => SetTimeOfDay(TimeOfDay.Morning)">@(TimeOfDay.Morning)</a>
         </li>
         <li class="nav-item">
-          <button type="button" class="btn btn-primary-outline shadow-none" @onclick="() => SetTimeOfDay(TimeOfDay.Afternoon)">@(TimeOfDay.Afternoon)</button>
+          <a class="nav-link @(_timeOfDay == TimeOfDay.Afternoon ? "active" : "")" href="#" @onclick="() => SetTimeOfDay(TimeOfDay.Afternoon)">@(TimeOfDay.Afternoon)</a>
+        </li>
+        <li class="nav-item ">
+          <a class="nav-link @(_timeOfDay == TimeOfDay.Evening ? "active" : "")" href="#" @onclick="() => SetTimeOfDay(TimeOfDay.Evening)">@(TimeOfDay.Evening)</a>
         </li>
         <li class="nav-item">
-          <button type="button" class="btn btn-primary-outline shadow-none" @onclick="() => SetTimeOfDay(TimeOfDay.Evening)">@(TimeOfDay.Evening)</button>
-        </li>
-        <li class="nav-item">
-          <button type="button" class="btn btn-primary-outline shadow-none" @onclick="() => SetTimeOfDay(TimeOfDay.Night)">@(TimeOfDay.Night)</button>
+          <a class="nav-link @(_timeOfDay == TimeOfDay.Night ? "active" : "")" href="#" @onclick="() => SetTimeOfDay(TimeOfDay.Night)">@(TimeOfDay.Night)</a>
         </li>
       </ul>
+      -->
       <!-- END  Time Of Day Navigation -->
+
+      <ul class="nav nav-pills justify-content-end">
+        <li class="nav-item">
+          <button type="button" class="btn shadow-none nav-link" @onclick="() => SetTimeOfDay(TimeOfDay.Morning)">
+            <img class="@(_timeOfDay == TimeOfDay.Morning ? "image-underline" : "")" src="@_config.GetString($"Time:TimeOfDayImagePaths:MorningSmall")" />
+          </button>
+        </li>
+        <li class="nav-item">
+          <button type="button" class="btn shadow-none nav-link" @onclick="() => SetTimeOfDay(TimeOfDay.Afternoon)">
+            <img class="@(_timeOfDay == TimeOfDay.Afternoon ? "image-underline" : "")" src="@_config.GetString($"Time:TimeOfDayImagePaths:AfternoonSmall")" />
+          </button>
+        </li>
+        <li class="nav-item">
+          <button type="button" class="btn shadow-none nav-link" @onclick="() => SetTimeOfDay(TimeOfDay.Evening)">
+            <img class="@(_timeOfDay == TimeOfDay.Evening ? "image-underline" : "")" src="@_config.GetString($"Time:TimeOfDayImagePaths:EveningSmall")" />
+          </button>
+        </li>
+        <li class="nav-item">
+          <button type="button" class="btn shadow-none nav-link" @onclick="() => SetTimeOfDay(TimeOfDay.Night)">
+            <img class="@(_timeOfDay == TimeOfDay.Night ? "image-underline" : "")" src="@_config.GetString($"Time:TimeOfDayImagePaths:NightSmall")" />
+          </button>
+        </li>
+      </ul>
 
     </div>
   </div>
@@ -84,6 +112,8 @@
 
   public void SetTimeOfDay(TimeOfDay timeOfDay)
   {
+    _js.InvokeVoidAsync("playClick");
+    
     _timeOfDay = timeOfDay;
 
     StateHasChanged();
