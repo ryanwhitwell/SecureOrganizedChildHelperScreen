@@ -18,15 +18,22 @@ namespace Sochs.Library
 
     private readonly Timer _timer;
     private readonly IConfiguration _config;
+    private readonly ILogger<DailyTasksService> _logger;
 
-    public DailyTasksService(IConfiguration config)
+    public DailyTasksService(HttpClient client, IConfiguration config, ILogger<DailyTasksService> logger)
     {
       _ = config ?? throw new ArgumentNullException(nameof(config));
+      _ = logger ?? throw new ArgumentNullException(nameof(logger));
 
       _config = config;
+      _logger = logger;
+
+      //_client.BaseAddress = new Uri("http://localhost");
 
       var autoEvent = new AutoResetEvent(false);
       _timer = new Timer(UpdateDailyTasks_Callback, autoEvent, new TimeSpan(0, 0, 0), new TimeSpan(0, 0, UpdateIntervalSeconds));
+      _logger = logger;
+
     }
 
     public event EventHandler<DailyTasksResetEventArgs>? OnDailyTasksReset;
@@ -52,28 +59,55 @@ namespace Sochs.Library
       };
 
       // Load data structure from config file
-      var allTasks = _config.GetSection("Tasks");
+      var tasksSection = _config.GetSection("Tasks");
 
-      foreach (var item in allTasks.GetChildren())
+      // Index the data to maintain task order
+      var index = 0;
+
+      // Child
+      foreach (var allChildren in tasksSection.GetChildren())
       {
-        var key         = int.Parse(item.Key);
-        var description = item.GetString("Description");
-        var imagePath   = item.GetString("ImagePath");
-        var child       = item.GetEnum<Child>("Child");
-        var timeOfDay   = item.GetEnum<TimeOfDay>("TimeOfDay");
-        var dayType     = item.GetEnum<DayType>("DayType");
+        var childKey = allChildren.Key;
 
-        var newTask = new DailyTask()
+        var child = Enum.Parse<Child>(childKey);
+
+        // DayOfWeek
+        foreach (var allDaysOfWeek in allChildren.GetChildren())
         {
-          Id          = key,
-          Description = description,
-          ImagePath   = imagePath,
-          Child       = child,
-          TimeOfDay   = timeOfDay,
-          DayType     = dayType
-        };
+          var dayOfWeekKey = allDaysOfWeek.Key;
 
-        data.Tasks.TryAdd(key, newTask);
+          var dayOfWeek = Enum.Parse<DayOfWeek>(dayOfWeekKey);
+
+          // TimeOfDay
+          foreach (var allTimeOfDay in allDaysOfWeek.GetChildren())
+          {
+            var timeOfDayKey = allTimeOfDay.Key;
+
+            var timeOfDay = Enum.Parse<TimeOfDay>(timeOfDayKey);
+
+            // Tasks
+            foreach (var allTasks in allTimeOfDay.GetChildren())
+            {
+              foreach (var task in allTasks.GetChildren())
+              {
+                var newTask = new DailyTask()
+                {
+                  Id          = index,
+                  Description = task.GetString("Description"),
+                  ImagePath   = task.GetString("ImagePath"),
+                  Child       = child,
+                  DayOfWeek   = dayOfWeek,
+                  TimeOfDay   = timeOfDay
+                };
+
+                data.Tasks.TryAdd(newTask.Id, newTask);
+
+                // increment the index after adding an item
+                index++;
+              }
+            }
+          }
+        }
       }
 
       return data;

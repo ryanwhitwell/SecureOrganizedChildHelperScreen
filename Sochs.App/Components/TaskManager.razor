@@ -72,7 +72,7 @@
 
   private TimeOfDay _timeOfDay { get; set; }
 
-  private DayType _dayType { get; set; }
+  private DayOfWeek _dayOfWeek { get; set; }
 
   private bool _morningTasksCompleted;
   private bool _afternoonTasksCompleted;
@@ -115,7 +115,7 @@
     if (args != null)
     {
       _timeOfDay = args.TimeOfDay;
-      _dayType = args.DayType;
+      _dayOfWeek = args.DateTime.DayOfWeek;
     }
   }
 
@@ -130,10 +130,10 @@
     if (args != null && args.TaskData != null)
     {
       // Get new task states for time of day
-      var morningTasksCompleted   = args.TaskData.MorningTasksCompleted(Child, _dayType);
-      var afternoonTasksCompleted = args.TaskData.AfternoonTasksCompleted(Child, _dayType);
-      var eveningTasksCompleted   = args.TaskData.EveningTasksCompleted(Child, _dayType);
-      var nightTasksCompleted     = args.TaskData.NightTasksCompleted(Child, _dayType);
+      var morningTasksCompleted   = args.TaskData.MorningTasksCompleted(Child, _dayOfWeek);
+      var afternoonTasksCompleted = args.TaskData.AfternoonTasksCompleted(Child, _dayOfWeek);
+      var eveningTasksCompleted   = args.TaskData.EveningTasksCompleted(Child, _dayOfWeek);
+      var nightTasksCompleted     = args.TaskData.NightTasksCompleted(Child, _dayOfWeek);
 
       // Get new task state for whole day
       var oldAllTasksCompleted = _morningTasksCompleted && _afternoonTasksCompleted && _eveningTasksCompleted && _nightTasksCompleted;

@@ -35,8 +35,8 @@ namespace Sochs.Library
       _config = config;
       _log = log;
 
-      client.BaseAddress = new Uri(LunchApiBase);
-      client.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue() {  NoCache = true, MustRevalidate = true  };
+      _client.BaseAddress = new Uri(LunchApiBase);
+      _client.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue() {  NoCache = true, MustRevalidate = true  };
 
       _lunchUri = GenerateLunchUri();
 

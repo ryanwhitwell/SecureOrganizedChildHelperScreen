@@ -19,25 +19,6 @@
     </div>
     <div class="col-7">
 
-      <!-- BEGIN Time Of Day Navigation -->
-      <!--
-      <ul class="nav nav-pills justify-content-end">
-        <li class="nav-item">
-          <a class="nav-link @(_timeOfDay == TimeOfDay.Morning ? "active" : "")" href="#" @onclick="() => SetTimeOfDay(TimeOfDay.Morning)">@(TimeOfDay.Morning)</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link @(_timeOfDay == TimeOfDay.Afternoon ? "active" : "")" href="#" @onclick="() => SetTimeOfDay(TimeOfDay.Afternoon)">@(TimeOfDay.Afternoon)</a>
-        </li>
-        <li class="nav-item ">
-          <a class="nav-link @(_timeOfDay == TimeOfDay.Evening ? "active" : "")" href="#" @onclick="() => SetTimeOfDay(TimeOfDay.Evening)">@(TimeOfDay.Evening)</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link @(_timeOfDay == TimeOfDay.Night ? "active" : "")" href="#" @onclick="() => SetTimeOfDay(TimeOfDay.Night)">@(TimeOfDay.Night)</a>
-        </li>
-      </ul>
-      -->
-      <!-- END  Time Of Day Navigation -->
-
       <ul class="nav nav-pills justify-content-end">
         <li class="nav-item">
           <button type="button" class="btn shadow-none nav-link" @onclick="() => SetTimeOfDay(TimeOfDay.Morning)">
@@ -69,7 +50,7 @@
       <!-- Task completion interface -->
       @if (_taskData != null && _taskData.HasData)
       {
-        var tasks = _taskData.GetTasks(Child, _timeOfDay, _dayType);
+        var tasks = _taskData.GetTasks(Child, _timeOfDay, _dayOfWeek);
         
         <table class="table">
           <!-- 
@@ -106,7 +87,7 @@
 
   private TimeOfDay _timeOfDay { get; set; }
 
-  private DayType _dayType { get; set; }
+  private DayOfWeek _dayOfWeek { get; set; }
 
   private DailyTaskData? _taskData { get; set; }
 
@@ -146,8 +127,7 @@
   {
     if (args != null)
     {
-      //_timeOfDay = args.TimeOfDay; // TODO: Don't automatically set the time of day on the Handler, set based on the new navigation
-      _dayType = args.DayType;
+      _dayOfWeek = args.DateTime.DayOfWeek;
     }
   }
 

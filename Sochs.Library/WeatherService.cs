@@ -42,8 +42,8 @@ namespace Sochs.Library
 			_config = config;
 			_log = log;
 
-      client.BaseAddress = new Uri(WeatherApiBase);
-      client.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue() { NoCache = true, MustRevalidate = true };
+      _client.BaseAddress = new Uri(WeatherApiBase);
+      _client.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue() { NoCache = true, MustRevalidate = true };
 
       _weatherUri = GenerateWeatherApiUri();
 
