@@ -7,9 +7,8 @@
 @inject IClassService _classService;
 @implements IDisposable;
 
-<div class="col-3 @(todayIsWeekday || tomorrowIsWeekday ? "visible mt-3" : "invisible")">
+<div class="col-6 @(todayIsWeekday || tomorrowIsWeekday ? "visible mt-3" : "invisible")">
 
-  <!-- Todays Special Class -->
   <div class="card shadow-lg">
     <!--
     <h5 class="card-header">
@@ -17,31 +16,30 @@
     </h5>
     -->
     <div class="card-body text-center">
-      @if(todayIsWeekday)
-      {
-        <img src="@todaysSpecialClassImagePath" />
-        <p class="mb-0" style="font-size: 2rem;">@todaysSpecialClass</p>
-      }
-    </div>
 
-  </div>
-</div>
+      <div class="row">
+        <div class="col-6" style="border-right: 1px solid #6c757d;">
+          <!-- Today -->
+          @if (todayIsWeekday)
+          {
+            <p class="h6 text-muted">Today</p>
+            <img src="@todaysSpecialClassImagePath" />
+            <p class="mb-0" style="font-size: 2rem;">@todaysSpecialClass</p>
+          }
+        </div>
+        <div class="col-6">
+          <!-- Tomorrow -->
+          @if (tomorrowIsWeekday)
+          {
+            <p class="h6 text-muted">Tomorrow</p>
+            <img src="@tomorrowSpecialClassImagePath" />
+            <p class="mb-0" style="font-size: 2rem;">@tomorrowSpecialClass</p>
+          }
+        </div>
 
-<div class="col-3 @(todayIsWeekday || tomorrowIsWeekday ? "visible mt-3" : "invisible")">
 
-  <!-- Tomorrow Special Class -->
-  <div class="card shadow-lg">
-    <!--
-    <h5 class="card-header">
-      Tomorrow
-    </h5>
-    -->
-    <div class="card-body text-center">
-      @if (tomorrowIsWeekday)
-      {
-        <img src="@tomorrowSpecialClassImagePath" />
-        <p class="mb-0" style="font-size: 2rem;">@tomorrowSpecialClass</p>
-      }
+      </div>
+      
     </div>
 
   </div>
