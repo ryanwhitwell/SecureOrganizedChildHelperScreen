@@ -15,8 +15,24 @@
 function playClick() {
   var audio = document.getElementById('player_click');
   if (audio != null) {
+
     audio.load();
-    audio.play();
+
+    var playPromise = audio.play();
+
+    if (playPromise !== undefined) {
+      playPromise.then(_ => {
+        // Audio is playing
+      })
+        .catch(error => {
+          // Playing error
+        });
+    }
+
+    
+
+    // audio.load();
+    // audio.play();
   }
 }
 
@@ -24,7 +40,22 @@ function playCompleteAchievement() {
   var audio = document.getElementById('player_complete_achievement');
   if (audio != null) {
     audio.load();
-    audio.play();
+
+    var playPromise = audio.play();
+
+    if (playPromise !== undefined) {
+      playPromise.then(_ => {
+        // Audio is playing
+      })
+        .catch(error => {
+          // Playing error
+        });
+    }
+
+
+
+    // audio.load();
+    // audio.play();
   }
 }
 
@@ -32,6 +63,21 @@ function playCompleteAllTasks() {
   var audio = document.getElementById('player_complete_all_tasks');
   if (audio != null) {
     audio.load();
-    audio.play();
+
+    var playPromise = audio.play();
+
+    if (playPromise !== undefined) {
+      playPromise.then(_ => {
+        // Audio is playing
+      })
+        .catch(error => {
+          // Playing error
+        });
+    }
+
+
+
+    // audio.load();
+    // audio.play();
   }
 }
