@@ -17,6 +17,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sochs.App", "Sochs.App\Soch
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sochs.Library", "Sochs.Library\Sochs.Library.csproj", "{66652AEF-3091-41F3-9E59-7A78253964FC}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{8CBD8238-A7CD-4BA2-8380-5D84108CC877}"
+	ProjectSection(SolutionItems) = preProject
+		.github\dependabot.yml = .github\dependabot.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
