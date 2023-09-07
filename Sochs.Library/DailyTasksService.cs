@@ -18,22 +18,16 @@ namespace Sochs.Library
 
     private readonly Timer _timer;
     private readonly IConfiguration _config;
-    private readonly ILogger<DailyTasksService> _logger;
 
-    public DailyTasksService(HttpClient client, IConfiguration config, ILogger<DailyTasksService> logger)
+    public DailyTasksService(IConfiguration config, ILogger<DailyTasksService> logger)
     {
       _ = config ?? throw new ArgumentNullException(nameof(config));
       _ = logger ?? throw new ArgumentNullException(nameof(logger));
 
       _config = config;
-      _logger = logger;
-
-      //_client.BaseAddress = new Uri("http://localhost");
 
       var autoEvent = new AutoResetEvent(false);
       _timer = new Timer(UpdateDailyTasks_Callback, autoEvent, new TimeSpan(0, 0, 0), new TimeSpan(0, 0, UpdateIntervalSeconds));
-      _logger = logger;
-
     }
 
     public event EventHandler<DailyTasksResetEventArgs>? OnDailyTasksReset;
@@ -86,25 +80,22 @@ namespace Sochs.Library
             var timeOfDay = Enum.Parse<TimeOfDay>(timeOfDayKey);
 
             // Tasks
-            foreach (var allTasks in allTimeOfDay.GetChildren())
+            foreach (var task in allTimeOfDay.GetChildren())
             {
-              foreach (var task in allTasks.GetChildren())
+              var newTask = new DailyTask()
               {
-                var newTask = new DailyTask()
-                {
-                  Id          = index,
-                  Description = task.GetString("Description"),
-                  ImagePath   = task.GetString("ImagePath"),
-                  Child       = child,
-                  DayOfWeek   = dayOfWeek,
-                  TimeOfDay   = timeOfDay
-                };
+                Id          = index,
+                Description = task.GetString("Description"),
+                ImagePath   = task.GetString("ImagePath"),
+                Child       = child,
+                DayOfWeek   = dayOfWeek,
+                TimeOfDay   = timeOfDay
+              };
 
-                data.Tasks.TryAdd(newTask.Id, newTask);
+              data.Tasks.TryAdd(newTask.Id, newTask);
 
-                // increment the index after adding an item
-                index++;
-              }
+              // increment the index after adding an item
+              index++;
             }
           }
         }
