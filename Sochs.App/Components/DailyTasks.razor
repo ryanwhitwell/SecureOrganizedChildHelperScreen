@@ -16,6 +16,28 @@
   <div class="row">
     <div class="col">
 
+      <!-- BEGIN Time Of Day Navigation -->
+      <ul class="nav justify-content-end">
+        <li class="nav-item">
+          <button type="button" class="btn btn-primary-outline shadow-none" @onclick="() => SetTimeOfDay(TimeOfDay.Morning)">@(TimeOfDay.Morning)</button>
+        </li>
+        <li class="nav-item">
+          <button type="button" class="btn btn-primary-outline shadow-none" @onclick="() => SetTimeOfDay(TimeOfDay.Afternoon)">@(TimeOfDay.Afternoon)</button>
+        </li>
+        <li class="nav-item">
+          <button type="button" class="btn btn-primary-outline shadow-none" @onclick="() => SetTimeOfDay(TimeOfDay.Evening)">@(TimeOfDay.Evening)</button>
+        </li>
+        <li class="nav-item">
+          <button type="button" class="btn btn-primary-outline shadow-none" @onclick="() => SetTimeOfDay(TimeOfDay.Night)">@(TimeOfDay.Night)</button>
+        </li>
+      </ul>
+      <!-- END  Time Of Day Navigation -->
+
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+
       <!-- Task completion interface -->
       @if (_taskData != null && _taskData.HasData)
       {
@@ -60,12 +82,19 @@
 
   private DailyTaskData? _taskData { get; set; }
 
+  public void SetTimeOfDay(TimeOfDay timeOfDay)
+  {
+    _timeOfDay = timeOfDay;
+
+    StateHasChanged();
+  }
+
   public event EventHandler<DailyTaskAchievementEventArgs>? OnDailyTaskAchievement;
 
   public void UpdateTask(int id, bool isCompleted)
   {
     _js.InvokeVoidAsync("playClick");
-    
+
     // Call the task service with the opposite value of IsCompleted in order to change the value
     _dailyTasksService.UpdateTask(id, !isCompleted);
   }
@@ -78,6 +107,8 @@
     _dailyTasksService.OnDailyTaskUpdated += HandleOnDailyTaskUpdated;
     _timeService.OnTimeUpdated            += HandleTimeUpdated;
 
+    _timeOfDay = TimeService.GetTimeOfDay(DateTime.Now);
+
     base.OnInitialized();
   }
 
@@ -85,8 +116,8 @@
   {
     if (args != null)
     {
-      _timeOfDay = args.TimeOfDay;
-      _dayType   = args.DayType;
+      //_timeOfDay = args.TimeOfDay; // TODO: Don't automatically set the time of day on the Handler, set based on the new navigation
+      _dayType = args.DayType;
     }
   }
 

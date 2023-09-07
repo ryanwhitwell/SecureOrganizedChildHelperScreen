@@ -37,6 +37,8 @@
   [Parameter]
   public RenderFragment? ChildContent { get; set; }
 
+  public event EventHandler<EventArgs>? OnOpen;
+
   private string modalDisplay = "none;";
   private string modalClass   = string.Empty;
   private bool showBackdrop   = false;
@@ -48,6 +50,8 @@
     modalDisplay = "block";
     modalClass   = "show";
     showBackdrop = true;
+
+    OnOpen?.Invoke(this, new EventArgs());
   }
 
   public void Close()

@@ -86,6 +86,11 @@
       DailyTasks.OnDailyTaskAchievement += HandleAchievementEvent;
     }
 
+    if (firstRender && TaskDialog != null)
+    {
+      TaskDialog.OnOpen += HandleModalOpen;
+    }
+
     base.OnAfterRender(firstRender);
   }
 
@@ -112,6 +117,12 @@
       _timeOfDay = args.TimeOfDay;
       _dayType = args.DayType;
     }
+  }
+
+  private void HandleModalOpen(object? sender, EventArgs args)
+  {
+    var timeOfDay = TimeService.GetTimeOfDay(DateTime.Now);
+    DailyTasks?.SetTimeOfDay(timeOfDay);
   }
 
   private void HandleAchievementEvent(object? sender, DailyTaskAchievementEventArgs args)
