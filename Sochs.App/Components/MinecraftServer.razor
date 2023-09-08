@@ -1,0 +1,12 @@
+﻿@inject IConfiguration _config
+
+<div class="col minecratServerContainer">
+  <img src="@_config.GetString("Application:MinecraftServerImagePath")" />
+  <button type="button" class="btn shadow-none minecratServerBtn" @onclick="@(() => Modal?.Open())"></button>
+</div>
+
+<MinecraftServerModalDialog @ref="Modal" Title="Minecraft Server"></MinecraftServerModalDialog>
+
+@code {
+  private MinecraftServerModalDialog? Modal { get; set; }
+}

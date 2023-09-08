@@ -107,23 +107,37 @@ img.image-underline {
 div.dateEventContainer {
   position: absolute;
   z-index: 999;
-  margin-left: 816px;
+  margin-left: 860px;
   margin-top: 20px;
-  width: 140px;
-  height: 140px;
+  width: 100px;
+  height: 100px;
 }
 
 button.dateEventToastBtn {
-  position: absolute;
   background-color: transparent;
   z-index: 999;
-  width: 140px;
-  height: 140px;
-  margin-top: -140px;
-  width: 140px;
-  height: 140px;
+  width: 100px;
+  height: 100px;
+  margin-top: -100px;
 }
 
 div.dateEventToast {
   /* background-color: white !important; */
+}
+
+div.minecratServerContainer {
+  position: absolute;
+  z-index: 999;
+  margin-left: -3%;
+  margin-top: 20px;
+  width: 100px;
+  height: 100px;
+}
+
+button.minecratServerBtn {
+  background-color: transparent;
+  z-index: 999;
+  width: 100px;
+  height: 100px;
+  margin-top: -100px;
 }

@@ -1,0 +1,55 @@
+﻿@inject IJSRuntime _js;
+
+<div class="modal @(modalClass)" tabindex="-1" style="display:@modalDisplay;">
+  <div class="modal-dialog modal-fullscreen">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">@Title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @onclick="Close"></button>
+      </div>
+      <div class="modal-body">
+        <iframe class="w-100 h-100" src="http://10.0.0.200:8804/server/Server%201" frameborder="0" allowfullscreen></iframe>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @onclick="Close">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+@if (showBackdrop)
+{
+  <div class="modal-backdrop fade show"></div>
+}
+
+@code {
+  [Parameter]
+  public string? Title { get; set; }
+
+  private string modalDisplay = "none;";
+  private string modalClass   = string.Empty;
+  private bool showBackdrop   = false;
+
+  public void Open()
+  {
+    _js.InvokeVoidAsync("playClick");
+
+    modalDisplay = "block";
+    modalClass   = "show";
+    showBackdrop = true;
+
+    StateHasChanged();
+  }
+
+  public void Close()
+  {
+    _js.InvokeVoidAsync("playClick");
+
+    modalDisplay = "none";
+    modalClass   = string.Empty;
+    showBackdrop = false;
+
+    StateHasChanged();
+  }
+}

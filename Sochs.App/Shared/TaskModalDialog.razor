@@ -51,6 +51,8 @@
     showBackdrop = true;
 
     OnOpen?.Invoke(this, new EventArgs());
+
+    StateHasChanged();
   }
 
   public void Close()
@@ -60,5 +62,7 @@
     modalDisplay = "none";
     modalClass   = string.Empty;
     showBackdrop = false;
+
+    StateHasChanged();
   }
 }
