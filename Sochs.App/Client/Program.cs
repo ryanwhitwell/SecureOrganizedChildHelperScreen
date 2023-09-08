@@ -22,6 +22,7 @@ namespace Sochs.App
       builder.Services.AddSingleton<IWeatherService, WeatherService>();
       builder.Services.AddSingleton<ILunchService, LunchService>();
       builder.Services.AddSingleton<IDailyTasksService, DailyTasksService>();
+      builder.Services.AddSingleton<IDateEventService, DateEventService>();
 
       // Transients
       builder.Services.AddTransient<IClassService, ClassService>();

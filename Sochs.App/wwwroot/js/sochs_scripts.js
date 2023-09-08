@@ -28,11 +28,6 @@ function playClick() {
           // Playing error
         });
     }
-
-    
-
-    // audio.load();
-    // audio.play();
   }
 }
 
@@ -51,11 +46,6 @@ function playCompleteAchievement() {
           // Playing error
         });
     }
-
-
-
-    // audio.load();
-    // audio.play();
   }
 }
 
@@ -74,10 +64,14 @@ function playCompleteAllTasks() {
           // Playing error
         });
     }
-
-
-
-    // audio.load();
-    // audio.play();
   }
+}
+
+function showAllDateEventToasts() {
+  var allDateEventToasts = document.getElementsByClassName("dateEventToast");
+
+  for (var i = 0; i < allDateEventToasts.length; i++) {
+    bootstrap.Toast.getOrCreateInstance(allDateEventToasts[i]).show();
+  }
+  
 }

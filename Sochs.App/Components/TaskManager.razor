@@ -1,11 +1,4 @@
-﻿@using Sochs.Library.Enums;
-@using Sochs.Library.Events;
-@using Sochs.Library.Interfaces;
-@using Sochs.Library;
-@using System.Runtime;
-@using System.Text.Json;
-
-@inject ITimeService _timeService;
+﻿@inject ITimeService _timeService;
 @inject IConfiguration _config;
 @inject ILogger<TaskManager> _log;
 @inject IJSRuntime _js;
@@ -29,9 +22,9 @@
             <img src="@_childAvatarImagePath" />
             <button type="button" class="btn shadow-none" style="background-color:transparent;z-index:999;width: 200px;position: absolute;height: 275px;margin-left: -200px;" @onclick="() => TaskDialog?.Open()"></button>
             
-            <ModalDialog @ref="@TaskDialog" Title=@($"{Child.ToString()}'s Tasks")>
+            <TaskModalDialog @ref="@TaskDialog" Title=@($"{Child.ToString()}'s Tasks")>
               <DailyTasks @ref="@DailyTasks" Child=Child />
-            </ModalDialog>
+            </TaskModalDialog>
 
           </div>
 
@@ -64,7 +57,7 @@
   [Parameter]
   public Child Child { get; set; }
 
-  private ModalDialog? TaskDialog { get; set; }
+  private TaskModalDialog? TaskDialog { get; set; }
 
   private string? _childAvatarImagePath { get; set; }
 

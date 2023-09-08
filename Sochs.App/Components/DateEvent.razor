@@ -1,0 +1,72 @@
+﻿@inject IDateEventService _dateEventService;
+@inject IJSRuntime _js;
+@implements IDisposable;
+
+@if (_dateEventsUpdatedEventArgs != null && _dateEventsUpdatedEventArgs.HasEventToday)
+{
+  <div class="col dateEventContainer">
+    <img src="@_dateEventsUpdatedEventArgs.DateEventImagePath" />
+    <button id="dateEventToastBtn" type="button" class="btn shadow-none dateEventToastBtn" @onclick="@(() => ShowAllToasts())"></button>
+  </div>
+
+  <div class="toast-container w-75 z-3 position-absolute top-50 start-50 translate-middle">
+
+    @foreach (var dateEvent in _dateEventsUpdatedEventArgs.TodayDateEvents)
+    {
+      <div class="toast dateEventToast w-100" role="alert" aria-live="assertive" aria-atomic="true">
+        <!-- 
+        <div class="toast-header">
+          <strong class="me-auto">Bootstrap</strong>
+          <small>11 mins ago</small>
+          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        -->
+        <div class="toast-body">
+          <table>
+            <tr>
+              <td><img src=@dateEvent.ImagePath /></td>
+              <td width="50px"></td>
+              <td><h2 class="display-1">@dateEvent.Description</h2></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    }
+
+  </div>
+}
+
+
+@code {
+
+  private DateEventsUpdatedEventArgs? _dateEventsUpdatedEventArgs;
+
+  protected override void OnInitialized()
+  {
+    _dateEventService.OnDateEventsUpdated += Handle;
+
+    base.OnInitialized();
+  }
+
+  private void ShowAllToasts()
+  {
+    _js.InvokeVoidAsync("playClick");
+    
+    _js.InvokeVoidAsync("showAllDateEventToasts");
+  }
+
+  public void Handle(object? sender, DateEventsUpdatedEventArgs args)
+  {
+    if (args != null)
+    {
+      _dateEventsUpdatedEventArgs = args;
+
+      StateHasChanged();
+    }
+  }
+
+  public void Dispose()
+  {
+    _dateEventService.OnDateEventsUpdated -= Handle;
+  }
+}

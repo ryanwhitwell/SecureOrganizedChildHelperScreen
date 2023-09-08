@@ -1,10 +1,4 @@
-﻿@using Sochs.Library.Enums;
-@using Sochs.Library.Events;
-@using Sochs.Library.Interfaces;
-@using Sochs.Library;
-@using System.Runtime;
-
-@inject IClassService _classService;
+﻿@inject IClassService _classService;
 @implements IDisposable;
 
 <div class="col-6 @(todayIsWeekday || tomorrowIsWeekday ? "visible mt-3" : "invisible")">

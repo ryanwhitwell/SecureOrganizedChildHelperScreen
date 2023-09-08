@@ -103,3 +103,27 @@ a, .btn-link {
 img.image-underline {
   border-bottom: 4px solid #007bff;
 }
+
+div.dateEventContainer {
+  position: absolute;
+  z-index: 999;
+  margin-left: 816px;
+  margin-top: 20px;
+  width: 140px;
+  height: 140px;
+}
+
+button.dateEventToastBtn {
+  position: absolute;
+  background-color: transparent;
+  z-index: 999;
+  width: 140px;
+  height: 140px;
+  margin-top: -140px;
+  width: 140px;
+  height: 140px;
+}
+
+div.dateEventToast {
+  /* background-color: white !important; */
+}
