@@ -9,7 +9,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @onclick="Close"></button>
       </div>
       <div class="modal-body">
-        <iframe class="w-100 h-100" src="http://@(_config.GetString("Application:MinecraftServerAddress")):8804/server/Server%201" frameborder="0" allowfullscreen></iframe>
+        <iframe id="minecraft_server" class="w-100 h-100" src="/" frameborder="0" allowfullscreen></iframe>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @onclick="Close">Close</button>
@@ -35,6 +35,10 @@
   public void Open()
   {
     _js.InvokeVoidAsync("playClick");
+
+    var minecraftServerUrl = $"http://{_config.GetString("Application:MinecraftServerAddress")}:8804/server/Server%201";
+
+    _js.InvokeVoidAsync("loadMinecraftServerData", minecraftServerUrl);
 
     modalDisplay = "block";
     modalClass   = "show";

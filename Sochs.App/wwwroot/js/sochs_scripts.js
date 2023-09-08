@@ -75,3 +75,11 @@ function showAllDateEventToasts() {
   }
   
 }
+
+function loadMinecraftServerData(url) {
+  var component = document.getElementById("minecraft_server");
+
+  if (component) {
+    component.src = url;
+  }
+}
