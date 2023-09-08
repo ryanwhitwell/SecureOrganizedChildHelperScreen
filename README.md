@@ -99,7 +99,7 @@ Note: The default file ( /etc/xdg/lxsession/LXDE-pi/autostart ) is the global au
 
   |           |       |
   |--------------|-----------|
-  | ![image](/IMG_4009.jpg) | ![image](/IMG_4010.jpg) |
-  | ![image](/IMG_4011.jpg) | ![image](/IMG_4013.jpg) |
-  | ![image](/IMG_4014.jpg) | ![image](/IMG_4015.jpg) |
-  | ![image](/IMG_4016.jpg) | ![image](/IMG_4017.jpg) |
+  | ![image](/.gallery/IMG_4009.jpg) | ![image](/.gallery/IMG_4010.jpg) |
+  | ![image](/.gallery/IMG_4011.jpg) | ![image](/.gallery/IMG_4013.jpg) |
+  | ![image](/.gallery/IMG_4014.jpg) | ![image](/.gallery/IMG_4015.jpg) |
+  | ![image](/.gallery/IMG_4016.jpg) | ![image](/.gallery/IMG_4017.jpg) |
