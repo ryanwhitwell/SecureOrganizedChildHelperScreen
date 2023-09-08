@@ -8,10 +8,22 @@ namespace Sochs.Library
   public class TimeService : ITimeService, IDisposable
   {
     private const int UpdateIntervalSeconds = 1;
-    private const int NightStartHour        = 20;
-    private const int MorningStartHour      = 5;
-    private const int AfternoonStartHour    = 11;
-    private const int EveningStartHour      = 18;
+
+    // Time of Day
+    private const int NightStartHour     = 20;
+    private const int MorningStartHour   = 5;
+    private const int AfternoonStartHour = 11;
+    private const int EveningStartHour   = 18;
+
+    // Seasons
+    private const int SummerStartMonth = 3;
+    private const int SummerStartDay   = 19;
+    private const int SpringStartMonth = 3;
+    private const int SpringStartDay   = 19;
+    private const int FallStartMonth   = 3;
+    private const int FallStartDay     = 19;
+    private const int WinterStartMonth = 3;
+    private const int WinterStartDay   = 19;
 
     private readonly Timer _timer;
     private readonly IConfiguration _config;
@@ -114,7 +126,7 @@ namespace Sochs.Library
       {
         return TimeOfDay.Afternoon;
       }
-      else if (hour >= 18 && hour < NightStartHour) // Evening 6 PM - 7:59 PM
+      else if (hour >= EveningStartHour && hour < NightStartHour) // Evening 6 PM - 7:59 PM
       {
         return TimeOfDay.Evening;
       }
@@ -139,17 +151,20 @@ namespace Sochs.Library
 
     private string GetDateImagePath(DateTime now)
     {
-      var month = now.Month;
+      DateTime springStartDate = new(now.Year, SpringStartMonth,  SpringStartDay);
+      DateTime summerStartDate = new(now.Year, SummerStartMonth,  SummerStartDay);
+      DateTime fallStartDate   = new(now.Year, FallStartMonth,    FallStartDay);
+      DateTime winterStartDate = new(now.Year, WinterStartMonth,  WinterStartDay);
 
-      if (month >= 3 && month <= 5) // Spring
+      if (now >= springStartDate && now < summerStartDate) // Spring
       {
         return _config.GetString("Time:SeasonImagePaths:Spring");
       }
-      else if (month > 5 && month <= 8) // Summer
+      else if (now > summerStartDate && now < fallStartDate) // Summer
       {
         return _config.GetString("Time:SeasonImagePaths:Summer");
       }
-      else if (month > 8 && month <= 11) // Fall
+      else if (now >= fallStartDate && now < winterStartDate) // Fall
       {
         return _config.GetString("Time:SeasonImagePaths:Fall");
       }
