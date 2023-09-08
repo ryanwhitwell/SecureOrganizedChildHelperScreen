@@ -93,6 +93,7 @@ function Format-Json {
 $json = Get-Content ".\Sochs.App\wwwroot\appsettings.json" | ConvertFrom-Json 
 $json.Application.WeatherApiKey = "" + $WeatherApiKey + ""
 $json.Application.MockEnabled = "false"
+$json.Application.MinecraftServerAddress = "localhost"
 $json | ConvertTo-Json -Depth 99 | Format-Json -Indentation 2 | Out-File ".\Sochs.App\wwwroot\appsettings.json"
 
 #<#
@@ -135,6 +136,7 @@ catch
 $json = Get-Content ".\Sochs.App\wwwroot\appsettings.json" | ConvertFrom-Json 
 $json.Application.WeatherApiKey = "WEATHER_API_KEY"
 $json.Application.MockEnabled = "true"
+.$json.Application.MinecraftServerAddress = "10.0.0.200"
 $json | ConvertTo-Json -Depth 99 | Format-Json -Indentation 2 | Out-File ".\Sochs.App\wwwroot\appsettings.json"
 
 
