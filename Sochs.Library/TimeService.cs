@@ -16,14 +16,14 @@ namespace Sochs.Library
     private const int EveningStartHour   = 18;
 
     // Seasons
-    private const int SummerStartMonth = 3;
-    private const int SummerStartDay   = 19;
+    private const int SummerStartMonth = 6;
+    private const int SummerStartDay   = 21;
     private const int SpringStartMonth = 3;
     private const int SpringStartDay   = 19;
-    private const int FallStartMonth   = 3;
-    private const int FallStartDay     = 19;
-    private const int WinterStartMonth = 3;
-    private const int WinterStartDay   = 19;
+    private const int FallStartMonth   = 9;
+    private const int FallStartDay     = 23;
+    private const int WinterStartMonth = 12;
+    private const int WinterStartDay   = 21;
 
     private readonly Timer _timer;
     private readonly IConfiguration _config;
