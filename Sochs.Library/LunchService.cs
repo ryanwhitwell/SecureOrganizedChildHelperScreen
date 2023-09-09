@@ -94,17 +94,14 @@ namespace Sochs.Library
 
         var todayString    = DateTime.Now.ToString("yyyy-MM-dd");
         var tommorowString = DateTime.Now.AddDays(1).ToString("yyyy-MM-dd");
-        var nextDayString  = DateTime.Now.AddDays(2).ToString("yyyy-MM-dd");
 
         var todayLunch    = apiResponse.Menus?.Where(x => x.Name.Equals(todayString, StringComparison.OrdinalIgnoreCase)).FirstOrDefault()?.Lunch.Split("\r\n").Take(MaxLunchItems) ?? Array.Empty<string>();
         var tomorrowLunch = apiResponse.Menus?.Where(x => x.Name.Equals(tommorowString, StringComparison.OrdinalIgnoreCase)).FirstOrDefault()?.Lunch.Split("\r\n").Take(MaxLunchItems) ?? Array.Empty<string>();
-        var nextDayLunch  = apiResponse.Menus?.Where(x => x.Name.Equals(nextDayString, StringComparison.OrdinalIgnoreCase)).FirstOrDefault()?.Lunch.Split("\r\n").Take(MaxLunchItems) ?? Array.Empty<string>();
 
         var args = new LunchUpdatedEventArgs()
         {
           TodayLunch    = todayLunch,
-          TomorrowLunch = tomorrowLunch,
-          NextDayLunch  = nextDayLunch
+          TomorrowLunch = tomorrowLunch
         };
 
         OnLunchUpdated?.Invoke(this, args);
@@ -121,8 +118,7 @@ namespace Sochs.Library
       var args = new LunchUpdatedEventArgs()
       {
         TodayLunch    = "Penne Pasta w/Marinara Sauce & Meatballs\r\nBagel w/ Yogurt & string cheese.\r\nHummus Plate w/String Cheese".Split("\r\n"),
-        TomorrowLunch = "Sals Fresh Pizza\r\nBagel w/ Yogurt & string cheese.\r\nHummus Plate w/String Cheese\r\nPotato Crusted Fish w/ Lemon & Dinner Roll".Split("\r\n"),
-        NextDayLunch  = "Chicken Patty on a WG Bun\r\nBagel w/ Yogurt & string cheese.\r\nHummus Plate w/String Cheese".Split("\r\n")
+        TomorrowLunch = "Sals Fresh Pizza\r\nBagel w/ Yogurt & string cheese.\r\nHummus Plate w/String Cheese\r\nPotato Crusted Fish w/ Lemon & Dinner Roll".Split("\r\n")
       };
 
       OnLunchUpdated?.Invoke(this, args);

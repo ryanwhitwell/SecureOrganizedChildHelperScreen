@@ -6,8 +6,6 @@
 
     public IEnumerable<string> TomorrowLunch { get; set; } = new List<string>();
 
-    public IEnumerable<string> NextDayLunch { get; set; } = new List<string>();
-
-    public bool HasData { get { return TodayLunch.Any() || TomorrowLunch.Any() || NextDayLunch.Any(); } }
+    public bool HasData { get { return TodayLunch.Any() || TomorrowLunch.Any(); } }
   }
 }
