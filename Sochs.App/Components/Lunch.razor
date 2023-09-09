@@ -1,7 +1,7 @@
 ﻿@inject ILunchService _lunchService;
 @implements IDisposable;
 
-<div class="col-4 @(showComponent ? "visible mt-5" : "invisible")">
+<div class="col-6 @(showComponent ? "visible mt-5" : "invisible")">
 
   <!-- Today Lunch Menu -->
   <div class="card shadow-lg">
@@ -25,7 +25,7 @@
 
 </div>
 
-<div class="col-4 @(showComponent ? "visible mt-5" : "invisible")">
+<div class="col-6 @(showComponent ? "visible mt-5" : "invisible")">
   <!-- Tomorrow Lunch Menu -->
   <div class="card shadow-lg">
     <h5 class="card-header">
@@ -47,36 +47,12 @@
 
 </div>
 
-<div class="col-4 @(showComponent ? "visible mt-5" : "invisible")">
-  <!-- Next Day Lunch Menu -->
-  <div class="card shadow-lg">
-    <h5 class="card-header">
-      @(DateTime.Now.AddDays(2).DayOfWeek.ToString())'s Lunch Menu
-    </h5>
-
-    <ul class="list-group list-group-flush">
-      @{
-        if (nextDayLunch != null && nextDayLunch.Any())
-        {
-          foreach (var item in nextDayLunch)
-          {
-            <li class="list-group-item">@item</li>
-          }
-        }
-      }
-    </ul>
-  </div>
-
-</div>
-
-
 
 @code {
   private bool showComponent;
 
   private IEnumerable<string>? todayLunch;
   private IEnumerable<string>? tomorrowLunch;
-  private IEnumerable<string>? nextDayLunch;
 
   protected override void OnInitialized()
   {
@@ -96,7 +72,6 @@
       {
         todayLunch    = args.TodayLunch;
         tomorrowLunch = args.TomorrowLunch;
-        nextDayLunch  = args.NextDayLunch;
       }
 
       StateHasChanged();
