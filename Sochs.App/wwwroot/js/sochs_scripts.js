@@ -67,6 +67,24 @@ function playCompleteAllTasks() {
   }
 }
 
+function playClockAlarm() {
+  var audio = document.getElementById('player_clock_alarm');
+  if (audio != null) {
+    audio.load();
+
+    var playPromise = audio.play();
+
+    if (playPromise !== undefined) {
+      playPromise.then(_ => {
+        // Audio is playing
+      })
+        .catch(error => {
+          // Playing error
+        });
+    }
+  }
+}
+
 function showAllDateEventToasts() {
   var allDateEventToasts = document.getElementsByClassName("dateEventToast");
 

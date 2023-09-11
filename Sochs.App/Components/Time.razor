@@ -49,6 +49,12 @@
 </div>
 
 @code {
+  // School Alarm 08:03 AM every weekday
+  private const int SchoolAlarmTimeHour   = 8; 
+  private const int SchoolAlarmTimeMinute = 3;
+
+  private bool SchoolAlarmHasTriggered = false;
+  
   private string? timeAsString;
   private string? timeOfDayImagePath;
 
@@ -58,6 +64,17 @@
   private string? dateAsString;
   private string? seasonImagePath;
 
+  private void AlertTimeForSchool(DateTime now, DayType dayType)
+  {
+    var doAlert = now.Hour == SchoolAlarmTimeHour && now.Minute == SchoolAlarmTimeMinute && !SchoolAlarmHasTriggered && dayType == DayType.Weekday;
+
+    if (doAlert)
+    {
+      SchoolAlarmHasTriggered = true;
+      
+      _jSRuntime.InvokeVoidAsync("playClockAlarm");
+    }
+  }
 
   protected override void OnInitialized()
   {
@@ -80,6 +97,9 @@
       // Set dark/light mode
       string mode = args.EnableDarkMode ? "dark" : "light";
       _jSRuntime.InvokeVoidAsync("setTheme", mode);
+
+      // Trigger Alarm for school
+      AlertTimeForSchool(args.DateTime, args.DayType);
 
       StateHasChanged();
     }
