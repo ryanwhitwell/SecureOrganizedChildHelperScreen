@@ -128,8 +128,8 @@ div.dateEventToast {
 div.minecratServerContainer {
   position: absolute;
   z-index: 999;
-  margin-left: -3%;
-  margin-top: 20px;
+  margin-left: -48px;
+  margin-top: 16px;
   width: 100px;
   height: 100px;
 }
