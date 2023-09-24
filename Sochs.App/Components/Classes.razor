@@ -1,4 +1,5 @@
 ﻿@inject IClassService _classService;
+@inject IJSRuntime _js;
 @implements IDisposable;
 
 <div class="col-6 @(todayIsWeekday || tomorrowIsWeekday ? "visible mt-3" : "invisible")">
@@ -53,30 +54,51 @@
 
   protected override void OnInitialized()
   {
-    _classService.Child = Child;
+    try
+    {
+      _classService.Child = Child;
 
-    _classService.OnClassesUpdated += Handle;
+      _classService.OnClassesUpdated += Handle;
 
-    base.OnInitialized();
+      base.OnInitialized();
+    }
+    catch (Exception e)
+    {
+      _js.InvokeVoidAsync("alert", $"Error in Classes.OnInitialized. {e.ToString()}");
+    }
   }
 
   public void Handle(object? sender, ClassesUpdatedEventArgs args)
   {
-    if (args != null)
+    try
     {
-      todaysSpecialClass            = args.TodaysSpecialClass;
-      todaysSpecialClassImagePath   = args.TodaysSpecialClassImagePath;
-      todayIsWeekday                = args.TodayIsWeekday;
-      tomorrowSpecialClass          = args.TomorrowSpecialClass;
-      tomorrowSpecialClassImagePath = args.TomorrowSpecialClassImagePath;
-      tomorrowIsWeekday             = args.TomorrowIsWeekday;
+      if (args != null)
+      {
+        todaysSpecialClass = args.TodaysSpecialClass;
+        todaysSpecialClassImagePath = args.TodaysSpecialClassImagePath;
+        todayIsWeekday = args.TodayIsWeekday;
+        tomorrowSpecialClass = args.TomorrowSpecialClass;
+        tomorrowSpecialClassImagePath = args.TomorrowSpecialClassImagePath;
+        tomorrowIsWeekday = args.TomorrowIsWeekday;
 
-      StateHasChanged();
+        StateHasChanged();
+      }
+    }
+    catch (Exception e)
+    {
+      _js.InvokeVoidAsync("alert", $"Error in Classes.Handle. {e.ToString()}");
     }
   }
 
   public void Dispose()
   {
-    _classService.OnClassesUpdated -= Handle;
+    try
+    {
+      _classService.OnClassesUpdated -= Handle;
+    }
+    catch (Exception e)
+    {
+      _js.InvokeVoidAsync("alert", $"Error in Classes.Dispose. {e.ToString()}");
+    }
   }
 }

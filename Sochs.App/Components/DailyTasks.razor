@@ -86,102 +86,158 @@
 
   public void SetTimeOfDay(TimeOfDay timeOfDay)
   {
-    _js.InvokeVoidAsync("playClick");
-    
-    _timeOfDay = timeOfDay;
+    try
+    {
+      _js.InvokeVoidAsync("playClick");
 
-    StateHasChanged();
+      _timeOfDay = timeOfDay;
+
+      StateHasChanged();
+    }
+    catch (Exception e)
+    {
+      _js.InvokeVoidAsync("alert", $"Error in DailyTasks.SetTimeOfDay. {e.ToString()}");
+    }
   }
 
   public event EventHandler<DailyTaskAchievementEventArgs>? OnDailyTaskAchievement;
 
   public void UpdateTask(int id, bool isCompleted)
   {
-    _js.InvokeVoidAsync("playClick");
+    try
+    {
+      _js.InvokeVoidAsync("playClick");
 
-    // Call the task service with the opposite value of IsCompleted in order to change the value
-    _dailyTasksService.UpdateTask(id, !isCompleted);
+      // Call the task service with the opposite value of IsCompleted in order to change the value
+      _dailyTasksService.UpdateTask(id, !isCompleted);
+    }
+    catch (Exception e)
+    {
+      _js.InvokeVoidAsync("alert", $"Error in DailyTasks.UpdateTask. {e.ToString()}");
+    }
   }
 
   protected override void OnInitialized()
   {
-    _dailyTasksService.Child = Child;
+    try
+    {
+      _dailyTasksService.Child = Child;
 
-    _dailyTasksService.OnDailyTasksReset  += HandleOnDailyTasksReset;
-    _dailyTasksService.OnDailyTaskUpdated += HandleOnDailyTaskUpdated;
-    _timeService.OnTimeUpdated            += HandleTimeUpdated;
+      _dailyTasksService.OnDailyTasksReset += HandleOnDailyTasksReset;
+      _dailyTasksService.OnDailyTaskUpdated += HandleOnDailyTaskUpdated;
+      _timeService.OnTimeUpdated += HandleTimeUpdated;
 
-    _timeOfDay = TimeService.GetTimeOfDay(DateTime.Now);
+      _timeOfDay = TimeService.GetTimeOfDay(DateTime.Now);
 
-    base.OnInitialized();
+      base.OnInitialized();
+    }
+    catch (Exception e)
+    {
+      _js.InvokeVoidAsync("alert", $"Error in DailyTasks.OnInitialized. {e.ToString()}");
+    }
   }
 
   public void HandleTimeUpdated(object? sender, TimeUpdatedEventArgs args)
   {
-    if (args != null)
+    try
     {
-      _dayOfWeek = args.DateTime.DayOfWeek;
+      if (args != null)
+      {
+        _dayOfWeek = args.DateTime.DayOfWeek;
+      }
+    }
+    catch (Exception e)
+    {
+      _js.InvokeVoidAsync("alert", $"Error in DailyTasks.HandleTimeUpdated. {e.ToString()}");
     }
   }
 
   public void HandleOnDailyTasksReset(object? sender, DailyTasksResetEventArgs args)
   {
-    if (args != null)
+    try
     {
-      _taskData = args.TaskData;
-
-      var achievementArgs = new DailyTaskAchievementEventArgs()
+      if (args != null)
       {
-        Child = this.Child,
-        TaskData = this._taskData
-      };
+        _taskData = args.TaskData;
 
-      OnDailyTaskAchievement?.Invoke(this, achievementArgs);
+        var achievementArgs = new DailyTaskAchievementEventArgs()
+          {
+            Child = this.Child,
+            TaskData = this._taskData
+          };
 
-      StateHasChanged();
+        OnDailyTaskAchievement?.Invoke(this, achievementArgs);
+
+        StateHasChanged();
+      }
+    }
+    catch (Exception e)
+    {
+      _js.InvokeVoidAsync("alert", $"Error in DailyTasks.HandleOnDailyTasksReset. {e.ToString()}");
     }
   }
 
   public void HandleOnDailyTaskUpdated(object? sender, DailyTaskUpdatedEventArgs args)
   {
-    if (args != null)
+    try
     {
-      _taskData = args.TaskData;
-
-      var achievementArgs = new DailyTaskAchievementEventArgs()
+      if (args != null)
       {
-        Child = this.Child,
-        TaskData = this._taskData
-      };
+        _taskData = args.TaskData;
 
-      OnDailyTaskAchievement?.Invoke(this, achievementArgs);
+        var achievementArgs = new DailyTaskAchievementEventArgs()
+          {
+            Child = this.Child,
+            TaskData = this._taskData
+          };
 
-      StateHasChanged();
+        OnDailyTaskAchievement?.Invoke(this, achievementArgs);
+
+        StateHasChanged();
+      }
+    }
+    catch (Exception e)
+    {
+      _js.InvokeVoidAsync("alert", $"Error in DailyTasks.HandleOnDailyTaskUpdated. {e.ToString()}");
     }
   }
 
   public void HandleOnActiveDailyTasksChange(object? sender, ActiveDailyTasksChangeEventArgs args)
   {
-    if (args != null)
+    try
     {
-      _taskData = args.TaskData;
-
-      var achievementArgs = new DailyTaskAchievementEventArgs()
+      if (args != null)
       {
-        Child = this.Child,
-        TaskData = this._taskData
-      };
+        _taskData = args.TaskData;
 
-      OnDailyTaskAchievement?.Invoke(this, achievementArgs);
+        var achievementArgs = new DailyTaskAchievementEventArgs()
+          {
+            Child = this.Child,
+            TaskData = this._taskData
+          };
 
-      StateHasChanged();
+        OnDailyTaskAchievement?.Invoke(this, achievementArgs);
+
+        StateHasChanged();
+      }
+    }
+    catch (Exception e)
+    {
+      _js.InvokeVoidAsync("alert", $"Error in DailyTasks.HandleOnActiveDailyTasksChange. {e.ToString()}");
     }
   }
 
   public void Dispose()
   {
-    _dailyTasksService.OnDailyTasksReset  -= HandleOnDailyTasksReset;
-    _dailyTasksService.OnDailyTaskUpdated -= HandleOnDailyTaskUpdated;
-    _timeService.OnTimeUpdated            -= HandleTimeUpdated;
+    try
+    {
+      _dailyTasksService.OnDailyTasksReset -= HandleOnDailyTasksReset;
+      _dailyTasksService.OnDailyTaskUpdated -= HandleOnDailyTaskUpdated;
+      _timeService.OnTimeUpdated -= HandleTimeUpdated;
+    }
+    catch (Exception e)
+    {
+      _js.InvokeVoidAsync("alert", $"Error in DailyTasks.Dispose. {e.ToString()}");
+    }
   }
 }

@@ -43,30 +43,58 @@
 
   protected override void OnInitialized()
   {
-    _dateEventService.OnDateEventsUpdated += Handle;
+    try
+    {
+      _dateEventService.OnDateEventsUpdated += Handle;
 
-    base.OnInitialized();
+      base.OnInitialized();
+    }
+    catch (Exception e)
+    {
+      _js.InvokeVoidAsync("alert", $"Error in DateEvent.OnInitialized. {e.ToString()}");
+    }
   }
 
   private void ShowAllToasts()
   {
-    _js.InvokeVoidAsync("playClick");
-    
-    _js.InvokeVoidAsync("showAllDateEventToasts");
+    try
+    {
+      _js.InvokeVoidAsync("playClick");
+
+      _js.InvokeVoidAsync("showAllDateEventToasts");
+    }
+    catch (Exception e)
+    {
+      _js.InvokeVoidAsync("alert", $"Error in DateEvent.ShowAllToasts. {e.ToString()}");
+    }
   }
 
   public void Handle(object? sender, DateEventsUpdatedEventArgs args)
   {
-    if (args != null)
+    try
     {
-      _dateEventsUpdatedEventArgs = args;
+      if (args != null)
+      {
+        _dateEventsUpdatedEventArgs = args;
 
-      StateHasChanged();
+        StateHasChanged();
+      }
+    }
+    catch (Exception e)
+    {
+      _js.InvokeVoidAsync("alert", $"Error in DateEvent.Handle. {e.ToString()}");
     }
   }
 
   public void Dispose()
   {
-    _dateEventService.OnDateEventsUpdated -= Handle;
+    try
+    {
+      _dateEventService.OnDateEventsUpdated -= Handle;
+    }
+    catch (Exception e)
+    {
+      _js.InvokeVoidAsync("alert", $"Error in DateEvent.Dispose. {e.ToString()}");
+    }
   }
 }

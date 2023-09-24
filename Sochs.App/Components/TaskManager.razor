@@ -74,98 +74,141 @@
 
   protected override void OnAfterRender(bool firstRender)
   {
-    if (firstRender && DailyTasks != null)
+    try
     {
-      DailyTasks.OnDailyTaskAchievement += HandleAchievementEvent;
-    }
+      if (firstRender && DailyTasks != null)
+      {
+        DailyTasks.OnDailyTaskAchievement += HandleAchievementEvent;
+      }
 
-    if (firstRender && TaskDialog != null)
+      if (firstRender && TaskDialog != null)
+      {
+        TaskDialog.OnOpen += HandleModalOpen;
+      }
+
+      base.OnAfterRender(firstRender);
+
+    }
+    catch (Exception e)
     {
-      TaskDialog.OnOpen += HandleModalOpen;
+      _js.InvokeVoidAsync("alert", $"Error in TaskManager.OnAfterRender. {e.ToString()}");
     }
-
-    base.OnAfterRender(firstRender);
   }
 
   protected override void OnInitialized()
   {
-    _timeService.OnTimeUpdated += HandleTimeUpdated;
-
-    if (Child == Child.Alice)
+    try
     {
-      _childAvatarImagePath = _config.GetString("Application:AliceAvatarImagePath");
-    }
-    else if (Child == Child.Clara)
-    {
-      _childAvatarImagePath = _config.GetString("Application:ClaraAvatarImagePath");
-    }
+      _timeService.OnTimeUpdated += HandleTimeUpdated;
 
-    base.OnInitialized(); 
+      if (Child == Child.Alice)
+      {
+        _childAvatarImagePath = _config.GetString("Application:AliceAvatarImagePath");
+      }
+      else if (Child == Child.Clara)
+      {
+        _childAvatarImagePath = _config.GetString("Application:ClaraAvatarImagePath");
+      }
+
+      base.OnInitialized();
+    }
+    catch (Exception e)
+    {
+      _js.InvokeVoidAsync("alert", $"Error in TaskManager.OnInitialized. {e.ToString()}");
+    }
   }
 
   public void HandleTimeUpdated(object? sender, TimeUpdatedEventArgs args)
   {
-    if (args != null)
+    try
     {
-      _timeOfDay = args.TimeOfDay;
-      _dayOfWeek = args.DateTime.DayOfWeek;
+      if (args != null)
+      {
+        _timeOfDay = args.TimeOfDay;
+        _dayOfWeek = args.DateTime.DayOfWeek;
+      }
+    }
+    catch (Exception e)
+    {
+      _js.InvokeVoidAsync("alert", $"Error in TaskManager.HandleTimeUpdated. {e.ToString()}");
     }
   }
 
   private void HandleModalOpen(object? sender, EventArgs args)
   {
-    var timeOfDay = TimeService.GetTimeOfDay(DateTime.Now);
-    DailyTasks?.SetTimeOfDay(timeOfDay);
+    try
+    {
+      var timeOfDay = TimeService.GetTimeOfDay(DateTime.Now);
+      DailyTasks?.SetTimeOfDay(timeOfDay);
+    }
+    catch (Exception e)
+    {
+      _js.InvokeVoidAsync("alert", $"Error in TaskManager.HandleModalOpen. {e.ToString()}");
+    }
   }
 
   private void HandleAchievementEvent(object? sender, DailyTaskAchievementEventArgs args)
   {
-    if (args != null && args.TaskData != null)
+    try
     {
-      // Get new task states for time of day
-      var morningTasksCompleted   = args.TaskData.MorningTasksCompleted(Child, _dayOfWeek);
-      var afternoonTasksCompleted = args.TaskData.AfternoonTasksCompleted(Child, _dayOfWeek);
-      var eveningTasksCompleted   = args.TaskData.EveningTasksCompleted(Child, _dayOfWeek);
-      var nightTasksCompleted     = args.TaskData.NightTasksCompleted(Child, _dayOfWeek);
-
-      // Get new task state for whole day
-      var oldAllTasksCompleted = _morningTasksCompleted && _afternoonTasksCompleted && _eveningTasksCompleted && _nightTasksCompleted;
-      var newAllTasksCompleted = morningTasksCompleted && afternoonTasksCompleted && eveningTasksCompleted && nightTasksCompleted;
-
-      // Aggregate task state for whole day
-      var isNewAllTasksCompleted = !oldAllTasksCompleted && newAllTasksCompleted;
-
-      // Aggregate tasks state for time of day
-      var isNewMorningTasksCompleted   = !_morningTasksCompleted && morningTasksCompleted;
-      var isNewAfternoonTasksCompleted = !_afternoonTasksCompleted && afternoonTasksCompleted;
-      var isNewEveningTasksCompleted   = !_eveningTasksCompleted && eveningTasksCompleted;
-      var isNewNightTasksCompleted     = !_nightTasksCompleted && nightTasksCompleted;
-
-      // Update private member values for UI
-      _morningTasksCompleted   = morningTasksCompleted;
-      _afternoonTasksCompleted = afternoonTasksCompleted;
-      _eveningTasksCompleted   = eveningTasksCompleted;
-      _nightTasksCompleted     = nightTasksCompleted;
-
-      // If state change is for whole day, play whole day achievement sound, other wise only play the time of day achivement sound
-      if (isNewAllTasksCompleted)
+      if (args != null && args.TaskData != null)
       {
-        _js.InvokeVoidAsync("playCompleteAllTasks");
-      }
-      else if (isNewMorningTasksCompleted || isNewAfternoonTasksCompleted || isNewEveningTasksCompleted || isNewNightTasksCompleted)
-      {
-        _js.InvokeVoidAsync("playCompleteAchievement");
-      }
+        // Get new task states for time of day
+        var morningTasksCompleted = args.TaskData.MorningTasksCompleted(Child, _dayOfWeek);
+        var afternoonTasksCompleted = args.TaskData.AfternoonTasksCompleted(Child, _dayOfWeek);
+        var eveningTasksCompleted = args.TaskData.EveningTasksCompleted(Child, _dayOfWeek);
+        var nightTasksCompleted = args.TaskData.NightTasksCompleted(Child, _dayOfWeek);
 
-      StateHasChanged();
+        // Get new task state for whole day
+        var oldAllTasksCompleted = _morningTasksCompleted && _afternoonTasksCompleted && _eveningTasksCompleted && _nightTasksCompleted;
+        var newAllTasksCompleted = morningTasksCompleted && afternoonTasksCompleted && eveningTasksCompleted && nightTasksCompleted;
+
+        // Aggregate task state for whole day
+        var isNewAllTasksCompleted = !oldAllTasksCompleted && newAllTasksCompleted;
+
+        // Aggregate tasks state for time of day
+        var isNewMorningTasksCompleted = !_morningTasksCompleted && morningTasksCompleted;
+        var isNewAfternoonTasksCompleted = !_afternoonTasksCompleted && afternoonTasksCompleted;
+        var isNewEveningTasksCompleted = !_eveningTasksCompleted && eveningTasksCompleted;
+        var isNewNightTasksCompleted = !_nightTasksCompleted && nightTasksCompleted;
+
+        // Update private member values for UI
+        _morningTasksCompleted = morningTasksCompleted;
+        _afternoonTasksCompleted = afternoonTasksCompleted;
+        _eveningTasksCompleted = eveningTasksCompleted;
+        _nightTasksCompleted = nightTasksCompleted;
+
+        // If state change is for whole day, play whole day achievement sound, other wise only play the time of day achivement sound
+        if (isNewAllTasksCompleted)
+        {
+          _js.InvokeVoidAsync("playCompleteAllTasks");
+        }
+        else if (isNewMorningTasksCompleted || isNewAfternoonTasksCompleted || isNewEveningTasksCompleted || isNewNightTasksCompleted)
+        {
+          _js.InvokeVoidAsync("playCompleteAchievement");
+        }
+
+        StateHasChanged();
+      }
+    }
+    catch (Exception e)
+    {
+      _js.InvokeVoidAsync("alert", $"Error in TaskManager.HandleAchievementEvent. {e.ToString()}");
     }
   }
 
   public void Dispose()
   {
-    if (DailyTasks != null)
+    try
     {
-      DailyTasks.OnDailyTaskAchievement -= HandleAchievementEvent;
+      if (DailyTasks != null)
+      {
+        DailyTasks.OnDailyTaskAchievement -= HandleAchievementEvent;
+      }
+    }
+    catch (Exception e)
+    {
+      _js.InvokeVoidAsync("alert", $"Error in TaskManager.Dispose. {e.ToString()}");
     }
   }
 }

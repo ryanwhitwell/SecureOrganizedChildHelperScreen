@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.JSInterop;
 using Sochs.Library.Enums;
 using Sochs.Library.Events;
 using Sochs.Library.Interfaces;
@@ -27,15 +28,17 @@ namespace Sochs.Library
 
     private readonly Timer _timer;
     private readonly IConfiguration _config;
+    private readonly IJSRuntime _js;
 
     private bool disposedValue;
 
-    public TimeOfDay TimeOfDay => throw new NotImplementedException();
-
-    public TimeService(IConfiguration config)
+    public TimeService(IConfiguration config, IJSRuntime js)
     {
       _ = config ?? throw new ArgumentNullException(nameof(config));
+      _ = js ?? throw new ArgumentNullException(nameof(js));
+
       _config = config;
+      _js = js;
 
       var autoEvent = new AutoResetEvent(false);
       _timer = new Timer(UpdateTimeOfDay_Callback, autoEvent, new TimeSpan(0, 0, 0), new TimeSpan(0, 0, UpdateIntervalSeconds));
@@ -43,34 +46,41 @@ namespace Sochs.Library
 
     public event EventHandler<TimeUpdatedEventArgs>? OnTimeUpdated;
 
-    private void UpdateTimeOfDay_Callback(object? stateInfo)
+    private async void UpdateTimeOfDay_Callback(object? stateInfo)
     {
-      _ = stateInfo ?? throw new ArgumentNullException(nameof(stateInfo));
-
-      var now = DateTime.Now;
-
-      TimeOfDay timeOfDay  = GetTimeOfDay(now);
-      DayType dayType      = GetDayType(now);
-      string timeImagePath = GetTimeImagePath(timeOfDay);
-      string dateImagePath = GetDateImagePath(now);
-      string dayImagePath  = GetDayImagePath(now);
-      bool enableDarkMode  = timeOfDay == TimeOfDay.Evening || timeOfDay == TimeOfDay.Night;
-
-      double minutesUntilNextTimeOfDay = GetMinutesUntilNextTimeOfDay(now, timeOfDay);
-
-      var args = new TimeUpdatedEventArgs()
+      try
       {
-        DateTime                  = DateTime.Now,
-        TimeOfDayImagePath        = timeImagePath,
-        SeasonImagePath           = dateImagePath,
-        DayOfWeekImagePath        = dayImagePath,
-        EnableDarkMode            = enableDarkMode,
-        TimeOfDay                 = timeOfDay,
-        DayType                   = dayType,
-        MinutesUntilNextTimeOfDay = minutesUntilNextTimeOfDay
-      };
+        _ = stateInfo ?? throw new ArgumentNullException(nameof(stateInfo));
 
-      OnTimeUpdated?.Invoke(this, args);
+        var now = DateTime.Now;
+
+        TimeOfDay timeOfDay  = GetTimeOfDay(now);
+        DayType dayType      = GetDayType(now);
+        string timeImagePath = GetTimeImagePath(timeOfDay);
+        string dateImagePath = GetDateImagePath(now);
+        string dayImagePath  = GetDayImagePath(now);
+        bool enableDarkMode  = timeOfDay == TimeOfDay.Evening || timeOfDay == TimeOfDay.Night;
+
+        double minutesUntilNextTimeOfDay = GetMinutesUntilNextTimeOfDay(now, timeOfDay);
+
+        var args = new TimeUpdatedEventArgs()
+        {
+          DateTime = DateTime.Now,
+          TimeOfDayImagePath = timeImagePath,
+          SeasonImagePath = dateImagePath,
+          DayOfWeekImagePath = dayImagePath,
+          EnableDarkMode = enableDarkMode,
+          TimeOfDay = timeOfDay,
+          DayType = dayType,
+          MinutesUntilNextTimeOfDay = minutesUntilNextTimeOfDay
+        };
+
+        OnTimeUpdated?.Invoke(this, args);
+      }
+      catch (Exception e)
+      {
+        await _js.InvokeVoidAsync("alert", $"Error in TimeService.UpdateTimeOfDay_Callback. {e}");
+      }
     }
 
     private static double GetMinutesUntilNextTimeOfDay(DateTime now, TimeOfDay timeOfDay)

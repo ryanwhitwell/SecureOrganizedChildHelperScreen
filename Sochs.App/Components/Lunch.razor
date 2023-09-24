@@ -1,4 +1,5 @@
 ﻿@inject ILunchService _lunchService;
+@inject IJSRuntime _js;
 @implements IDisposable;
 
 <div class="col-6 @(showComponent ? "visible mt-5" : "invisible")">
@@ -56,30 +57,51 @@
 
   protected override void OnInitialized()
   {
-    _lunchService.OnLunchUpdated += Handle;
+    try
+    {
+      _lunchService.OnLunchUpdated += Handle;
 
-    base.OnInitialized();
+      base.OnInitialized();
+    }
+    catch (Exception e)
+    {
+      _js.InvokeVoidAsync("alert", $"Error in Lunch.OnInitialized. {e.ToString()}");
+    }
   }
 
   public void Handle(object? sender, LunchUpdatedEventArgs args)
   {
-    if (args != null)
+    try
     {
-      // Only show component when there's data to show
-      showComponent = args.HasData;
-
-      if (showComponent)
+      if (args != null)
       {
-        todayLunch    = args.TodayLunch;
-        tomorrowLunch = args.TomorrowLunch;
-      }
+        // Only show component when there's data to show
+        showComponent = args.HasData;
 
-      StateHasChanged();
+        if (showComponent)
+        {
+          todayLunch = args.TodayLunch;
+          tomorrowLunch = args.TomorrowLunch;
+        }
+
+        StateHasChanged();
+      }
+    }
+    catch (Exception e)
+    {
+      _js.InvokeVoidAsync("alert", $"Error in Lunch.OnInitialized. {e.ToString()}");
     }
   }
 
   public void Dispose()
   {
-    _lunchService.OnLunchUpdated -= Handle;
+    try
+    {
+      _lunchService.OnLunchUpdated -= Handle;
+    }
+    catch (Exception e)
+    {
+      _js.InvokeVoidAsync("alert", $"Error in Lunch.Dispose. {e.ToString()}");
+    }
   }
 }

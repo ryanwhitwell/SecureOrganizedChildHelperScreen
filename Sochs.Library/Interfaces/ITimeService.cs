@@ -6,7 +6,5 @@ namespace Sochs.Library.Interfaces
   public interface ITimeService
   {
     event EventHandler<TimeUpdatedEventArgs>? OnTimeUpdated;
-
-    public TimeOfDay TimeOfDay { get; }
   }
 }

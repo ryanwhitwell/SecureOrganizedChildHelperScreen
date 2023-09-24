@@ -1,5 +1,5 @@
 ﻿@inject ITimeService _timeService;
-@inject IJSRuntime _jSRuntime
+@inject IJSRuntime _js
 @implements IDisposable;
 
 <div class="col-12 mt-5">
@@ -66,47 +66,75 @@
 
   private void AlertTimeForSchool(DateTime now, DayType dayType)
   {
-    var doAlert = now.Hour == SchoolAlarmTimeHour && now.Minute == SchoolAlarmTimeMinute && !SchoolAlarmHasTriggered && dayType == DayType.Weekday;
-
-    if (doAlert)
+    try
     {
-      SchoolAlarmHasTriggered = true;
-      
-      _jSRuntime.InvokeVoidAsync("playClockAlarm");
+      var doAlert = now.Hour == SchoolAlarmTimeHour && now.Minute == SchoolAlarmTimeMinute && !SchoolAlarmHasTriggered && dayType == DayType.Weekday;
+
+      if (doAlert)
+      {
+        SchoolAlarmHasTriggered = true;
+
+        _js.InvokeVoidAsync("playClockAlarm");
+      }
+    }
+    catch (Exception e)
+    {
+      _js.InvokeVoidAsync("alert", $"Error in Time.AlertTimeForSchool. {e.ToString()}");
     }
   }
 
   protected override void OnInitialized()
   {
-    _timeService.OnTimeUpdated += Handle;
+    try
+    {
+      _timeService.OnTimeUpdated += Handle;
 
-    base.OnInitialized();
+      base.OnInitialized();
+    }
+    catch (Exception e)
+    {
+      _js.InvokeVoidAsync("alert", $"Error in Time.AlertTimeForSchool. {e.ToString()}");
+    }
   }
 
   public void Handle(object? sender, TimeUpdatedEventArgs args)
   {
-    if (args != null)
+    try
     {
-      timeAsString       = args.DateTime.ToShortTimeString();
-      timeOfDayImagePath = args.TimeOfDayImagePath;
-      dayOfWeekAsString  = args.DateTime.DayOfWeek.ToString();
-      dayOfWeekImagePath = args.DayOfWeekImagePath;
-      dateAsString       = args.DateTime.ToShortDateString();
-      seasonImagePath    = args.SeasonImagePath;
+      if (args != null)
+      {
+        timeAsString = args.DateTime.ToShortTimeString();
+        timeOfDayImagePath = args.TimeOfDayImagePath;
+        dayOfWeekAsString = args.DateTime.DayOfWeek.ToString();
+        dayOfWeekImagePath = args.DayOfWeekImagePath;
+        dateAsString = args.DateTime.ToShortDateString();
+        seasonImagePath = args.SeasonImagePath;
 
-      // Set dark/light mode
-      string mode = args.EnableDarkMode ? "dark" : "light";
-      _jSRuntime.InvokeVoidAsync("setTheme", mode);
+        // Set dark/light mode
+        string mode = args.EnableDarkMode ? "dark" : "light";
+        _js.InvokeVoidAsync("setTheme", mode);
 
-      // Trigger Alarm for school
-      AlertTimeForSchool(args.DateTime, args.DayType);
+        // Trigger Alarm for school
+        AlertTimeForSchool(args.DateTime, args.DayType);
 
-      StateHasChanged();
+        StateHasChanged();
+      }
+    }
+    catch (Exception e)
+    {
+      _js.InvokeVoidAsync("alert", $"Error in Time.Handle. {e.ToString()}");
     }
   }
 
   public void Dispose()
   {
-    _timeService.OnTimeUpdated -= Handle;
+    try
+    {
+      _timeService.OnTimeUpdated -= Handle;
+    }
+    catch (Exception e)
+    {
+      _js.InvokeVoidAsync("alert", $"Error in Time.Handle. {e.ToString()}");
+    }
   }
 }
