@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.JSInterop;
 using Sochs.Library.Enums;
 using Sochs.Library.Events;
 using Sochs.Library.Interfaces;
@@ -12,17 +13,17 @@ namespace Sochs.Library
 
     private readonly Timer _timer;
     private readonly IConfiguration _config;
-    private readonly ILogger<ClassService> _log;
+    private readonly IJSRuntime _js;
 
     private bool disposedValue;
 
-		public ClassService(IConfiguration config, ILogger<ClassService> log)
+		public ClassService(IConfiguration config, IJSRuntime js)
 		{
       _ = config ?? throw new ArgumentNullException(nameof(config));
-      _ = log ?? throw new ArgumentNullException(nameof(log));
+      _ = js ?? throw new ArgumentNullException(nameof(js));
 
       _config = config;
-      _log = log;
+      _js = js;
 
       var autoEvent = new AutoResetEvent(false);
 			_timer = new Timer(UpdateClasses_Callback, autoEvent, new TimeSpan(0, 0, 0), new TimeSpan(0, 0, UpdateIntervalMinutes));
@@ -32,14 +33,13 @@ namespace Sochs.Library
 
     public event EventHandler<ClassesUpdatedEventArgs>? OnClassesUpdated;
 
-		private void UpdateClasses_Callback(object? stateInfo)
+		private async void UpdateClasses_Callback(object? stateInfo)
 		{
-			_ = stateInfo ?? throw new ArgumentNullException(nameof(stateInfo));
-
       try
       {
-        var args = new ClassesUpdatedEventArgs();
+        _ = stateInfo ?? throw new ArgumentNullException(nameof(stateInfo));
 
+        var args = new ClassesUpdatedEventArgs();
 
         var today = DateTime.Now.DayOfWeek;
         var tomorrow = DateTime.Now.AddDays(1).DayOfWeek;
@@ -68,10 +68,9 @@ namespace Sochs.Library
 
         OnClassesUpdated?.Invoke(this, args);
       }
-      catch (Exception ex)
+      catch (Exception e)
       {
-        _log.LogError(ex, "Error updating classes in class service.");
-        throw;
+        await _js.InvokeVoidAsync("alert", $"Error in SlassService.UpdateClasses_Callback. {e}");
       }
     }
 

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.JSInterop;
 using Sochs.Library.Enums;
 using Sochs.Library.Events;
 using Sochs.Library.Interfaces;
@@ -31,16 +32,19 @@ namespace Sochs.Library
 		private readonly Uri _weatherUri;
 		private readonly IConfiguration _config;
     private readonly ILogger<WeatherService> _log;
+    private readonly IJSRuntime _js;
 
-    public WeatherService(HttpClient client, IConfiguration config, ILogger<WeatherService> log)
+    public WeatherService(HttpClient client, IConfiguration config, ILogger<WeatherService> log, IJSRuntime js)
 		{
       _ = client ?? throw new ArgumentNullException(nameof(client));
       _ = config ?? throw new ArgumentNullException(nameof(config));
       _ = log ?? throw new ArgumentNullException(nameof(log));
+      _ = js ?? throw new ArgumentNullException(nameof(js));
 
       _client = client;
 			_config = config;
 			_log = log;
+      _js = js;
 
       _client.BaseAddress = new Uri(WeatherApiBase);
       _client.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue() { NoCache = true, MustRevalidate = true };
@@ -205,44 +209,36 @@ namespace Sochs.Library
 
 		private async Task WeatherUpdate()
 		{
-      try
+      var response = await _client.GetAsync(_weatherUri).ConfigureAwait(false);
+
+      response.EnsureSuccessStatusCode();
+
+      var responseContentAsString = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+      _log.LogTrace("Weather API Response: {responseContentAsString}", responseContentAsString);
+
+      var weatherApiResponse = JsonSerializer.Deserialize<WeatherApiResponse>(responseContentAsString) ?? throw new InvalidOperationException($"There was an error parsing the response from Weather API. HTTP Response: {response}");
+
+      var feelsLikeTemp = GetFeelsLikeTemp(weatherApiResponse);
+      var conditionImagePath = GetConditionImagePath(weatherApiResponse);
+      var temperatureImagePath = GetTemperatureImagePath(feelsLikeTemp);
+      var shoesImagePath = GetShoesImagePath(feelsLikeTemp);
+      var jacketImagePath = GetJacketImagePath(weatherApiResponse);
+      var pantsImagePath = GetPantsImagePath(feelsLikeTemp);
+      var shirtImagePath = GetShirtImagePath(feelsLikeTemp);
+
+      var args = new WeatherUpdatedEventArgs()
       {
-        var response = await _client.GetAsync(_weatherUri).ConfigureAwait(false);
+        WeatherInfo = weatherApiResponse,
+        ConditionImagePath = conditionImagePath,
+        TemperatureImagePath = temperatureImagePath,
+        ShirtImagePath = shirtImagePath,
+        PantsImagePath = pantsImagePath,
+        ShoesImagePath = shoesImagePath,
+        JacketImagePath = jacketImagePath
+      };
 
-        response.EnsureSuccessStatusCode();
-
-        var responseContentAsString = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-
-        _log.LogTrace("Weather API Response: {responseContentAsString}", responseContentAsString);
-
-        var weatherApiResponse = JsonSerializer.Deserialize<WeatherApiResponse>(responseContentAsString) ?? throw new InvalidOperationException($"There was an error parsing the response from Weather API. HTTP Response: {response}");
-
-        var feelsLikeTemp        = GetFeelsLikeTemp(weatherApiResponse);
-        var conditionImagePath   = GetConditionImagePath(weatherApiResponse);
-        var temperatureImagePath = GetTemperatureImagePath(feelsLikeTemp);
-        var shoesImagePath       = GetShoesImagePath(feelsLikeTemp);
-        var jacketImagePath      = GetJacketImagePath(weatherApiResponse);
-        var pantsImagePath       = GetPantsImagePath(feelsLikeTemp);
-        var shirtImagePath       = GetShirtImagePath(feelsLikeTemp);
-
-        var args = new WeatherUpdatedEventArgs()
-        {
-          WeatherInfo          = weatherApiResponse,
-          ConditionImagePath   = conditionImagePath,
-          TemperatureImagePath = temperatureImagePath,
-          ShirtImagePath       = shirtImagePath,
-          PantsImagePath       = pantsImagePath,
-          ShoesImagePath       = shoesImagePath,
-          JacketImagePath      = jacketImagePath
-        };
-
-        OnWeatherUpdated?.Invoke(this, args);
-      }
-      catch (Exception ex)
-      {
-        _log.LogError(ex, "Error getting data from Weather API.");
-        throw;
-      }
+      OnWeatherUpdated?.Invoke(this, args);
     }
 
     private void MockWeatherUpdate()
@@ -285,17 +281,24 @@ namespace Sochs.Library
 
     private async void UpdateWeather_Callback(object? stateInfo)
 		{
-			_ = stateInfo ?? throw new ArgumentNullException(nameof(stateInfo));
-
-      if (bool.TryParse(_config["Application:MockEnabled"], out var mockEnabled) == false) { throw new InvalidOperationException("Invalid or missing config value located at Application:MockEnabled"); }
-
-      if (mockEnabled)
+      try
       {
-        MockWeatherUpdate();
+        _ = stateInfo ?? throw new ArgumentNullException(nameof(stateInfo));
+
+        if (bool.TryParse(_config["Application:MockEnabled"], out var mockEnabled) == false) { throw new InvalidOperationException("Invalid or missing config value located at Application:MockEnabled"); }
+
+        if (mockEnabled)
+        {
+          MockWeatherUpdate();
+        }
+        else
+        {
+          await WeatherUpdate().ConfigureAwait(false);
+        }
       }
-      else
+      catch (Exception e)
       {
-        await WeatherUpdate().ConfigureAwait(false);
+        await _js.InvokeVoidAsync("alert", $"Error in WeatherService.UpdateWeather_Callback. {e}");
       }
     }
 

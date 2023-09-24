@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.JSInterop;
 using Sochs.Library.Enums;
 using Sochs.Library.Events;
 using Sochs.Library.Interfaces;
@@ -18,13 +19,15 @@ namespace Sochs.Library
 
     private readonly Timer _timer;
     private readonly IConfiguration _config;
+    private readonly IJSRuntime _js;
 
-    public DailyTasksService(IConfiguration config, ILogger<DailyTasksService> logger)
+    public DailyTasksService(IConfiguration config, IJSRuntime js)
     {
       _ = config ?? throw new ArgumentNullException(nameof(config));
-      _ = logger ?? throw new ArgumentNullException(nameof(logger));
+      _ = js ?? throw new ArgumentNullException(nameof(js));
 
       _config = config;
+      _js = js;
 
       var autoEvent = new AutoResetEvent(false);
       _timer = new Timer(UpdateDailyTasks_Callback, autoEvent, new TimeSpan(0, 0, 0), new TimeSpan(0, 0, UpdateIntervalSeconds));
@@ -104,17 +107,25 @@ namespace Sochs.Library
       return data;
     }
 
-    private void UpdateDailyTasks_Callback(object? stateInfo)
+    private async void UpdateDailyTasks_Callback(object? stateInfo)
     {
-      // If there's already task data and the current Date is NOT different from the DateTime.Date in the data, then do nothing
-      if (_taskData != null && _taskData.DateTime.Date == DateTime.Now.Date)
+      try
       {
-        return;
-      }
+        // If there's already task data and the current Date is NOT different from the DateTime.Date in the data, then do nothing
+        if (_taskData != null && _taskData.DateTime.Date == DateTime.Now.Date)
+        {
+          return;
+        }
 
-      // If current day IS different from the currentTaskDay, then delete and regenerate the collection and fire the reset event
-      _taskData = GetNewDailyTaskData();
-      OnDailyTasksReset?.Invoke(this, new DailyTasksResetEventArgs() { TaskData = _taskData });
+        // If current day IS different from the currentTaskDay, then delete and regenerate the collection and fire the reset event
+        _taskData = GetNewDailyTaskData();
+
+        OnDailyTasksReset?.Invoke(this, new DailyTasksResetEventArgs() { TaskData = _taskData });
+      }
+      catch (Exception e)
+      {
+        await _js.InvokeVoidAsync("alert", $"Error in DailyTasksService.UpdateDailyTasks_Callback. {e}");
+      }
     }
 
     protected virtual void Dispose(bool disposing)

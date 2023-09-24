@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.JSInterop;
 using Sochs.Library.Events;
 using Sochs.Library.Interfaces;
 using Sochs.Library.Models;
@@ -22,18 +23,21 @@ namespace Sochs.Library
     private readonly HttpClient _client;
     private readonly Uri _lunchUri;
     private readonly ILogger<LunchService> _log;
+    private readonly IJSRuntime _js;
 
     private bool disposedValue;
 
-		public LunchService(HttpClient client, IConfiguration config, ILogger<LunchService> log)
+		public LunchService(HttpClient client, IConfiguration config, ILogger<LunchService> log, IJSRuntime js)
 		{
       _ = client ?? throw new ArgumentNullException(nameof(client));
       _ = config ?? throw new ArgumentNullException(nameof(config));
       _ = log ?? throw new ArgumentNullException(nameof(log));
+      _ = js ?? throw new ArgumentNullException(nameof(js));
 
       _client = client;
       _config = config;
       _log = log;
+      _js = js;
 
       _client.BaseAddress = new Uri(LunchApiBase);
       _client.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue() {  NoCache = true, MustRevalidate = true  };
@@ -64,53 +68,52 @@ namespace Sochs.Library
 
 		private async void UpdateLunch_Callback(object? stateInfo)
 		{
-			_ = stateInfo ?? throw new ArgumentNullException(nameof(stateInfo));
-
-      if (bool.TryParse(_config["Application:MockEnabled"], out var mockEnabled) == false) { throw new InvalidOperationException("Invalid or missing config value located at Application:MockEnabled"); }
-
-      if (mockEnabled)
+      try
       {
-        MockLunchUpdated();
+        _ = stateInfo ?? throw new ArgumentNullException(nameof(stateInfo));
+
+        if (bool.TryParse(_config["Application:MockEnabled"], out var mockEnabled) == false) { throw new InvalidOperationException("Invalid or missing config value located at Application:MockEnabled"); }
+
+        if (mockEnabled)
+        {
+          MockLunchUpdated();
+        }
+        else
+        {
+          await LunchUpdate().ConfigureAwait(false);
+        }
       }
-      else
+      catch (Exception e)
       {
-        await LunchUpdate().ConfigureAwait(false);
+        await _js.InvokeVoidAsync("alert", $"Error in LunchService.UpdateLunch_Callback. {e}");
       }
     }
 
     private async Task LunchUpdate()
     {
-      try
+      var response = await _client.GetAsync(_lunchUri).ConfigureAwait(false);
+
+      response.EnsureSuccessStatusCode();
+
+      var responseContentAsString = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+      _log.LogTrace("Lunch API Response: {responseContentAsString}", responseContentAsString);
+
+      var apiResponse = JsonSerializer.Deserialize<LunchApiResponse>(responseContentAsString) ?? throw new InvalidOperationException($"There was an error parsing the response from Weather API. HTTP Response: {response}");
+
+      var todayString = DateTime.Now.ToString("yyyy-MM-dd");
+      var tommorowString = DateTime.Now.AddDays(1).ToString("yyyy-MM-dd");
+
+      var todayLunch = apiResponse.Menus?.Where(x => x.Name.Equals(todayString, StringComparison.OrdinalIgnoreCase)).FirstOrDefault()?.Lunch.Split("\r\n").Take(MaxLunchItems) ?? Array.Empty<string>();
+      var tomorrowLunch = apiResponse.Menus?.Where(x => x.Name.Equals(tommorowString, StringComparison.OrdinalIgnoreCase)).FirstOrDefault()?.Lunch.Split("\r\n").Take(MaxLunchItems) ?? Array.Empty<string>();
+
+      var args = new LunchUpdatedEventArgs()
       {
-        var response = await _client.GetAsync(_lunchUri).ConfigureAwait(false);
+        TodayLunch = todayLunch,
+        TomorrowLunch = tomorrowLunch
+      };
 
-        response.EnsureSuccessStatusCode();
-
-        var responseContentAsString = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-
-        _log.LogTrace("Lunch API Response: {responseContentAsString}", responseContentAsString);
-
-        var apiResponse = JsonSerializer.Deserialize<LunchApiResponse>(responseContentAsString) ?? throw new InvalidOperationException($"There was an error parsing the response from Weather API. HTTP Response: {response}");
-
-        var todayString    = DateTime.Now.ToString("yyyy-MM-dd");
-        var tommorowString = DateTime.Now.AddDays(1).ToString("yyyy-MM-dd");
-
-        var todayLunch    = apiResponse.Menus?.Where(x => x.Name.Equals(todayString, StringComparison.OrdinalIgnoreCase)).FirstOrDefault()?.Lunch.Split("\r\n").Take(MaxLunchItems) ?? Array.Empty<string>();
-        var tomorrowLunch = apiResponse.Menus?.Where(x => x.Name.Equals(tommorowString, StringComparison.OrdinalIgnoreCase)).FirstOrDefault()?.Lunch.Split("\r\n").Take(MaxLunchItems) ?? Array.Empty<string>();
-
-        var args = new LunchUpdatedEventArgs()
-        {
-          TodayLunch    = todayLunch,
-          TomorrowLunch = tomorrowLunch
-        };
-
-        OnLunchUpdated?.Invoke(this, args);
-      }
-      catch (Exception ex)
-      {
-        _log.LogError(ex, "Error getting data from Lunch API.");
-        throw;
-      }
+      OnLunchUpdated?.Invoke(this, args);
     }
 
     private void MockLunchUpdated()

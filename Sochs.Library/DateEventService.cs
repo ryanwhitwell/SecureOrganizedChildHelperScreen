@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.JSInterop;
 using Sochs.Library.Enums;
 using Sochs.Library.Events;
 using Sochs.Library.Interfaces;
@@ -13,17 +14,17 @@ namespace Sochs.Library
 
     private readonly Timer _timer;
     private readonly IConfiguration _config;
-    private readonly ILogger<ClassService> _log;
+    private readonly IJSRuntime _js;
 
     private bool disposedValue;
 
-		public DateEventService(IConfiguration config, ILogger<ClassService> log)
+		public DateEventService(IConfiguration config, IJSRuntime js)
 		{
       _ = config ?? throw new ArgumentNullException(nameof(config));
-      _ = log ?? throw new ArgumentNullException(nameof(log));
+      _ = js ?? throw new ArgumentNullException(nameof(js));
 
       _config = config;
-      _log = log;
+      _js = js;
 
       var autoEvent = new AutoResetEvent(false);
 			_timer = new Timer(UpdateDateEvents_Callback, autoEvent, new TimeSpan(0, 0, 0), new TimeSpan(0, 0, UpdateIntervalMinutes));
@@ -31,12 +32,12 @@ namespace Sochs.Library
 
     public event EventHandler<DateEventsUpdatedEventArgs>? OnDateEventsUpdated;
 
-    private void UpdateDateEvents_Callback(object? stateInfo)
+    private async void UpdateDateEvents_Callback(object? stateInfo)
 		{
-			_ = stateInfo ?? throw new ArgumentNullException(nameof(stateInfo));
-
       try
       {
+        _ = stateInfo ?? throw new ArgumentNullException(nameof(stateInfo));
+
         var args = new DateEventsUpdatedEventArgs
         {
           DateEventImagePath = _config.GetString("Application:DateEventImagePath")
@@ -62,10 +63,9 @@ namespace Sochs.Library
 
         OnDateEventsUpdated?.Invoke(this, args);
       }
-      catch (Exception ex)
+      catch (Exception e)
       {
-        _log.LogError(ex, "Error updating classes in class service.");
-        throw;
+        await _js.InvokeVoidAsync("alert", $"Error in DateEventService.UpdateDateEvents_Callback. {e}");
       }
     }
 
