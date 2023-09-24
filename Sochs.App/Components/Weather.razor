@@ -76,33 +76,54 @@
 
   protected override void OnInitialized()
   {
-    _weatherService.OnWeatherUpdated += Handle;
+    try
+    {
+      _weatherService.OnWeatherUpdated += Handle;
 
-    base.OnInitialized();
+      base.OnInitialized();
+    }
+    catch (Exception e)
+    {
+      _js.InvokeVoidAsync("alert", $"Error in Weather.OnInitialized. {e.ToString()}");
+    }
   }
 
   public void Handle(object? sender, WeatherUpdatedEventArgs args)
   {
-    if (args != null && args.WeatherInfo != null)
+    try
     {
-      temperature          = args.WeatherInfo.Current?.FeelsLikeF.ToString("N0");
-      condition            = args.WeatherInfo.Current?.Condition?.Text;
-      conditionImagePath   = args.ConditionImagePath;
-      temperatureImagePath = args.TemperatureImagePath;
+      if (args != null && args.WeatherInfo != null)
+      {
+        temperature = args.WeatherInfo.Current?.FeelsLikeF.ToString("N0");
+        condition = args.WeatherInfo.Current?.Condition?.Text;
+        conditionImagePath = args.ConditionImagePath;
+        temperatureImagePath = args.TemperatureImagePath;
 
-      jacketImagePath = args.JacketImagePath;
-      shirtImagePath = args.ShirtImagePath;
-      pantsImagePath = args.PantsImagePath;
-      shoesImagePath = args.ShoesImagePath;
+        jacketImagePath = args.JacketImagePath;
+        shirtImagePath = args.ShirtImagePath;
+        pantsImagePath = args.PantsImagePath;
+        shoesImagePath = args.ShoesImagePath;
 
-      _log.LogTrace("Condition Image Path: {conditionImagePath}", conditionImagePath);
+        _log.LogTrace("Condition Image Path: {conditionImagePath}", conditionImagePath);
 
-      StateHasChanged();
+        StateHasChanged();
+      }
+    }
+    catch (Exception e)
+    {
+      _js.InvokeVoidAsync("alert", $"Error in Weather.Handle. {e.ToString()}");
     }
   }
 
   public void Dispose()
   {
-    _weatherService.OnWeatherUpdated -= Handle;
+    try
+    {
+      _weatherService.OnWeatherUpdated -= Handle;
+    }
+    catch (Exception e)
+    {
+      _js.InvokeVoidAsync("alert", $"Error in Weather.Dispose. {e.ToString()}");
+    }
   }
 }

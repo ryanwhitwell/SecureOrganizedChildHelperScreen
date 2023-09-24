@@ -34,27 +34,41 @@
 
   public void Open()
   {
-    _js.InvokeVoidAsync("playClick");
+    try
+    {
+      _js.InvokeVoidAsync("playClick");
 
-    var minecraftServerUrl = $"http://{_config.GetString("Application:MinecraftServerAddress")}:8804/server/Server%201";
+      var minecraftServerUrl = $"http://{_config.GetString("Application:MinecraftServerAddress")}:8804/server/Server%201";
 
-    _js.InvokeVoidAsync("loadMinecraftServerData", minecraftServerUrl);
+      _js.InvokeVoidAsync("loadMinecraftServerData", minecraftServerUrl);
 
-    modalDisplay = "block";
-    modalClass   = "show";
-    showBackdrop = true;
+      modalDisplay = "block";
+      modalClass = "show";
+      showBackdrop = true;
 
-    StateHasChanged();
+      StateHasChanged();
+    }
+    catch (Exception e)
+    {
+      _js.InvokeVoidAsync("alert", $"Error in MinecraftServerModalDialog.Open. {e.ToString()}");
+    }
   }
 
   public void Close()
   {
-    _js.InvokeVoidAsync("playClick");
+    try
+    {
+      _js.InvokeVoidAsync("playClick");
 
-    modalDisplay = "none";
-    modalClass   = string.Empty;
-    showBackdrop = false;
+      modalDisplay = "none";
+      modalClass = string.Empty;
+      showBackdrop = false;
 
-    StateHasChanged();
+      StateHasChanged();
+    }
+    catch (Exception e)
+    {
+      _js.InvokeVoidAsync("alert", $"Error in MinecraftServerModalDialog.Close. {e.ToString()}");
+    }
   }
 }

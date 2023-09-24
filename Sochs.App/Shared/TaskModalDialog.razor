@@ -44,25 +44,39 @@
 
   public void Open()
   {
-    _js.InvokeVoidAsync("playClick");
-    
-    modalDisplay = "block";
-    modalClass   = "show";
-    showBackdrop = true;
+    try
+    {
+      _js.InvokeVoidAsync("playClick");
 
-    OnOpen?.Invoke(this, new EventArgs());
+      modalDisplay = "block";
+      modalClass = "show";
+      showBackdrop = true;
 
-    StateHasChanged();
+      OnOpen?.Invoke(this, new EventArgs());
+
+      StateHasChanged();
+    }
+    catch (Exception e)
+    {
+      _js.InvokeVoidAsync("alert", $"Error in TaskModelDialog.Open. {e.ToString()}");
+    }
   }
 
   public void Close()
   {
-    _js.InvokeVoidAsync("playClick");
+    try
+    {
+      _js.InvokeVoidAsync("playClick");
 
-    modalDisplay = "none";
-    modalClass   = string.Empty;
-    showBackdrop = false;
+      modalDisplay = "none";
+      modalClass = string.Empty;
+      showBackdrop = false;
 
-    StateHasChanged();
+      StateHasChanged();
+    }
+    catch (Exception e)
+    {
+      _js.InvokeVoidAsync("alert", $"Error in TaskModelDialog.Close. {e.ToString()}");
+    }
   }
 }
