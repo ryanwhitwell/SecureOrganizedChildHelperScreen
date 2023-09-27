@@ -136,7 +136,7 @@ namespace Sochs.Library
         FeelsLikeTemp.Warm => string.Empty,
         FeelsLikeTemp.Cool => _config.GetString("Clothes:Jackets:LightJacket"),
         FeelsLikeTemp.Cold => _config.GetString("Clothes:Jackets:HeavyJacket"),
-        _                  => throw new InvalidOperationException("Cannot determine shirt from weather info.")
+        _                  => throw new InvalidOperationException($"Cannot determine shirt from weather info.{JsonSerializer.Serialize(weatherApiResponse)}")
       };
     }
 
@@ -178,7 +178,7 @@ namespace Sochs.Library
       }
       else
       {
-        throw new InvalidOperationException("Cannot determine feel like temp from weather info.");
+        throw new InvalidOperationException($"Cannot determine feel like temp from weather info. {JsonSerializer.Serialize(weatherApiResponse) }");
       }
     }
 
@@ -199,7 +199,7 @@ namespace Sochs.Library
       _ = weatherApiResponse ?? throw new ArgumentNullException(nameof(weatherApiResponse));
 
       // Get the code from the Api reponse
-      var code = weatherApiResponse.Current?.Condition?.Code ?? throw new InvalidOperationException("Cannot get code from Weather API Response");
+      var code = weatherApiResponse.Current?.Condition?.Code ?? throw new InvalidOperationException($"Cannot get code from Weather API Response. {JsonSerializer.Serialize(weatherApiResponse) }");
 
       // Get the path based on the code from the local data structure
       var path = _config.GetString($"Weather:ConditionImagePaths:{code}");
