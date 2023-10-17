@@ -19,6 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sochs.Library", "Sochs.Libr
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{8CBD8238-A7CD-4BA2-8380-5D84108CC877}"
 	ProjectSection(SolutionItems) = preProject
+		CODEOWNERS = CODEOWNERS
 		.github\dependabot.yml = .github\dependabot.yml
 	EndProjectSection
 EndProject
