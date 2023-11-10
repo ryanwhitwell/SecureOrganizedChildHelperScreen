@@ -23,6 +23,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{8CBD
 		.github\dependabot.yml = .github\dependabot.yml
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sochs.Data", "Sochs.Data\Sochs.Data.csproj", "{1DFC4E8C-23C0-4227-97F6-27950ACB9850}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,10 @@ Global
 		{66652AEF-3091-41F3-9E59-7A78253964FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{66652AEF-3091-41F3-9E59-7A78253964FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{66652AEF-3091-41F3-9E59-7A78253964FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1DFC4E8C-23C0-4227-97F6-27950ACB9850}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DFC4E8C-23C0-4227-97F6-27950ACB9850}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DFC4E8C-23C0-4227-97F6-27950ACB9850}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DFC4E8C-23C0-4227-97F6-27950ACB9850}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
