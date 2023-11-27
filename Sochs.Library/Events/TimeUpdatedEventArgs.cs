@@ -19,5 +19,7 @@ namespace Sochs.Library.Events
     public DayType DayType { get; set; }
 
     public double MinutesUntilNextTimeOfDay {  get; set; }
+
+    public int DaysUntilXmas { get; set; }
   }
 }

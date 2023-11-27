@@ -8,6 +8,9 @@ namespace Sochs.Library
 {
   public class TimeService : ITimeService, IDisposable
   {
+    // Days out to start showing Xmas countdown
+    public const int XmasDaysThreshold = 45;
+
     private const int UpdateIntervalSeconds = 1;
 
     // Time of Day
@@ -60,6 +63,7 @@ namespace Sochs.Library
         string dateImagePath = GetDateImagePath(now);
         string dayImagePath  = GetDayImagePath(now);
         bool enableDarkMode  = timeOfDay == TimeOfDay.Evening || timeOfDay == TimeOfDay.Night;
+        int daysUntilXmas    = GetDaysUntilXmas(now);
 
         double minutesUntilNextTimeOfDay = GetMinutesUntilNextTimeOfDay(now, timeOfDay);
 
@@ -72,7 +76,8 @@ namespace Sochs.Library
           EnableDarkMode = enableDarkMode,
           TimeOfDay = timeOfDay,
           DayType = dayType,
-          MinutesUntilNextTimeOfDay = minutesUntilNextTimeOfDay
+          MinutesUntilNextTimeOfDay = minutesUntilNextTimeOfDay,
+          DaysUntilXmas = daysUntilXmas
         };
 
         OnTimeUpdated?.Invoke(this, args);
@@ -122,6 +127,20 @@ namespace Sochs.Library
         TimeOfDay.Night     => _config.GetString("Time:TimeOfDayImagePaths:Night"),
         _                   => throw new InvalidOperationException($"Cannot determine time of day image path based on time of day")
       };
+    }
+
+    private static int GetDaysUntilXmas(DateTime now)
+    {
+      DateTime christmasDate = new(DateTime.Now.Year, 12, 25);
+
+      // If Christmas has already occurred this year, calculate days until next Christmas
+      if (now > christmasDate)
+      {
+        christmasDate = new(now.Year + 1, 12, 25);
+      }
+
+      TimeSpan timeUntilChristmas = christmasDate - now;
+      return timeUntilChristmas.Days;
     }
 
     public static TimeOfDay GetTimeOfDay(DateTime now)
