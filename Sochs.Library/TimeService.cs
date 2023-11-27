@@ -57,13 +57,13 @@ namespace Sochs.Library
 
         var now = DateTime.Now;
 
-        TimeOfDay timeOfDay  = GetTimeOfDay(now);
-        DayType dayType      = GetDayType(now);
-        string timeImagePath = GetTimeImagePath(timeOfDay);
-        string dateImagePath = GetDateImagePath(now);
-        string dayImagePath  = GetDayImagePath(now);
-        bool enableDarkMode  = timeOfDay == TimeOfDay.Evening || timeOfDay == TimeOfDay.Night;
-        int daysUntilXmas    = GetDaysUntilXmas(now);
+        TimeOfDay timeOfDay     = GetTimeOfDay(now);
+        DayType dayType         = GetDayType(now);
+        string timeImagePath    = GetTimeImagePath(timeOfDay);
+        string dateImagePath    = GetDateImagePath(now);
+        string dayImagePath     = GetDayImagePath(now);
+        bool enableDarkMode     = timeOfDay == TimeOfDay.Evening || timeOfDay == TimeOfDay.Night;
+        TimeSpan timeUntilXmas  = GetTimeUntilXmas(now);
 
         double minutesUntilNextTimeOfDay = GetMinutesUntilNextTimeOfDay(now, timeOfDay);
 
@@ -77,7 +77,7 @@ namespace Sochs.Library
           TimeOfDay = timeOfDay,
           DayType = dayType,
           MinutesUntilNextTimeOfDay = minutesUntilNextTimeOfDay,
-          DaysUntilXmas = daysUntilXmas
+          TimeUntilXmas = timeUntilXmas
         };
 
         OnTimeUpdated?.Invoke(this, args);
@@ -129,7 +129,7 @@ namespace Sochs.Library
       };
     }
 
-    private static int GetDaysUntilXmas(DateTime now)
+    private static TimeSpan GetTimeUntilXmas(DateTime now)
     {
       DateTime christmasDate = new(DateTime.Now.Year, 12, 25);
 
@@ -140,7 +140,7 @@ namespace Sochs.Library
       }
 
       TimeSpan timeUntilChristmas = christmasDate - now;
-      return timeUntilChristmas.Days;
+      return timeUntilChristmas;
     }
 
     public static TimeOfDay GetTimeOfDay(DateTime now)

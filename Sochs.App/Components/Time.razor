@@ -14,7 +14,7 @@
 
         <!-- Time of Day -->
         <div class="row">
-          <div class="col-9">
+          <div class="col-10">
             <h1 class="display" style="font-size: 8rem;">@timeAsString</h1>
           </div>
           <div class="col">
@@ -24,7 +24,7 @@
 
         <!-- Day of Week -->
         <div class="row">
-          <div class="col-9">
+          <div class="col-10">
             <h1 class="display" style="font-size: 7rem;">@dayOfWeekAsString</h1>
           </div>
           <div class="col">
@@ -34,7 +34,7 @@
 
         <!-- Date & Season -->
         <div class="row">
-          <div class="col-9">
+          <div class="col-10">
             <h1 class="display-4" style="font-size: 7rem;">@dateAsString</h1>
           </div>
           <div class="col">
@@ -42,15 +42,18 @@
           </div>
         </div>
 
-        <!-- Xmas Countdown -->
-        <div class="row">
-          <div class="col-9">
-            <h1 class="display-4" style="font-size: 7rem;">Days 'til Xmas</h1>
+        @if(showXmasCountdown)
+        {
+          <!-- Xmas Countdown -->
+          <div class="row">
+            <div class="col-10">
+              <h1 class="display" style="font-size: 7rem;">Days 'til Xmas</h1>
+            </div>
+            <div class="col">
+              <h1 class="display" style="font-size: 7rem;">@timeUntilXmas.Days</h1>
+            </div>
           </div>
-          <div class="col">
-            <h1 class="display-4" style="font-size: 7rem;">@daysUntilXmas</h1>
-          </div>
-        </div>
+        }
       </div>
     </div>
 
@@ -73,8 +76,8 @@
   private string? dateAsString;
   private string? seasonImagePath;
 
-  private bool showXmasDays = false;
-  private int daysUntilXmas;
+  private bool showXmasCountdown = false;
+  private TimeSpan timeUntilXmas;
 
   private void AlertTimeForSchool(DateTime now, DayType dayType)
   {
@@ -121,7 +124,7 @@
         dayOfWeekImagePath = args.DayOfWeekImagePath;
         dateAsString = args.DateTime.ToShortDateString();
         seasonImagePath = args.SeasonImagePath;
-        daysUntilXmas = args.DaysUntilXmas;
+        timeUntilXmas = args.TimeUntilXmas;
 
         // Set dark/light mode
         string mode = args.EnableDarkMode ? "dark" : "light";
@@ -130,7 +133,7 @@
         // Trigger Alarm for school
         AlertTimeForSchool(args.DateTime, args.DayType);
 
-        showXmasDays = daysUntilXmas <= TimeService.XmasDaysThreshold;
+        showXmasCountdown = timeUntilXmas.Days <= TimeService.XmasDaysThreshold;
 
         StateHasChanged();
       }

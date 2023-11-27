@@ -20,6 +20,6 @@ namespace Sochs.Library.Events
 
     public double MinutesUntilNextTimeOfDay {  get; set; }
 
-    public int DaysUntilXmas { get; set; }
+    public TimeSpan TimeUntilXmas { get; set; }
   }
 }
