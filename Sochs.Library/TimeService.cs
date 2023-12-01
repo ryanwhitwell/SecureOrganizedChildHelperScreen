@@ -63,7 +63,7 @@ namespace Sochs.Library
         string dateImagePath    = GetDateImagePath(now);
         string dayImagePath     = GetDayImagePath(now);
         bool enableDarkMode     = timeOfDay == TimeOfDay.Evening || timeOfDay == TimeOfDay.Night;
-        TimeSpan timeUntilXmas  = GetTimeUntilXmas(now);
+        int daysUntilXmas       = GetDaysUntilXmas(now);
 
         double minutesUntilNextTimeOfDay = GetMinutesUntilNextTimeOfDay(now, timeOfDay);
 
@@ -77,7 +77,7 @@ namespace Sochs.Library
           TimeOfDay = timeOfDay,
           DayType = dayType,
           MinutesUntilNextTimeOfDay = minutesUntilNextTimeOfDay,
-          TimeUntilXmas = timeUntilXmas
+          DaysUntilXmas = daysUntilXmas
         };
 
         OnTimeUpdated?.Invoke(this, args);
@@ -129,7 +129,7 @@ namespace Sochs.Library
       };
     }
 
-    private static TimeSpan GetTimeUntilXmas(DateTime now)
+    private static int GetDaysUntilXmas(DateTime now)
     {
       DateTime christmasDate = new(DateTime.Now.Year, 12, 25);
 
@@ -140,7 +140,8 @@ namespace Sochs.Library
       }
 
       TimeSpan timeUntilChristmas = christmasDate - now;
-      return timeUntilChristmas;
+
+      return (int)Math.Round(timeUntilChristmas.TotalDays);
     }
 
     public static TimeOfDay GetTimeOfDay(DateTime now)
