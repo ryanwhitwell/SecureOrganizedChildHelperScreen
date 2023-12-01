@@ -141,7 +141,8 @@ namespace Sochs.Library
 
       TimeSpan timeUntilChristmas = christmasDate - now;
 
-      return (int)Math.Round(timeUntilChristmas.TotalDays);
+      // Adding one day here since there's no support for fractions of a day, there's only hours
+      return timeUntilChristmas.Days + 1;
     }
 
     public static TimeOfDay GetTimeOfDay(DateTime now)
