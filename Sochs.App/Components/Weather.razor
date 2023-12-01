@@ -84,7 +84,8 @@
     }
     catch (Exception e)
     {
-      _js.InvokeVoidAsync("alert", $"Error in Weather.OnInitialized. {e.ToString()}");
+      Console.WriteLine($"Error in Weather.OnInitialized. {e.ToString()}");
+      //_js.InvokeVoidAsync("alert", $"Error in Weather.OnInitialized. {e.ToString()}");
     }
   }
 
@@ -111,7 +112,8 @@
     }
     catch (Exception e)
     {
-      _js.InvokeVoidAsync("alert", $"Error in Weather.Handle. {e.ToString()}");
+      Console.WriteLine($"Error in Weather.Handle. {e.ToString()}");
+      //_js.InvokeVoidAsync("alert", $"Error in Weather.Handle. {e.ToString()}");
     }
   }
 
@@ -123,7 +125,8 @@
     }
     catch (Exception e)
     {
-      _js.InvokeVoidAsync("alert", $"Error in Weather.Dispose. {e.ToString()}");
+      Console.WriteLine($"Error in Weather.Dispose. {e.ToString()}");
+      //_js.InvokeVoidAsync("alert", $"Error in Weather.Dispose. {e.ToString()}");
     }
   }
 }
