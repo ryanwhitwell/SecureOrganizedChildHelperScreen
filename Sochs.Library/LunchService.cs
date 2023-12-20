@@ -85,6 +85,7 @@ namespace Sochs.Library
       }
       catch (Exception e)
       {
+        await Task.Run(() => Console.WriteLine($"Error in LunchService.UpdateLunch_Callback. {e}"));
         // await _js.InvokeVoidAsync("alert", $"Error in LunchService.UpdateLunch_Callback. {e}");
       }
     }

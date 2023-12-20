@@ -124,6 +124,7 @@ namespace Sochs.Library
       }
       catch (Exception e)
       {
+        await Task.Run(() => Console.WriteLine($"Error in DailyTasksService.UpdateDailyTasks_Callback. {e}"));
         // await _js.InvokeVoidAsync("alert", $"Error in DailyTasksService.UpdateDailyTasks_Callback. {e}");
       }
     }

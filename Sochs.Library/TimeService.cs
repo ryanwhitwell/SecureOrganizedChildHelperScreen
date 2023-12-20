@@ -84,6 +84,7 @@ namespace Sochs.Library
       }
       catch (Exception e)
       {
+        await Task.Run(() => Console.WriteLine($"Error in TimeService.UpdateTimeOfDay_Callback. {e}"));
         // await _js.InvokeVoidAsync("alert", $"Error in TimeService.UpdateTimeOfDay_Callback. {e}");
       }
     }

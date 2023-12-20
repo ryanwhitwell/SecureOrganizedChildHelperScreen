@@ -298,6 +298,7 @@ namespace Sochs.Library
       }
       catch (Exception e)
       {
+        await Task.Run(() => Console.WriteLine($"Error in WeatherService.UpdateWeather_Callback. {e}"));
         // await _js.InvokeVoidAsync("alert", $"Error in WeatherService.UpdateWeather_Callback. {e}");
       }
     }
