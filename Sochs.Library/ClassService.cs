@@ -70,7 +70,7 @@ namespace Sochs.Library
       }
       catch (Exception e)
       {
-        await _js.InvokeVoidAsync("alert", $"Error in SlassService.UpdateClasses_Callback. {e}");
+        // await _js.InvokeVoidAsync("alert", $"Error in SlassService.UpdateClasses_Callback. {e}");
       }
     }
 

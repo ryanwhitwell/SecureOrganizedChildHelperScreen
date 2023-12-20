@@ -65,7 +65,7 @@ namespace Sochs.Library
       }
       catch (Exception e)
       {
-        await _js.InvokeVoidAsync("alert", $"Error in DateEventService.UpdateDateEvents_Callback. {e}");
+        // await _js.InvokeVoidAsync("alert", $"Error in DateEventService.UpdateDateEvents_Callback. {e}");
       }
     }
 
