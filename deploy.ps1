@@ -136,7 +136,7 @@ catch
 $json = Get-Content ".\Sochs.App\wwwroot\appsettings.json" | ConvertFrom-Json 
 $json.Application.WeatherApiKey = "WEATHER_API_KEY"
 $json.Application.MockEnabled = "true"
-$json.Application.MinecraftServerAddress = "10.0.0.200"
+$json.Application.MinecraftServerAddress = "10.0.0.201"
 $json | ConvertTo-Json -Depth 99 | Format-Json -Indentation 2 | Out-File ".\Sochs.App\wwwroot\appsettings.json"
 
 
